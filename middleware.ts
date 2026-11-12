@@ -26,6 +26,6 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // everything except Next internals, API routes and files with an extension (icons, images, sitemap.xml…)
-  matcher: ['/((?!_next|api|.*\\..*).*)'],
+  // everything except Next internals, API routes, the /admin CMS area, and files with an extension (icons, images, sitemap.xml…)
+  matcher: ['/((?!_next|api|admin|.*\\..*).*)'],
 };

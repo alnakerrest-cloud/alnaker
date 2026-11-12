@@ -1,26 +1,44 @@
 {
-  "name": "naqer-menu",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Bilingual (AR/EN) digital menu for Al Naqer Village — Damietta & Gamasa",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "typecheck": "tsc --noEmit",
-    "qr": "node scripts/generate-qr.mjs"
-  },
-  "dependencies": {
-    "next": "^16.4.2",
-    "qrcode": "^1.5.4",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.19.0",
-    "@types/qrcode": "^1.5.5",
-    "@types/react": "^19.1.0",
-    "@types/react-dom": "^19.1.0",
-    "typescript": "^5.9.0"
-  }
+    "name": "naqer-menu",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Bilingual (AR/EN) digital menu for Al Naqer Village ??? Damietta & Gamasa",
+    "scripts": {
+        "dev": "next dev --hostname 127.0.0.1 --port 3001",
+        "build": "next build",
+        "start": "next start --hostname 127.0.0.1 --port 3001",
+        "postinstall": "prisma generate",
+        "typecheck": "tsc --noEmit",
+        "db:generate": "prisma generate",
+        "db:push": "echo \"DISABLED: use migrate dev (destructive)\"",
+        "db:baseline": "node scripts/baseline.mjs",
+        "db:seed-admin": "node scripts/seed-admin.mjs",
+        "db:provision-owner": "node scripts/provision-owner.mjs",
+        "qr": "node scripts/generate-qr.mjs",
+        "db:import": "node scripts/import-menu.mjs",
+        "db:verify": "node scripts/verify-import.mjs"
+    },
+    "dependencies": {
+        "@prisma/adapter-pg": "^7.10.1",
+        "@prisma/client": "^7.10.1",
+        "bcryptjs": "^3.0.2",
+        "cloudinary": "^2.5.1",
+        "next": "^16.4.2",
+        "pg": "^8.23.1",
+        "qrcode": "^1.5.4",
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0",
+        "zod": "^3.24.1"
+    },
+    "devDependencies": {
+        "@playwright/test": "^1.64.1",
+        "@types/bcryptjs": "^2.4.6",
+        "@types/node": "^20.19.0",
+        "@types/qrcode": "^1.5.5",
+        "@types/react": "^19.1.0",
+        "@types/react-dom": "^19.1.0",
+        "dotenv": "^18.0.9",
+        "prisma": "^7.10.1",
+        "typescript": "^5.9.0"
+    }
 }

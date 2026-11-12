@@ -7,8 +7,8 @@
 ```bash
 npm install
 cp .env.example .env.local     # ثم عدّل NEXT_PUBLIC_SITE_URL للدومين الحقيقي
-npm run dev                    # http://localhost:3000
-npm run build && npm start     # نسخة الإنتاج
+npm run dev                    # http://127.0.0.1:3001
+npm run build && npm start     # نسخة الإنتاج (3001)
 ```
 
 ## هيكل المشروع
