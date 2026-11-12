@@ -1,0 +1,10 @@
+import dotenv from 'dotenv';
+import path from 'node:path';
+import pg from 'pg';
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: true });
+const r = await pool.query('select * from "RestaurantSettings"');
+console.log('Settings in DB:', r.rows[0]);
+const b = await pool.query('select * from "Branch"');
+console.log('Branches in DB:', b.rows);
+await pool.end();

@@ -1,22 +1,8 @@
-import Image from "next/image";
-
 /**
- * شعار المطعم. إن وُجد شعار مرفوع (src من Cloudinary) يُعرض، وإلا يظهر الشعار الرمزي الافتراضي.
+ * Placeholder emblem (eight-point star). To use the real logo, replace this component's
+ * body with <Image src="/logo.png" … /> after dropping the file in /public.
  */
-export default function Logo({ size = 84, className, src }: { size?: number; className?: string; src?: string | null }) {
-  if (src) {
-    return (
-      <Image
-        className={className}
-        src={src}
-        alt="Al Naqer"
-        width={size}
-        height={size}
-        sizes={`${size}px`}
-        style={{ objectFit: "contain", width: size, height: size }}
-      />
-    );
-  }
+export default function Logo({ size = 84, className }: { size?: number; className?: string }) {
   return (
     <svg
       className={className}

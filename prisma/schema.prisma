@@ -1,0 +1,377 @@
+// Naqer Menu CMS — Prisma 7 schema (Arabic-first, single restaurant).
+// AR fields are required; EN strings from the legacy bilingual data are intentionally
+// NOT migrated (approved decision: Arabic only). Presentation metadata (icons, layout,
+// badges, tray ingredients, sub-section titles, sort order) is preserved 1:1.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum MenuGroup {
+  FOOD
+  DRINKS
+}
+
+enum CategoryLayout {
+  TRAYS
+  LIST
+}
+
+enum ProductBadge {
+  SIGNATURE // مميز
+  OFFER     // عرض
+}
+
+enum OfferType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  SPECIAL_PRICE
+  BUNDLE
+  BUY_X_GET_Y
+}
+
+enum ImportJobStatus {
+  PENDING
+  RUNNING
+  SUCCESS
+  PARTIAL
+  FAILED
+}
+
+enum ImportItemStatus {
+  OK
+  SKIPPED
+  FAILED
+}
+
+enum AdminRole {
+  OWNER  // كل الصلاحيات: المحتوى + الإعدادات + المستخدمون + النشر
+  EDITOR // المحتوى فقط
+}
+
+model AdminUser {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  displayName  String
+  role         AdminRole  @default(OWNER)
+  isActive     Boolean    @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  auditLogs    AuditLog[]
+  sessions     Session[]
+}
+
+// Server-side session store. Stores only the HASH of the random token (never the raw token).
+// Logout / expiry = row deleted or past expiresAt. Enables real, immediate invalidation.
+model Session {
+  id        String    @id @default(cuid())
+  adminId   String
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([adminId])
+  @@index([expiresAt])
+}
+
+// Singleton row (id = "default") holding restaurant-wide settings.
+model RestaurantSettings {
+  id               String   @id @default("default")
+  brandNameAr      String
+  taglineAr        String?
+  phoneDisplay     String?
+  phoneIntl        String?
+  logoUrl          String?
+  logoPublicId     String? // Cloudinary public_id for safe replace/delete of the logo
+  vatNoteAr        String?
+  serviceNoteAr    String?
+  serviceChargePct Decimal? @db.Decimal(5, 2)
+  currencyAr       String   @default("ج.م")
+  updatedAt        DateTime @updatedAt
+}
+
+model Branch {
+  id             String   @id @default(cuid())
+  nameAr         String
+  nameEn         String?
+  addressAr      String
+  addressEn      String?
+  cityAr         String
+  mapQuery       String?
+  phoneIntl      String? // null => fall back to RestaurantSettings.phoneIntl
+  whatsappNumber String?
+  isOrderable    Boolean  @default(true)
+  openingHoursAr String?
+  openingHoursEn String?
+  isActive       Boolean  @default(true)
+  sortOrder      Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+}
+
+model Category {
+  id        String         @id @default(cuid())
+  slug      String         @unique // keeps stable ids from data/menu.ts (trays, mandi, ...)
+  nameAr    String
+  icon      String? // emoji used by the current UI
+  group     MenuGroup
+  layout    CategoryLayout @default(LIST)
+  noteAr    String?
+  imageUrl      String?   // Cloudinary secure URL (category image)
+  imagePublicId String?   // Cloudinary public_id
+  isVisible Boolean        @default(true)
+  sortOrder Int            @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sections     Section[]
+  offerTargets OfferCategoryTarget[]
+
+  @@index([group, isVisible, sortOrder])
+}
+
+// Optional sub-grouping inside a category (e.g. بالوزن / أطباق مشوية / 550 جم).
+model Section {
+  id         String   @id @default(cuid())
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  titleAr    String?
+  sortOrder  Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products Product[]
+
+  @@index([categoryId, sortOrder])
+}
+
+model Product {
+  id            String       @id @default(cuid())
+  sectionId     String
+  section       Section      @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  nameAr        String
+  descAr        String?
+  badge         ProductBadge?
+  ingredientsAr String[]     @default([]) // tray ingredient chips
+  isAvailable   Boolean      @default(true)
+  isVisible     Boolean      @default(true)
+  isFeatured    Boolean      @default(false)
+  sortOrder     Int          @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  variants     ProductVariant[]
+  images       ProductImage[]
+  optionGroups ProductOptionGroup[]
+  offerTargets OfferProductTarget[]
+
+  @@index([sectionId, sortOrder])
+  @@index([isFeatured])
+}
+
+// One row per price pill: single price => labelAr null; sizes/weights => labelled variants.
+model ProductVariant {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  labelAr     String? // ثلث كيلو / سنجل / M / صغيرة ...
+  price       Decimal  @db.Decimal(10, 2)
+  maxPrice    Decimal? @db.Decimal(10, 2) // for ranges like "60 – 95"; null = fixed price
+  sortOrder   Int      @default(0)
+  isAvailable Boolean  @default(true)
+
+  @@index([productId, sortOrder])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  publicId  String? // Cloudinary public_id (needed for delete-on-replace)
+  altAr     String?
+  isPrimary Boolean @default(false)
+  sortOrder Int     @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([productId, sortOrder])
+}
+
+model ImportJob {
+  id         String          @id @default(cuid())
+  source     String // e.g. "data/menu.ts"
+  status     ImportJobStatus @default(PENDING)
+  totalItems Int             @default(0)
+  processed  Int             @default(0)
+  failed     Int             @default(0)
+  error      String?
+  startedAt  DateTime?
+  finishedAt DateTime?
+  createdAt  DateTime        @default(now())
+
+  items ImportItem[]
+
+  @@index([status, createdAt])
+}
+
+model ImportItem {
+  id      String           @id @default(cuid())
+  jobId   String
+  job     ImportJob        @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  kind    String // category | section | product | variant
+  ref     String // source path, e.g. "المشويات > بالوزن > كباب"
+  status  ImportItemStatus @default(OK)
+  message String?
+  payload Json?
+
+  @@index([jobId, status])
+}
+
+model AuditLog {
+  id         String     @id @default(cuid())
+  adminId    String?
+  admin      AdminUser? @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  action     String // create | update | delete | publish | import
+  entityType String // model name
+  entityId   String?
+  summary    String? // human-readable Arabic note
+  changes    Json? // before/after snapshot
+
+  createdAt DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([adminId])
+  @@index([createdAt])
+}
+
+model OptionGroup {
+  id         String               @id @default(cuid())
+  nameAr     String
+  nameEn     String?
+  isRequired Boolean              @default(false)
+  isMulti    Boolean              @default(false)
+  minSelect  Int                  @default(0)
+  maxSelect  Int                  @default(1)
+  sortOrder  Int                  @default(0)
+  isActive   Boolean              @default(true)
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+
+  options             OptionItem[]
+  productAssignments ProductOptionGroup[]
+
+  @@index([isActive, sortOrder])
+}
+
+model OptionItem {
+  id        String      @id @default(cuid())
+  groupId   String
+  group     OptionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  nameAr    String
+  nameEn    String?
+  price     Decimal     @default(0) @db.Decimal(10, 2)
+  isActive  Boolean     @default(true)
+  sortOrder Int         @default(0)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([groupId, sortOrder])
+}
+
+model ProductOptionGroup {
+  id        String      @id @default(cuid())
+  productId String
+  product   Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  groupId   String
+  group     OptionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  sortOrder Int         @default(0)
+
+  @@unique([productId, groupId])
+  @@index([productId])
+  @@index([groupId])
+}
+
+model Offer {
+  id             String                @id @default(cuid())
+  titleAr        String
+  titleEn        String?
+  descAr         String?
+  descEn         String?
+  offerType      OfferType             @default(PERCENTAGE)
+  discountValue  Decimal?              @db.Decimal(10, 2)
+  promoPrice     Decimal?              @db.Decimal(10, 2)
+  buyQty         Int?                  @default(1)
+  getQty         Int?                  @default(1)
+  minOrderAmount Decimal?              @db.Decimal(10, 2)
+  minQuantity    Int?                  @default(1)
+  startDate      DateTime?
+  endDate        DateTime?
+  isActive       Boolean               @default(false)
+  sortOrder      Int                   @default(0)
+  imageUrl       String?
+  imagePublicId  String?
+  badgeAr        String?               @default("عرض خاص")
+  badgeEn        String?               @default("Special Offer")
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  productTargets  OfferProductTarget[]
+  categoryTargets OfferCategoryTarget[]
+  locationTargets OfferLocationTarget[]
+
+  @@index([isActive, sortOrder])
+  @@index([startDate, endDate])
+}
+
+model OfferProductTarget {
+  id        String   @id @default(cuid())
+  offerId   String
+  offer     Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([offerId, productId])
+  @@index([offerId])
+  @@index([productId])
+}
+
+model OfferCategoryTarget {
+  id         String   @id @default(cuid())
+  offerId    String
+  offer      Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([offerId, categoryId])
+  @@index([offerId])
+  @@index([categoryId])
+}
+
+model OfferLocationTarget {
+  id               String   @id @default(cuid())
+  offerId          String
+  offer            Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  targetLocationId String
+  createdAt        DateTime @default(now())
+
+  @@unique([offerId, targetLocationId])
+  @@index([offerId])
+  @@index([targetLocationId])
+}
+
