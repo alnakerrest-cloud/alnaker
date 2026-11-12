@@ -4,6 +4,7 @@ import { normalize } from './search';
 
 export type VPrice = { value: number | string; label?: string };
 export type VItem = {
+  id: string;
   name: string;
   desc?: string;
   parts?: string[];
