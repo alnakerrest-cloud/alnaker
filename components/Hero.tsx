@@ -1,11 +1,10 @@
-import { branches, mapsUrl, PHONE_DISPLAY, PHONE_INTL } from '@/lib/site';
-import { ui, type Locale } from '@/lib/i18n';
+import type { SiteData } from '@/lib/site-db';
+import type { Locale } from '@/lib/i18n';
 import LangSwitch from './LangSwitch';
 import Logo from './Logo';
 import { PhoneIcon, PinIcon } from './Icons';
 
-export default function Hero({ locale }: { locale: Locale }) {
-  const t = ui[locale];
+export default function Hero({ locale, site }: { locale: Locale; site: SiteData }) {
   return (
     <header className="hero">
       <div className="container">
@@ -14,25 +13,25 @@ export default function Hero({ locale }: { locale: Locale }) {
         </div>
 
         <div className="hero-inner">
-          <Logo className="brand-mark" />
-          <h1>{t.brand}</h1>
-          <p className="tag">{t.tagline}</p>
+          <Logo className="brand-mark" src={site.logoUrl} />
+          <h1>{site.brand}</h1>
+          <p className="tag">{site.tagline}</p>
 
           <div className="hero-actions">
-            <a className="btn primary" href={`tel:${PHONE_INTL}`}>
+            <a className="btn primary" href={`tel:${site.phoneIntl}`}>
               <PhoneIcon />
-              <span dir="ltr">{PHONE_DISPLAY}</span>
+              <span dir="ltr">{site.phoneDisplay}</span>
             </a>
-            {branches.map((b) => (
+            {site.branches.map((b) => (
               <a
                 key={b.id}
                 className="btn"
-                href={mapsUrl(b.mapQuery)}
+                href={b.mapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <PinIcon />
-                <span>{b.name[locale]}</span>
+                <span>{b.name}</span>
               </a>
             ))}
           </div>

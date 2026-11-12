@@ -1,20 +1,20 @@
-import { branches, PHONE_INTL, SITE_URL } from '@/lib/site';
-import { ui, type Locale } from '@/lib/i18n';
+import { SITE_URL } from '@/lib/site';
+import type { SiteData } from '@/lib/site-db';
+import type { Locale } from '@/lib/i18n';
 
-export default function JsonLd({ locale }: { locale: Locale }) {
-  const t = ui[locale];
-  const graph = branches.map((b) => ({
+export default function JsonLd({ locale, site }: { locale: Locale; site: SiteData }) {
+  const graph = site.branches.map((b) => ({
     '@type': 'Restaurant',
-    name: `${t.brand} — ${b.name[locale]}`,
+    name: `${site.brand} — ${b.name}`,
     url: `${SITE_URL}/${locale}`,
     hasMenu: `${SITE_URL}/${locale}`,
-    telephone: PHONE_INTL,
+    telephone: site.phoneIntl,
     servesCuisine: ['Egyptian', 'Bedouin', 'Middle Eastern', 'Mandi'],
     priceRange: 'EGP',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: b.address[locale],
-      addressLocality: b.city[locale],
+      streetAddress: b.address,
+      addressLocality: b.city,
       addressCountry: 'EG',
     },
   }));

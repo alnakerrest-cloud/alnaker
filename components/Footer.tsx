@@ -1,9 +1,9 @@
-import { branches, mapsUrl, PHONE_DISPLAY, PHONE_INTL } from '@/lib/site';
+import type { SiteData } from '@/lib/site-db';
 import { ui, type Locale } from '@/lib/i18n';
 import Logo from './Logo';
 import { PhoneIcon, PinIcon } from './Icons';
 
-export default function Footer({ locale }: { locale: Locale }) {
+export default function Footer({ locale, site }: { locale: Locale; site: SiteData }) {
   const t = ui[locale];
   const year = new Date().getFullYear();
   return (
@@ -12,27 +12,27 @@ export default function Footer({ locale }: { locale: Locale }) {
         <div className="footer-brand">
           <Logo size={56} />
           <div>
-            <strong>{t.brand}</strong>
-            <span>{t.tagline}</span>
+            <strong>{site.brand}</strong>
+            <span>{site.tagline}</span>
           </div>
         </div>
 
         <h2 className="footer-title">{t.branches}</h2>
         <div className="branches">
-          {branches.map((b) => (
+          {site.branches.map((b) => (
             <article key={b.id} className="branch">
-              <h3>{b.name[locale]}</h3>
+              <h3>{b.name}</h3>
               <p>
-                {b.address[locale]}
+                {b.address}
                 <br />
-                {b.city[locale]}
+                {b.city}
               </p>
               <div className="branch-actions">
-                <a href={`tel:${PHONE_INTL}`}>
+                <a href={`tel:${site.phoneIntl}`}>
                   <PhoneIcon width={16} height={16} />
-                  <span dir="ltr">{PHONE_DISPLAY}</span>
+                  <span dir="ltr">{site.phoneDisplay}</span>
                 </a>
-                <a href={mapsUrl(b.mapQuery)} target="_blank" rel="noopener noreferrer">
+                <a href={b.mapUrl} target="_blank" rel="noopener noreferrer">
                   <PinIcon width={16} height={16} />
                   <span>{t.directions}</span>
                 </a>
@@ -42,10 +42,10 @@ export default function Footer({ locale }: { locale: Locale }) {
         </div>
 
         <p className="footer-note">
-          {t.vat} · {t.service}
+          {site.vat} · {site.service}
         </p>
         <p className="footer-copy">
-          © {year} {t.brand} — {t.rights}
+          © {year} {site.brand} — {t.rights}
         </p>
       </div>
     </footer>
