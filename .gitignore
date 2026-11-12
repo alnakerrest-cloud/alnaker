@@ -5,19 +5,45 @@ next-env.d.ts
 *.tsbuildinfo
 .env
 .env.local
+.env*.local
 .vercel
 
 # Prisma 7 generated client (recreate with `npx prisma generate`)
 lib/generated/prisma
+
 # Local backups created during Phase 1
 .phase1-backup
-
-# Phase 2 QA artifacts (local only)
-qa-step*.png
-dev.log
 
 # Production database backups — never commit or track SQL dumps
 backups/
 *.sql
 *.dump
 *.backup
+
+# Logs
+*.log
+dev.log
+server.log
+diag.log
+build*.log
+pw-*.log
+
+# QA / E2E generated artifacts (screenshots, reports, traces)
+qa-*.png
+qa2-*.png
+e2e-*.png
+qa-final/
+qa-premium/
+playwright-report/
+test-results/
+pdf-images/
+50500.pdf
+
+# Local verification scratch files
+build*.txt
+tc*.txt
+typecheck*.txt
+run-*.ps1
+downloaded-images-data.json
+product-inventory-data.json
+backup-product-images-before-real-photos.json
