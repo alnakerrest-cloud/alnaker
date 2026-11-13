@@ -19,7 +19,7 @@ history, and post-push verification.
 | Remote branch | `origin/main` |
 | Push mechanism | `git push --force-with-lease=main:f2b6e67…` (succeeded) |
 | Push timestamp | 2026-11-13 ~13:49 +02:00 (local push completion) |
-| Commits reachable from `origin/main` | 11 (the 9 preserved release commits + audit commit + credential-hardening commit) |
+| Commits reachable from `origin/main` | 11 at force-push time (the 9 preserved release commits + audit commit + credential-hardening commit); 12 including this status document |
 | Application tree hash | `2ee38124ddfe72f96d9424180c76836fc2548103` (identical locally and on `origin/main`) |
 
 The status document commit is added on top of `b4acc0f`; the final
