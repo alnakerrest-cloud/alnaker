@@ -26,7 +26,8 @@ export default async function AdminLoginPage() {
         <LoginForm />
         {isDev ? (
           <p className="admin-demo-note" dir="ltr">
-            <strong>Demo (dev only):</strong> admin@naqer-menu.local / CHANGE_ME_DEV_ONLY_PASSWORD
+            <strong>Dev only:</strong> seed a local admin with <code>npm run db:seed-admin</code>{" "}
+            (password comes from <code>SEED_ADMIN_PASSWORD</code>).
           </p>
         ) : null}
         <p className="admin-login-foot">© {new Date().getFullYear()} {brand}</p>

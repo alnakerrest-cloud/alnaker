@@ -4,9 +4,14 @@ import * as path from "node:path";
 
 // ---- Around the environment ----
 export const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3001";
+// Test-only credentials. Never set these to production values; E2E_* env vars override.
 export const ADMIN = {
-  email: "admin@naqer-menu.local",
-  password: "CHANGE_ME_DEV_ONLY_PASSWORD",
+  email: process.env.E2E_ADMIN_EMAIL ?? "admin@naqer-menu.local",
+  password: process.env.E2E_ADMIN_PASSWORD ?? "test-only-admin-password",
+};
+export const EDITOR = {
+  email: process.env.E2E_EDITOR_EMAIL ?? "editor@naqer-menu.local",
+  password: process.env.E2E_EDITOR_PASSWORD ?? "test-only-editor-password",
 };
 
 // مجلد الأدلة المرئية (لقطات لكل مرحلة) — يبقى خارج test-results حتى لا يُمسح مع كل تشغيل.

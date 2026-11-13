@@ -7,7 +7,11 @@ import bcrypt from "bcryptjs";
 import pg from "pg";
 
 const DEMO_EMAIL = "admin@naqer-menu.local";
-const DEMO_PASSWORD = "CHANGE_ME_DEV_ONLY_PASSWORD";
+const DEMO_PASSWORD = process.env.SEED_ADMIN_PASSWORD;
+if (!DEMO_PASSWORD || DEMO_PASSWORD.length < 12) {
+  console.error("REFUSED: set SEED_ADMIN_PASSWORD (min 12 chars) in the target environment. Never hardcode or commit it.");
+  process.exit(2);
+}
 const DEMO_NAME = "مدير تجريبي";
 
 const isProd = process.env.NODE_ENV === "production";

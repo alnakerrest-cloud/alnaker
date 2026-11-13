@@ -3,7 +3,7 @@ import * as path from "node:path";
 import * as fs from "node:fs";
 import dotenv from "dotenv";
 import pg from "pg";
-import { login, shot, acceptDialogs, IMG, EVIDENCE_DIR } from "./helpers";
+import { login, shot, acceptDialogs, IMG, EVIDENCE_DIR, ADMIN, EDITOR } from "./helpers";
 
 // Authoritative DB access (tests run in Node). Load the same env the app uses.
 dotenv.config({ path: path.resolve(__dirname, "..", ".env.local") });
@@ -11,7 +11,6 @@ const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: true
 const q = async (sql: string, params: any[] = []) => (await pool.query(sql, params)).rows;
 
 const token = "ZZ" + Date.now().toString(36).toUpperCase();
-const EDITOR = { email: "editor@naqer-menu.local", password: "CHANGE_ME_DEV_ONLY_PASSWORD" };
 
 async function loginAs(page: Page, email: string, password: string) {
   await page.goto("/admin/login");
@@ -288,7 +287,7 @@ test.describe("5) CRUD Acceptance (DB-authoritative)", () => {
     await expect(page).toHaveURL(/\/admin\/login/, { timeout: 20_000 });
 
     // login + session persistence across reload
-    await loginAs(page, "admin@naqer-menu.local", "CHANGE_ME_DEV_ONLY_PASSWORD");
+    await loginAs(page, ADMIN.email, ADMIN.password);
     await page.reload();
     await expect(page.locator('a[href="/admin/products"]').first()).toBeVisible({ timeout: 20_000 });
 
@@ -324,7 +323,7 @@ test.describe("5) CRUD Acceptance (DB-authoritative)", () => {
     const ctx2 = await browser.newContext();
     const p2 = await ctx2.newPage();
     acceptDialogs(p2);
-    await loginAs(p2, "admin@naqer-menu.local", "CHANGE_ME_DEV_ONLY_PASSWORD");
+    await loginAs(p2, ADMIN.email, ADMIN.password);
     await p2.goto("/admin/products");
     await p2.locator('main input[name="q"]').fill(name);
     await p2.locator('main form[method="GET"] button[type="submit"]').click();

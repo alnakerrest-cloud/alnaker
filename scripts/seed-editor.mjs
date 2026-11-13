@@ -6,7 +6,11 @@ import bcrypt from "bcryptjs";
 import pg from "pg";
 
 const EMAIL = "editor@naqer-menu.local";
-const PASSWORD = "CHANGE_ME_DEV_ONLY_PASSWORD";
+const PASSWORD = process.env.SEED_EDITOR_PASSWORD;
+if (!PASSWORD || PASSWORD.length < 12) {
+  console.error("REFUSED: set SEED_EDITOR_PASSWORD (min 12 chars) in the target environment. Never hardcode or commit it.");
+  process.exit(2);
+}
 const NAME = "محرر تجريبي";
 
 const isProd = process.env.NODE_ENV === "production";
@@ -29,7 +33,7 @@ try {
        values (gen_random_uuid(), $1, $2, $3, 'EDITOR', true, now(), now())`,
       [EMAIL, hash, NAME],
     );
-    console.log(`SEED created EDITOR: ${EMAIL} / ${PASSWORD}`);
+    console.log(`SEED created EDITOR: ${EMAIL}`);
   }
 } finally {
   await db.end();

@@ -7,6 +7,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const QA_DIR = path.resolve(__dirname, '..', 'qa-premium', 'real-photography');
 fs.mkdirSync(QA_DIR, { recursive: true });
 
+const ADMIN_LOGIN_PASSWORD = process.env.QA_ADMIN_PASSWORD;
+if (!ADMIN_LOGIN_PASSWORD) {
+  console.error('REFUSED: set QA_ADMIN_PASSWORD for QA scripts (never commit it).');
+  process.exit(2);
+}
+
 async function run() {
   console.log('🚀 Starting Comprehensive Real Photography Visual QA Suite...');
 
@@ -222,7 +228,7 @@ async function run() {
 
   await adminPage.goto('http://127.0.0.1:3001/admin/login');
   await adminPage.locator('input[name="email"]').fill('admin@naqer-menu.local');
-  await adminPage.locator('input[name="password"]').fill('CHANGE_ME_DEV_ONLY_PASSWORD');
+  await adminPage.locator('input[name="password"]').fill(ADMIN_LOGIN_PASSWORD);
   await adminPage.locator('button[type="submit"]').click();
   await adminPage.waitForURL('**/admin/dashboard', { timeout: 15000 });
   console.log('Logged in to admin! Current URL:', adminPage.url());

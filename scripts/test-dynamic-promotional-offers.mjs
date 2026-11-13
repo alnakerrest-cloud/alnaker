@@ -10,6 +10,12 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') });
 
+const ADMIN_LOGIN_PASSWORD = process.env.QA_ADMIN_PASSWORD;
+if (!ADMIN_LOGIN_PASSWORD) {
+  console.error('REFUSED: set QA_ADMIN_PASSWORD for QA scripts (never commit it).');
+  process.exit(2);
+}
+
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: true, max: 2 });
 const q = async (sql, params = []) => (await pool.query(sql, params)).rows;
 
@@ -19,7 +25,7 @@ fs.mkdirSync(QA_DIR, { recursive: true });
 async function loginAdmin(page) {
   await page.goto('http://127.0.0.1:3001/admin/login');
   await page.locator('input[name="email"]').fill('admin@naqer-menu.local');
-  await page.locator('input[name="password"]').fill('CHANGE_ME_DEV_ONLY_PASSWORD');
+  await page.locator('input[name="password"]').fill(ADMIN_LOGIN_PASSWORD);
   await page.locator('button[type="submit"]').click();
   await page.locator('a[href="/admin/products"]').first().waitFor({ state: 'visible', timeout: 20000 });
 }

@@ -22,17 +22,25 @@ Create the production environment configuration using `.env.example` as a templa
 NEXT_PUBLIC_SITE_URL=https://menu.naqer.com
 
 # PostgreSQL Connection String (Use pooled connection for serverless hosting)
-DATABASE_URL=postgresql://user:password@host.neon.tech/neondb?sslmode=require
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require
 
 # Session Signing Secret (Must be 32+ cryptographically random characters)
+# MUST be newly generated for production. Never reuse any value that has ever
+# been committed to Git, shared in chat, or used in another environment.
 SESSION_SECRET=CHANGE_ME_TO_A_LONG_RANDOM_SECRET
 
 # Cloudinary Storage Configuration
-CLOUDINARY_CLOUD_NAME=naqer-menu
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
 CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret_here
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 CLOUDINARY_SECURE_FOLDER=naqer-menu
 ```
+
+> **Security notice:** every value above is a placeholder. Do not paste real
+> credentials into documentation, commits, or chat. `SESSION_SECRET` and the
+> OWNER/EDITOR passwords referenced in this guide must be rotated before the
+> first production deployment (see section 4 and
+> `docs/FINAL_RELEASE_SECURITY_STATUS.md`).
 
 ---
 
@@ -116,6 +124,37 @@ npm run db:provision-owner
 ```
 
 *Note:* If the account already exists, the script safely stops and will not overwrite credentials unless explicitly instructed with `ALLOW_OWNER_OVERWRITE=1`.
+
+### Rotating a previously exposed OWNER password
+
+If the OWNER password was ever committed, shared, or exposed, rotate it before
+deployment. The provisioning script refuses to overwrite silently:
+
+```bash
+# Non-production / staging
+ALLOW_OWNER_OVERWRITE=1 \
+OWNER_EMAIL="<owner-email>" \
+OWNER_PASSWORD="<NEW_STRONG_PASSWORD>" \
+NODE_ENV=production \
+CONFIRM_PRODUCTION_OVERWRITE="<owner-email>" \
+npm run db:provision-owner
+```
+
+The new password must be supplied through the environment only; never write it
+into a file that is committed to Git.
+
+### Rotating or disabling a previously exposed EDITOR password
+
+There is no dedicated EDITOR provisioning script. Rotate the `EDITOR` account by
+either:
+
+- re-running `scripts/seed-editor.mjs` against the target environment with
+  `NODE_ENV=production ALLOW_DEMO_ADMIN=1 SEED_EDITOR_PASSWORD=<new password>`
+  (it updates the existing `editor@naqer-menu.local` row in place), or
+- deactivating the `EDITOR` account if it is not needed in production.
+
+Never reuse the formerly hardcoded demo password or any value that appears in
+Git history.
 
 ---
 
