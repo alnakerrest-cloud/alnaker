@@ -3,13 +3,17 @@ node_modules
 out
 next-env.d.ts
 *.tsbuildinfo
+# Environment files: real values must never be committed.
+# Example templates stay trackable via the negations below.
 .env
-.env.local
-.env*.local
+.env.*
+!.env.example
+!*.env.example
 .vercel
 
 # Prisma 7 generated client (recreate with `npx prisma generate`)
 lib/generated/prisma
+
 
 # Local backups created during Phase 1
 .phase1-backup
@@ -19,6 +23,10 @@ backups/
 *.sql
 *.dump
 *.backup
+
+# Prisma migration SQL is required source — keep it trackable even though `*.sql`
+# above targets database dumps.
+!prisma/migrations/**/*.sql
 
 # Logs
 *.log
