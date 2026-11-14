@@ -3,7 +3,16 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { z } from "zod/v3";
 import { prisma, withDbRetry, isTransientDbError } from "@/lib/prisma";
-import { verifyPassword, hashPassword, createSession, destroySession, getSessionAdmin, requireAdmin, invalidateOtherSessions } from "@/lib/auth";
+import {
+  verifyPassword,
+  hashPassword,
+  createAtomicLoginSession,
+  executeAtomicPasswordChange,
+  setSessionCookie,
+  destroySession,
+  getSessionAdmin,
+  requireAdmin,
+} from "@/lib/auth";
 import { consumeAttempt, resetAttempts } from "@/lib/rate-limit";
 import { logAction } from "@/lib/audit";
 
@@ -64,8 +73,16 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
   }
 
   resetAttempts(rlKey);
-  await createSession(admin.id);
-  await prisma.adminUser.update({ where: { id: admin.id }, data: { lastLoginAt: new Date() } });
+
+  // تسجيل دخول ذري بالكامل: CAS مشروط بقفل الصف + إنشاء الجلسة داخل نفس المعاملة
+  const sessionResult = await createAtomicLoginSession(admin.id, admin.passwordHash);
+  if (!sessionResult) {
+    // تغيرت كلمة المرور أو أُلغي تفعيل الحساب تزامناً مع تسجيل الدخول — نرفض فوراً دون إنشاء جلسة
+    return { error: "بيانات الدخول غير صحيحة" };
+  }
+
+  // كتابة الكوكي تتم حصراً بعد نجاح الـ COMMIT التام للمعاملة
+  await setSessionCookie(sessionResult.rawToken);
   await logAction({ adminId: admin.id, action: "login", entityType: "AdminUser", entityId: admin.id, summaryAr: `تسجيل دخول: ${admin.displayName}` });
 
   return { success: true, mustChangePassword: Boolean(admin.mustChangePassword) };
@@ -121,25 +138,27 @@ export async function changePasswordAction(
     return { error: "كلمة المرور الحالية غير صحيحة" };
   }
 
-  const passwordHash = await hashPassword(newPassword);
+  const newHash = await hashPassword(newPassword);
 
-  await prisma.adminUser.update({
-    where: { id: admin.id },
-    data: {
-      passwordHash,
-      mustChangePassword: false,
-      updatedAt: new Date(),
-    },
-  });
+  // تغيير كلمة المرور وتدوير الجلسة ذرياً (Atomic Password Change & Session Rotation):
+  // 1. CAS يتأكد من ثبات الهاش الحالي
+  // 2. تحديث passwordHash وإلغاء mustChangePassword
+  // 3. إبطال كافة الجلسات السابقة للمستخدم
+  // 4. إنشاء جلسة جديدة مدوّرة لمنع تثبيت الجلسة
+  const rotateResult = await executeAtomicPasswordChange(admin.id, user.passwordHash, newHash);
+  if (!rotateResult) {
+    return { error: "تعذّر تغيير كلمة المرور، حاول مرة أخرى." };
+  }
 
-  await invalidateOtherSessions(admin.id);
+  // تدوير الكوكي بعد نجاح المعاملة فقط
+  await setSessionCookie(rotateResult.newRawToken);
 
   await logAction({
     adminId: admin.id,
     action: "update",
     entityType: "AdminUser",
     entityId: admin.id,
-    summaryAr: "تغيير كلمة مرور المشرف بنجاح وإبطال الجلسات الأخرى",
+    summaryAr: "تغيير كلمة مرور المشرف بنجاح وتدوير الجلسة ذرياً",
   });
 
   return { success: true, message: "تم تغيير كلمة المرور بنجاح" };
