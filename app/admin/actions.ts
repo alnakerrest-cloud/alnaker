@@ -1,7 +1,7 @@
 "use server";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
-import { z } from "zod";
+import { z } from "zod/v3";
 import { prisma, withDbRetry, isTransientDbError } from "@/lib/prisma";
 import { verifyPassword, createSession, destroySession, getSessionAdmin } from "@/lib/auth";
 import { consumeAttempt, resetAttempts } from "@/lib/rate-limit";

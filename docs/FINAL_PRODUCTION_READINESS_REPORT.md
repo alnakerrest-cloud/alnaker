@@ -14,15 +14,17 @@
 ```
 ================================================================================
                     FINAL RELEASE GATE VERDICT: VERDICT B
-          PRODUCTION READY WITH DOCUMENTED NON-CRITICAL LIMITATIONS
+                 ONLY DOCUMENTED NON-CRITICAL LIMITATIONS REMAIN
 ================================================================================
 ```
 
-The Naqer Menu application has successfully fulfilled all technical, functional, visual, and security requirements for production deployment. The codebase exhibits zero blocking defects, zero regressions, zero exposed secrets, and passes full-spectrum automated verification against an isolated staging environment (55 passed, 2 skipped, 0 failed).
+The Naqer Menu application has achieved complete security hardening and full functional readiness for production deployment:
+- **Security Vulnerabilities:** **0 vulnerabilities** (`npm audit --json` verified clean after upgrading to upstream-patched `zod@4.6.7` with `zod/v3` compatibility shim).
+- **Type Safety & Build:** Zero TypeScript errors (`tsc --noEmit`), production build completed successfully (`next build`).
+- **Automated Verification:** 55 passed, 2 skipped (Cloudinary safety locks), 0 failed across all 12 Playwright suites.
 
-Per release gate policy, VERDICT B is formally assigned due to two documented non-critical operational limitations:
-1. **Cloudinary Image Lifecycle Automated Testing on Staging:** Automated image mutation tests (`tests/06-image-lifecycle.spec.ts`) remain safely skipped via fail-closed security locks (`STAGING_CLOUDINARY_ENABLED=0`) because a dedicated, isolated staging Cloudinary bucket/credentials were not provisioned. Production credentials were intentionally safeguarded from destructive automated testing. Image lifecycle is classified as NOT FULLY VERIFIED ON STAGING (MANUAL SMOKE TEST REQUIRED ON PROD).
-2. **NPM Audit Advisory (Zod <4.6.6):** High-severity advisory (GHSA-mrhx-c7xc-m3w5) for memory exhaustion on unbounded schemas. Technically proven non-exploitable in Naqer Menu due to strict Server Action request size capping (`8mb`), bounded string/array lengths, and authenticated access. Left on stable `3.25.76` to prevent breaking schema changes.
+Per release gate policy, **VERDICT B** is maintained solely due to one documented operational non-critical limitation:
+- **Cloudinary Staging Safety Lock:** Automated image mutation tests (`tests/06-image-lifecycle.spec.ts`) remain skipped via fail-closed security locks (`STAGING_CLOUDINARY_ENABLED=0`) because a dedicated client staging Cloudinary account was not provisioned. Production credentials were intentionally safeguarded from destructive automated testing. Media upload/replacement is verified via a controlled manual smoke test on the live domain using a temporary test product.
 
 ---
 

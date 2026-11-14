@@ -1,7 +1,7 @@
 // مخططات التحقق (Zod) المشتركة لكل عمليات الكتابة في لوحة الإدارة.
 // تُستخدم على الخادم داخل كل Server Action بعد التحقق من الجلسة/الدور.
 // ملاحظة: التحويل من FormData يتم عبر lib/admin/form.ts قبل safeParse، لذا المخططات نقية.
-import { z } from "zod";
+import { z } from "zod/v3";
 
 /* ---------- Category ---------- */
 export const categorySchema = z.object({

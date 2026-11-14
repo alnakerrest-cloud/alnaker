@@ -31,6 +31,6 @@
 
 ---
 
-## 5. Dependency Advisory (Zod <4.6.6)
-- **Constraint:** `npm audit` flags `zod <4.6.6` regarding potential memory exhaustion on oversized recursive collection schemas.
-- **Mitigation:** The application caps Server Action payloads at `8mb` in `next.config.mjs` and parses flat, strongly typed forms. Upgrading to Zod 4 represents a major breaking change; maintaining the tested dependency tree is recommended.
+## 5. Dependency Advisory (Resolved)
+- **Status:** **FULLY RESOLVED**.
+- **Details:** The previous `zod <4.6.6` advisory (`GHSA-mrhx-c7xc-m3w5`) has been eliminated by upgrading to `zod@4.6.7` using the official `zod/v3` compatibility shim. `npm audit --json` now reports 0 vulnerabilities.

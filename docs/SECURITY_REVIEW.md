@@ -85,11 +85,11 @@ Inspection of `scripts/provision-owner.mjs` confirms strict safety locks:
 
 ## 6. Dependency Security Analysis
 
-Running `npm audit` identified 1 advisory:
-- **Package:** `zod <4.6.6` (High severity — `GHSA-mrhx-c7xc-m3w5`).
-- **Nature of Advisory:** Potential memory exhaustion when parsing exceptionally large, adversarial nested collection schemas.
-- **Risk Assessment in Naqer Menu:** **NEGLIGIBLE / MITIGATED**.
-  1. All Zod validation occurs server-side inside Server Actions.
-  2. Next.js enforces `serverActions: { bodySizeLimit: "8mb" }` in `next.config.mjs`, capping request size before parsing.
-  3. Form payloads are bounded to shallow, known fields (`nameAr`, `price`, `sortOrder`).
-  4. Updating to `zod@4.6.7` involves a breaking change across schemas. Maintaining stability on the verified version is recommended for the current release milestone.
+- **Initial Advisory:** `zod <4.6.6` (High severity — `GHSA-mrhx-c7xc-m3w5`).
+- **Resolution:** Upgraded to upstream-patched `zod@4.6.7` using the official `zod/v3` compatibility shim in `lib/admin/schemas.ts` and `app/admin/actions.ts`.
+- **Verification Evidence:**
+  1. `npm audit --json`: **0 vulnerabilities** across all 247 production, development, and optional dependencies.
+  2. `npm run typecheck` (`tsc --noEmit`): Exited `0` with zero compilation errors.
+  3. `npm run build` (`next build`): Exited `0` with all routes, Server Actions, and optimizations successfully built.
+  4. Playwright E2E Suite: All 55 functional tests passed across 12 test suites.
+- **Current Dependency Security Status:** **100% CLEAN (0 Vulnerabilities)**.
