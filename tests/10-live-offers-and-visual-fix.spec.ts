@@ -5,7 +5,8 @@ import dotenv from 'dotenv';
 import pg from 'pg';
 import { login, acceptDialogs } from './helpers';
 
-dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') });
+const { loadStagingEnv, hasCloudinary } = require('./staging-env');
+loadStagingEnv();
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: true, max: 3 });
 const q = async (sql: string, params: any[] = []) => (await pool.query(sql, params)).rows;
 
@@ -25,6 +26,7 @@ async function initMenu(page: Page, url = '/ar') {
 }
 
 test.describe('Naqer Menu — Visual Fix + Live Offers End-to-End Acceptance', () => {
+  test.describe.configure({ mode: 'serial' });
   let monsterTrayId: string = '';
   let monsterTrayPrice: number = 1820;
   let testOfferId: string = '';
@@ -164,9 +166,9 @@ test.describe('Naqer Menu — Visual Fix + Live Offers End-to-End Acceptance', (
       await branchCheckboxes.nth(i).check();
     }
 
-    // Upload promotional banner image
+    // Upload promotional banner image if Cloudinary configured
     const testImage = path.resolve(__dirname, '..', 'e2e-logo.png');
-    if (fs.existsSync(testImage)) {
+    if (hasCloudinary() && fs.existsSync(testImage)) {
       await page.locator('input[name="imageFile"]').setInputFiles(testImage);
     }
 

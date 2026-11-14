@@ -3,7 +3,7 @@ import { shot, ADMIN, login } from './helpers';
 import dotenv from 'dotenv';
 import pg from 'pg';
 
-dotenv.config({ path: '.env.local' });
+require('./staging-env').loadStagingEnv();
 
 test.describe('12) Final Release Gate Browser Smoke Test', () => {
   test('1. Bilingual Navigation (Arabic & English) and Branch Access', async ({ page }) => {

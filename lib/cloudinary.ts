@@ -5,6 +5,9 @@ import { v2 as cloudinary } from "cloudinary";
 let configured = false;
 function ensureConfig() {
   if (configured) return;
+  if (process.env.NAQER_TEST_ENV === "staging" && process.env.STAGING_CLOUDINARY_ENABLED !== "1") {
+    throw new Error("CLOUDINARY_NOT_CONFIGURED");
+  }
   const cloud_name = process.env.CLOUDINARY_CLOUD_NAME;
   const api_key = process.env.CLOUDINARY_API_KEY;
   const api_secret = process.env.CLOUDINARY_API_SECRET;

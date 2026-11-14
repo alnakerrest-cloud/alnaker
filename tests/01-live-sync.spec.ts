@@ -3,6 +3,7 @@ import {
   login, shot, logEvent, acceptDialogs, IMG, mainSubmit,
   openProductEditByName, attachDiagnostics, writeDiagnostics,
 } from "./helpers";
+const { hasCloudinary } = require("./staging-env");
 
 const token = Date.now().toString(36).toUpperCase();
 
@@ -191,6 +192,7 @@ test.describe("1) Live Sync Acceptance — product data path", () => {
   });
 
   test("ls-4 صورة المنتج: رفع → تظهر في Context A → حذف → تختفي (Cloudinary)", async ({ browser }) => {
+    test.skip(!hasCloudinary(), "BLOCKED: dedicated staging Cloudinary credentials and folder are not configured.");
     test.setTimeout(240_000); // رفع صورة إلى Cloudinary + إعادة فتح صفحة التعديل: يحتاج هامشًا فوق حدّبقية التعديل الافتراضية (ليس نومًا تعسفيًا).
     const name = `ZZصورة${token}`;
     const { ctx: ctxA, page: A, diag: diagA } = await openPublic(browser, "ls-4");

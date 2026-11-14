@@ -1,8 +1,16 @@
 import { defineConfig } from "@playwright/test";
+import { loadStagingEnv } from "./tests/staging-env";
 
 // إعدادات اختبار القبول النهائي. تُشغَّل برأس مرئي عبر: npx playwright test --headed
 // بطيء بسيط (slowMo) ليمكن متابعة المستخدم لكل خطوة؛ يُضبط عبر المتغير SLOWMO.
+loadStagingEnv();
+
 const SLOWMO = Number(process.env.SLOWMO ?? 0);
+const BASE_URL = "http://127.0.0.1:3002";
+
+if (process.env.BASE_URL && process.env.BASE_URL !== BASE_URL) {
+  throw new Error("STAGING GUARD REFUSAL: Playwright BASE_URL must target the isolated local staging server.");
+}
 
 export default defineConfig({
   testDir: "./tests",
@@ -17,11 +25,17 @@ export default defineConfig({
     ["html", { outputFolder: "playwright-report", open: "never" }],
   ],
   use: {
-    baseURL: process.env.BASE_URL ?? "http://127.0.0.1:3001",
+    baseURL: BASE_URL,
     trace: "retain-on-failure",
     screenshot: "on",
     video: "off",
     launchOptions: { slowMo: SLOWMO },
+  },
+  webServer: {
+    command: "npx next dev --hostname 127.0.0.1 --port 3002",
+    url: BASE_URL,
+    reuseExistingServer: false,
+    timeout: 120_000,
   },
   projects: [{ name: "chromium", use: { browserName: "chromium" } }],
 });

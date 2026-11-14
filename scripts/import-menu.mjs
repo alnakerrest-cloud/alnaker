@@ -2,7 +2,8 @@
 // Uses the already-installed `pg` driver (no extra deps). Non-destructive:
 // aborts if Category table already has rows (unless --force). Public menu untouched.
 import { config } from "dotenv";
-config({ path: ".env.local", quiet: true });
+const envPath = process.env.NAQER_TEST_ENV === 'staging' ? ".env.staging.local" : ".env.local";
+config({ path: envPath, quiet: true });
 import pg from "pg";
 import { writeFileSync } from "node:fs";
 import { menu } from "../data/menu.ts";
@@ -43,6 +44,15 @@ if (pre.rows[0].n > 0 && !process.argv.includes("--force")) {
   process.exit(1);
 }
 
+const REVIEWS = [
+  "ريد بانانا (٨٠ ج.م) موجود في data/menu.ts لكنه لم يعثر عليه بوضوح في PDF — مراجعة بشرية",
+  "اسم الكنافة في PDF غير واضح مقابل 'كنافة نابلسية' في التطبيق — هاجر اسم التطبيق",
+  "PDF: 'ميكي تارت' مقابل التطبيق: 'ميني تارت' — هاجر اسم التطبيق",
+  "PDF: 'بيز جولد' مقابل التطبيق: 'بريز جولد' — هاجر اسم التطبيق",
+  "PDF: شوربة كريمة '(شورب او فراخ)' مقابل التطبيق 'مشروم أو فراخ' — هاجر وصف التطبيق",
+  "الترجمات الإنجليزية لم تهاجر عمدا (قرار معتمد: عربي فقط)",
+];
+// REVIEWS defined for report generation
 const items = [];
 const job = await db.query("insert into \"ImportJob\" (id, source, status, \"startedAt\", \"totalItems\") values (gen_random_uuid(), 'data/menu.ts', 'RUNNING', now(), $1) returning id", [src.prods]);
 const jobId = job.rows[0].id;

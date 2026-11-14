@@ -5,7 +5,9 @@ import * as path from "node:path";
 import * as dotenv from "dotenv";
 
 // نقرأ الأسرار من .env.local وقت التشغيل فقط — لا تُكتب داخل ملف الاختبار ولا تُطبع.
-const env = dotenv.config({ path: path.resolve(__dirname, "..", ".env.local") }).parsed ?? {};
+require('./staging-env').loadStagingEnv();
+require('./staging-env').loadStagingEnv();
+const env = process.env as Record<string, string | undefined>;
 const SECRET_VALUES = Object.entries(env)
   .filter(([k, v]) => /SECRET|KEY|TOKEN|DATABASE_URL|PASSWORD|-uri/i.test(k) && v && String(v).length > 8)
   .map(([, v]) => String(v));

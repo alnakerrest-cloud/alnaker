@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import pg from 'pg';
 import { login, acceptDialogs } from './helpers';
 
-dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') });
+require('./staging-env').loadStagingEnv();
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: true, max: 3 });
 const q = async (sql: string, params: any[] = []) => (await pool.query(sql, params)).rows;
 
@@ -25,6 +25,7 @@ async function initMenu(page: Page, url = '/ar') {
 }
 
 test.describe('Naqer Menu — Card Layout Repair & Offers Management Suite', () => {
+  test.describe.configure({ mode: 'serial' });
   const token = `e2e-${Date.now()}`;
   let testProductId: string | null = null;
   let testProductName: string = '';
@@ -316,8 +317,11 @@ test.describe('Naqer Menu — Card Layout Repair & Offers Management Suite', () 
     // Visit public menu
     await initMenu(page, '/ar');
 
-    // Open first card to add item to cart
-    await page.locator('.card--platter, .card--meal').first().click();
+    // Open card for testProductName to add item to cart
+    const prodCard = testProductName
+      ? page.locator('.card', { hasText: testProductName }).first()
+      : page.locator('.card--platter, .card--meal').first();
+    await prodCard.click();
     const modal = page.locator('.modal-panel');
     await expect(modal).toBeVisible({ timeout: 8_000 });
 

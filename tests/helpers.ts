@@ -1,17 +1,19 @@
 import { expect, type Page } from "@playwright/test";
 import * as fs from "node:fs";
 import * as path from "node:path";
+const { loadStagingEnv } = require("./staging-env");
+loadStagingEnv();
 
 // ---- Around the environment ----
-export const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3001";
+export const BASE_URL = process.env.BASE_URL ?? "http://127.0.0.1:3002";
 // Test-only credentials. Never set these to production values; E2E_* env vars override.
 export const ADMIN = {
   email: process.env.E2E_ADMIN_EMAIL ?? "admin@naqer-menu.local",
-  password: process.env.E2E_ADMIN_PASSWORD ?? "test-only-admin-password",
+  password: process.env.E2E_ADMIN_PASSWORD ?? "",
 };
 export const EDITOR = {
   email: process.env.E2E_EDITOR_EMAIL ?? "editor@naqer-menu.local",
-  password: process.env.E2E_EDITOR_PASSWORD ?? "test-only-editor-password",
+  password: process.env.E2E_EDITOR_PASSWORD ?? "",
 };
 
 // مجلد الأدلة المرئية (لقطات لكل مرحلة) — يبقى خارج test-results حتى لا يُمسح مع كل تشغيل.
@@ -70,6 +72,7 @@ export function mainSubmit(page: Page, index = 0) {
 
 /** تسجيل دخول عبر واجهة الدخول الحقيقية (Server Action + كوكي httpOnly). */
 export async function login(page: Page): Promise<void> {
+  requireE2ECredentials(ADMIN.email, ADMIN.password);
   await page.goto("/admin/login");
   await page.locator('input[name="email"]').fill(ADMIN.email);
   await page.locator('input[name="password"]').fill(ADMIN.password);
@@ -77,6 +80,12 @@ export async function login(page: Page): Promise<void> {
   await expect(page).not.toHaveURL(/\/admin\/login$/, { timeout: 20_000 });
   // نتأكد أننا داخل القشرة عبر ظهور رابط لوحة التحكم في التنقّل.
   await expect(page.locator('a[href="/admin/products"]').first()).toBeVisible({ timeout: 20_000 });
+}
+
+export function requireE2ECredentials(email: string, password: string): void {
+  if (!email || !password) {
+    throw new Error("STAGING ENV: explicit E2E_ADMIN_* or E2E_EDITOR_* credentials are required; fixture defaults are disabled.");
+  }
 }
 
 /** قبول أي نافذة تأكيد (window.confirm) تلقائيًا لخطوات الحذف. */

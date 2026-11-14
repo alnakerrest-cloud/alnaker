@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import pg from 'pg';
 import { login, shot, acceptDialogs } from './helpers';
 
-dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') });
+require('./staging-env').loadStagingEnv();
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: true, max: 3 });
 const q = async (sql: string, params: any[] = []) => (await pool.query(sql, params)).rows;
 

@@ -1,5 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import { login, shot, acceptDialogs, IMG, openProductEditByName, openCategoryEditByName, productRow, mainSubmit } from "./helpers";
+const { hasCloudinary } = require("./staging-env");
 
 const token = Date.now().toString(36).toUpperCase();
 
@@ -96,21 +97,23 @@ test.describe("2) Full CRUD Browser Tests", () => {
     await page.locator("tbody tr", { hasText: cname2 }).first().locator('button:has-text("إظهار")').click();
     await expect(page.locator("tbody tr", { hasText: cname2 }).first().locator("td").nth(6)).toContainText("ظاهر", { timeout: 20_000 });
 
-    // صورة الفئة: رفع ← استبدال ← إزالة (صفحة التعديل)
-    await openCategoryEditByName(page, cname2);
-    await page.locator('input[type="file"][name="file"]').setInputFiles(IMG.category);
-    await page.locator('button:has-text("رفع صورة")').click();
-    await expect(page.locator("text=تم حفظ الصورة")).toBeVisible({ timeout: 40_000 });
-    await page.reload();
-    await expect(page.locator('button:has-text("استبدال الصورة")')).toBeVisible({ timeout: 20_000 });
-    await shot(page, "crud-07-category-image");
-    await page.locator('input[type="file"][name="file"]').setInputFiles(IMG.category);
-    await page.locator('button:has-text("استبدال الصورة")').click();
-    await expect(page.locator("text=تم حفظ الصورة")).toBeVisible({ timeout: 40_000 });
-    await page.reload();
-    await page.locator('button:has-text("إزالة")').click();
-    // أنتظر تحديث الواجهة عبر router.refresh() في المكون قبل المتابعة
-    await expect(page.locator('button:has-text("رفع صورة")')).toBeVisible({ timeout: 20_000 });
+    if (hasCloudinary()) {
+      // صورة الفئة: رفع ← استبدال ← إزالة (صفحة التعديل)
+      await openCategoryEditByName(page, cname2);
+      await page.locator('input[type="file"][name="file"]').setInputFiles(IMG.category);
+      await page.locator('button:has-text("رفع صورة")').click();
+      await expect(page.locator("text=تم حفظ الصورة")).toBeVisible({ timeout: 40_000 });
+      await page.reload();
+      await expect(page.locator('button:has-text("استبدال الصورة")')).toBeVisible({ timeout: 20_000 });
+      await shot(page, "crud-07-category-image");
+      await page.locator('input[type="file"][name="file"]').setInputFiles(IMG.category);
+      await page.locator('button:has-text("استبدال الصورة")').click();
+      await expect(page.locator("text=تم حفظ الصورة")).toBeVisible({ timeout: 40_000 });
+      await page.reload();
+      await page.locator('button:has-text("إزالة")').click();
+      // أنتظر تحديث الواجهة عبر router.refresh() في المكون قبل المتابعة
+      await expect(page.locator('button:has-text("رفع صورة")')).toBeVisible({ timeout: 20_000 });
+    }
 
     // حذف الفئة
     await page.goto("/admin/categories");
@@ -175,25 +178,27 @@ test.describe("2) Full CRUD Browser Tests", () => {
     await page.locator('button:has-text("حفظ الإعدادات")').click();
     await expect(page.locator("text=تم حفظ الإعدادات")).toBeVisible({ timeout: 20_000 });
 
-    // الشعار: زر واحد نشيط (رفع/استبدال) يحمل «الشعار» في تسميته
-    await page.reload();
-    await page.locator('input[type="file"][name="file"]').setInputFiles(IMG.logo);
-    await page.locator('button:has-text("الشعار")').first().click();
-    await expect(page.locator("text=تم حفظ الشعار")).toBeVisible({ timeout: 40_000 });
-    await page.reload();
-    await expect(page.locator('button:has-text("استبدال الشعار")')).toBeVisible({ timeout: 20_000 });
-    await shot(page, "crud-12-logo-uploaded");
+    if (hasCloudinary()) {
+      // الشعار: زر واحد نشيط (رفع/استبدال) يحمل «الشعار» في تسميته
+      await page.reload();
+      await page.locator('input[type="file"][name="file"]').setInputFiles(IMG.logo);
+      await page.locator('button:has-text("الشعار")').first().click();
+      await expect(page.locator("text=تم حفظ الشعار")).toBeVisible({ timeout: 40_000 });
+      await page.reload();
+      await expect(page.locator('button:has-text("استبدال الشعار")')).toBeVisible({ timeout: 20_000 });
+      await shot(page, "crud-12-logo-uploaded");
 
-    // استبدال
-    await page.locator('input[type="file"][name="file"]').setInputFiles(IMG.logo);
-    await page.locator('button:has-text("استبدال الشعار")').click();
-    await expect(page.locator("text=تم حفظ الشعار")).toBeVisible({ timeout: 40_000 });
+      // استبدال
+      await page.locator('input[type="file"][name="file"]').setInputFiles(IMG.logo);
+      await page.locator('button:has-text("استبدال الشعار")').click();
+      await expect(page.locator("text=تم حفظ الشعار")).toBeVisible({ timeout: 40_000 });
 
-    // إزالة (تنظيف — إعادة لحالة بلا شعار مخصّص)
-    await page.reload();
-    await page.locator('button:has-text("إزالة")').click();
-    // أنتظر تحديث الواجهة عبر router.refresh() في المكون قبل المتابعة
-    await expect(page.locator('button:has-text("رفع الشعار")')).toBeVisible({ timeout: 20_000 });
-    await shot(page, "crud-13-logo-removed");
+      // إزالة (تنظيف — إعادة لحالة بلا شعار مخصّص)
+      await page.reload();
+      await page.locator('button:has-text("إزالة")').click();
+      // أنتظر تحديث الواجهة عبر router.refresh() في المكون قبل المتابعة
+      await expect(page.locator('button:has-text("رفع الشعار")')).toBeVisible({ timeout: 20_000 });
+      await shot(page, "crud-13-logo-removed");
+    }
   });
 });
