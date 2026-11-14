@@ -12,7 +12,15 @@ import pg from "pg";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient; pool?: pg.Pool };
 
-function createClient(): PrismaClient {
+let instance: PrismaClient | null = null;
+
+function getClient(): PrismaClient {
+  if (instance) return instance;
+  if (globalForPrisma.prisma) {
+    instance = globalForPrisma.prisma;
+    return instance;
+  }
+
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) throw new Error("DATABASE_URL is not set");
 
@@ -33,12 +41,19 @@ function createClient(): PrismaClient {
   if (process.env.NODE_ENV !== "production") globalForPrisma.pool = pool;
 
   const adapter = new PrismaPg(pool);
-  return new PrismaClient({ adapter });
+  instance = new PrismaClient({ adapter });
+  if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = instance;
+  return instance;
 }
 
-export const prisma: PrismaClient = globalForPrisma.prisma ?? createClient();
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
+  get(_target, prop) {
+    if (prop === "then") return undefined;
+    const client = getClient();
+    const val = (client as unknown as Record<string | symbol, unknown>)[prop];
+    return typeof val === "function" ? (val as (...args: unknown[]) => unknown).bind(client) : val;
+  },
+});
 
 /* ---- إعادة المحاولة للأعطال المؤقتة (cold-start / شبكة) ---- */
 const TRANSIENT_CODES = new Set([
