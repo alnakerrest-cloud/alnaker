@@ -1,6 +1,7 @@
 // نواة المصادقة: تجزئة كلمات المرور + جلسات مخزّنة في قاعدة البيانات + كوكي httpOnly موقّع.
 // الجلسات تُخزَّن كـ HASH للعشوائية (tokenHash) حتى لا ينفع تسريب قاعدة البيانات في تزوير جلسة.
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { createHmac, randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { prisma, withDbRetry } from "@/lib/prisma";
@@ -15,6 +16,7 @@ export type SessionAdmin = {
   email: string;
   displayName: string;
   role: AdminRole;
+  mustChangePassword: boolean;
 };
 
 /* ---- كلمات المرور ---- */
@@ -78,6 +80,7 @@ export async function getSessionAdmin(): Promise<SessionAdmin | null> {
     email: session.admin.email,
     displayName: session.admin.displayName,
     role: session.admin.role,
+    mustChangePassword: Boolean(session.admin.mustChangePassword),
   };
 }
 
@@ -93,14 +96,42 @@ export async function destroySession(): Promise<void> {
   store.delete(COOKIE_NAME);
 }
 
+/** يُبطل كل الجلسات الأخرى لنفس المستخدم مع إبقاء الجلسة الحالية فقط. */
+export async function invalidateOtherSessions(adminId: string): Promise<void> {
+  const store = await cookies();
+  const token = store.get(COOKIE_NAME)?.value;
+  const currentTokenHash = token ? hashToken(token) : null;
+  if (currentTokenHash) {
+    await prisma.session
+      .deleteMany({
+        where: {
+          adminId,
+          tokenHash: { not: currentTokenHash },
+        },
+      })
+      .catch(() => {});
+  } else {
+    await prisma.session
+      .deleteMany({ where: { adminId } })
+      .catch(() => {});
+  }
+}
+
 /**
  * حارس لكل Server Action / Route Handler حسّاس.
- * يطلب جلسة صالحة؛ ويرفض لو الدور غير مسموح. يرمي خطأ عند عدم الإذن.
+ * يطلب جلسة صالحة؛ ويرفض لو الدور غير مسموح.
+ * يرفض تلقائيًا أي إجراء للمستخدم الذي يجب عليه تغيير كلمة المرور ما لم يُحدد allowPendingPasswordChange=true.
  */
-export async function requireAdmin(allowedRoles?: AdminRole[]): Promise<SessionAdmin> {
+export async function requireAdmin(
+  allowedRoles?: AdminRole[],
+  opts?: { allowPendingPasswordChange?: boolean },
+): Promise<SessionAdmin> {
   const admin = await getSessionAdmin();
-  if (!admin) throw new Error("UNAUTHENTICATED");
+  if (!admin) redirect("/admin/login");
   if (allowedRoles && !allowedRoles.includes(admin.role)) throw new Error("FORBIDDEN");
+  if (admin.mustChangePassword && !opts?.allowPendingPasswordChange) {
+    redirect("/admin/change-password");
+  }
   return admin;
 }
 

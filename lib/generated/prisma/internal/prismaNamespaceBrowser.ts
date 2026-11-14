@@ -95,6 +95,7 @@ export const AdminUserScalarFieldEnum = {
   displayName: 'displayName',
   role: 'role',
   isActive: 'isActive',
+  mustChangePassword: 'mustChangePassword',
   lastLoginAt: 'lastLoginAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

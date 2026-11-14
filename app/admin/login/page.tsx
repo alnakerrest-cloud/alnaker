@@ -8,7 +8,9 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminLoginPage() {
   const admin = await getSessionAdmin();
-  if (admin) redirect("/admin/dashboard");
+  if (admin) {
+    redirect(admin.mustChangePassword ? "/admin/change-password" : "/admin/dashboard");
+  }
   const isDev = process.env.NODE_ENV !== "production";
   const settings = await prisma.restaurantSettings.findUnique({ where: { id: "default" }, select: { logoUrl: true, brandNameAr: true } }).catch(() => null);
   const brand = settings?.brandNameAr ?? "قرية الناقر";

@@ -58,20 +58,22 @@ async function provisionOwner() {
         process.exit(1);
       }
 
+      const mustChange = process.env.MUST_CHANGE_PASSWORD === '1';
       const passwordHash = await bcrypt.hash(password, 12);
       await pool.query(
-        'UPDATE "AdminUser" SET "passwordHash" = $1, "isActive" = true, role = \'OWNER\', "displayName" = $2, "updatedAt" = now() WHERE email = $3',
-        [passwordHash, displayName, email]
+        'UPDATE "AdminUser" SET "passwordHash" = $1, "isActive" = true, role = \'OWNER\', "displayName" = $2, "mustChangePassword" = $3, "updatedAt" = now() WHERE email = $4',
+        [passwordHash, displayName, mustChange, email]
       );
-      console.log(`[PROVISION SUCCESS] Explicitly updated credentials for existing OWNER account: "${email}".`);
+      console.log(`[PROVISION SUCCESS] Explicitly updated credentials for existing OWNER account: "${email}" (mustChangePassword=${mustChange}).`);
     } else {
+      const mustChange = process.env.MUST_CHANGE_PASSWORD === '1';
       const passwordHash = await bcrypt.hash(password, 12);
       await pool.query(
-        `INSERT INTO "AdminUser" (id, email, "passwordHash", "displayName", role, "isActive", "createdAt", "updatedAt")
-         VALUES (gen_random_uuid(), $1, $2, $3, 'OWNER', true, now(), now())`,
-        [email, passwordHash, displayName]
+        `INSERT INTO "AdminUser" (id, email, "passwordHash", "displayName", role, "isActive", "mustChangePassword", "createdAt", "updatedAt")
+         VALUES (gen_random_uuid(), $1, $2, $3, 'OWNER', true, $4, now(), now())`,
+        [email, passwordHash, displayName, mustChange]
       );
-      console.log(`[PROVISION SUCCESS] Successfully created new OWNER account: "${email}".`);
+      console.log(`[PROVISION SUCCESS] Successfully created new OWNER account: "${email}" (mustChangePassword=${mustChange}).`);
     }
 
     const totalAdmins = await pool.query('SELECT count(*)::int as cnt FROM "AdminUser"');

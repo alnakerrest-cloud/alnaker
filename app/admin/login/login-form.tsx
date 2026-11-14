@@ -19,9 +19,13 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (state.success) {
-      router.replace("/admin/dashboard");
+      if (state.mustChangePassword) {
+        router.replace("/admin/change-password");
+      } else {
+        router.replace("/admin/dashboard");
+      }
     }
-  }, [state.success, router]);
+  }, [state.success, state.mustChangePassword, router]);
 
   return (
     <form action={formAction} className="admin-login-form">

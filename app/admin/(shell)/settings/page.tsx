@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/auth";
 import SettingsForm from "./settings-form";
 import LogoManager from "./logo-manager";
 import { updateSettings } from "./actions";
+import PasswordChangeForm from "@/app/admin/password-change-form";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,20 @@ export default async function SettingsPage() {
       <SettingsForm action={updateSettings} initial={initial} submitLabel="حفظ الإعدادات" readOnly={!canManage} />
 
       <LogoManager logoUrl={s?.logoUrl ?? null} readOnly={!canManage} />
+
+      {canManage ? (
+        <section className="admin-panel" style={{ marginTop: 24 }}>
+          <div className="admin-panel-header">
+            <h2>إدارة أمان الحساب وكلمة المرور (OWNER)</h2>
+          </div>
+          <div style={{ padding: 18 }}>
+            <p style={{ fontSize: 14, color: "var(--muted)", margin: "0 0 16px" }}>
+              يمكنك تغيير كلمة المرور الخاصة بحساب المالك في أي وقت. يؤدي تغيير كلمة المرور تلقائياً إلى إنهاء أي جلسات نشطة أخرى على أجهزة أخرى.
+            </p>
+            <PasswordChangeForm mode="voluntary" />
+          </div>
+        </section>
+      ) : null}
     </>
   );
 }
