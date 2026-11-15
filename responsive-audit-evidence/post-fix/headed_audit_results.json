@@ -1,0 +1,706 @@
+[
+  {
+    "section": "Public /ar",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "Public /ar",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "Public /ar",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "Public /ar",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "Public /ar",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "Public /ar",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "Public /ar",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "Public /ar",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/dashboard",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/dashboard",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/dashboard",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/dashboard",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/dashboard",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/dashboard",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/dashboard",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/dashboard",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/categories",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/categories",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/categories",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/categories",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/categories",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/categories",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/categories",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/categories",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products/new",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products/new",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products/new",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products/new",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products/new",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products/new",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products/new",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/products/new",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/offers",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/offers",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/offers",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/offers",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/offers",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/offers",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/offers",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/offers",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/addons",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/addons",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/addons",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/addons",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/addons",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/addons",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/addons",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/addons",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/branches",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/branches",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/branches",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/branches",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/branches",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/branches",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/branches",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/branches",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/images",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/images",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/images",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/images",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/images",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/images",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/images",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/images",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/settings",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/settings",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/settings",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/settings",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/settings",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/settings",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/settings",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/settings",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/audit",
+    "viewport": "small_mobile_320",
+    "width": 320,
+    "height": 640,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/audit",
+    "viewport": "mobile_375",
+    "width": 375,
+    "height": 812,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/audit",
+    "viewport": "mobile_390",
+    "width": 390,
+    "height": 844,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/audit",
+    "viewport": "large_mobile_430",
+    "width": 430,
+    "height": 932,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/audit",
+    "viewport": "tablet_portrait_768",
+    "width": 768,
+    "height": 1024,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/audit",
+    "viewport": "tablet_landscape_1024",
+    "width": 1024,
+    "height": 768,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/audit",
+    "viewport": "desktop_1440",
+    "width": 1440,
+    "height": 900,
+    "overflow": 0,
+    "passed": true
+  },
+  {
+    "section": "/admin/audit",
+    "viewport": "mobile_landscape_844",
+    "width": 844,
+    "height": 390,
+    "overflow": 0,
+    "passed": true
+  }
+]

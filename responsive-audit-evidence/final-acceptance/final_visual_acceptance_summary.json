@@ -1,0 +1,111 @@
+{
+  "timestamp": "2026-11-15T17:23:47.316Z",
+  "totalPagesReviewed": 11,
+  "viewportsCount": 10,
+  "matrixViewports": [
+    "320",
+    "375",
+    "390",
+    "430",
+    "768",
+    "1024",
+    "1440"
+  ],
+  "visualMatrix": {
+    "Public Header": {
+      "320": "PASS",
+      "375": "PASS",
+      "390": "PASS",
+      "430": "PASS",
+      "768": "PASS",
+      "1024": "PASS",
+      "1440": "PASS"
+    },
+    "Hero": {
+      "320": "PASS",
+      "375": "PASS",
+      "390": "PASS",
+      "430": "PASS",
+      "768": "PASS",
+      "1024": "PASS",
+      "1440": "PASS"
+    },
+    "Menu": {
+      "320": "PASS",
+      "375": "PASS",
+      "390": "PASS",
+      "430": "PASS",
+      "768": "PASS",
+      "1024": "PASS",
+      "1440": "PASS"
+    },
+    "Product Cards": {
+      "320": "PASS",
+      "375": "PASS",
+      "390": "PASS",
+      "430": "PASS",
+      "768": "PASS",
+      "1024": "PASS",
+      "1440": "PASS"
+    },
+    "Product Modal": {
+      "320": "PASS",
+      "375": "PASS",
+      "390": "PASS",
+      "430": "PASS",
+      "768": "PASS",
+      "1024": "PASS",
+      "1440": "PASS"
+    },
+    "Cart": {
+      "320": "PASS",
+      "375": "PASS",
+      "390": "PASS",
+      "430": "PASS",
+      "768": "PASS",
+      "1024": "PASS",
+      "1440": "PASS"
+    },
+    "Admin Navigation": {
+      "320": "PASS",
+      "375": "PASS",
+      "390": "PASS",
+      "430": "PASS",
+      "768": "PASS",
+      "1024": "PASS",
+      "1440": "PASS"
+    },
+    "Admin Forms": {
+      "320": "PASS",
+      "375": "PASS",
+      "390": "PASS",
+      "430": "PASS",
+      "768": "PASS",
+      "1024": "PASS",
+      "1440": "PASS"
+    },
+    "Admin Tables": {
+      "320": "PASS",
+      "375": "PASS",
+      "390": "PASS",
+      "430": "PASS",
+      "768": "PASS",
+      "1024": "PASS",
+      "1440": "PASS"
+    },
+    "Admin Modals": {
+      "320": "PASS",
+      "375": "PASS",
+      "390": "PASS",
+      "430": "PASS",
+      "768": "PASS",
+      "1024": "PASS",
+      "1440": "PASS"
+    }
+  },
+  "consoleErrorsCount": 0,
+  "pageErrorsCount": 0,
+  "networkFailuresCount": 0,
+  "consoleErrors": [],
+  "networkFailures": []
+}
