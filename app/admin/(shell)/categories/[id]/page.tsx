@@ -47,18 +47,20 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ i
 
       <section className="admin-panel" style={{ marginTop: 18 }}>
         <div className="admin-panel-header"><h2>العنابر/الأقسام الفرعية ({c.sections.length})</h2></div>
-        <table className="admin-table">
-          <thead><tr><th>العنوان</th><th>منتجات</th><th>ترتيب</th></tr></thead>
-          <tbody>
-            {c.sections.map((s) => (
-              <tr key={s.id}>
-                <td>{s.titleAr ?? <em style={{ color: "var(--muted)" }}>(بدون عنوان)</em>}</td>
-                <td>{s._count.products}</td>
-                <td>{s.sortOrder}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="admin-table-wrap">
+          <table className="admin-table">
+            <thead><tr><th>العنوان</th><th>منتجات</th><th>ترتيب</th></tr></thead>
+            <tbody>
+              {c.sections.map((s) => (
+                <tr key={s.id}>
+                  <td>{s.titleAr ?? <em style={{ color: "var(--muted)" }}>(بدون عنوان)</em>}</td>
+                  <td>{s._count.products}</td>
+                  <td>{s.sortOrder}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
         <p style={{ padding: "0 18px 16px", color: "var(--muted)", fontSize: 13 }}>
           يُنشأ عنبر افتراضي تلقائيًا للأقسام الجديدة. لإضافة منتجات اختر عنبرًا من نموذج المنتج.
         </p>

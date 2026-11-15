@@ -109,7 +109,7 @@ export default function ProductForm({ action, sections, initial, submitLabel }: 
         <div className="admin-field">
           <label>الأسعار / الأحجام *</label>
           <div className="admin-variants">
-            <div className="admin-variant-row" style={{ fontWeight: 700, fontSize: 12, color: "var(--muted)" }}>
+            <div className="admin-variant-row admin-variant-header" style={{ fontWeight: 700, fontSize: 12, color: "var(--muted)" }}>
               <span>الملصق (ثلث كيلو/سنجل/…)</span><span>السعر</span><span>حد أقصى (نطاق)</span><span>متوفر</span><span></span>
             </div>
             {variants.map((vr, i) => (

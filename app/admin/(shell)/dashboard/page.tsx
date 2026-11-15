@@ -53,7 +53,7 @@ export default async function DashboardPage() {
         <Link href="/admin/import" className="admin-btn">استيراد من PDF</Link>
       </div>
 
-      <div className="grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
+      <div className="admin-dashboard-grid">
         <section className="admin-panel">
           <div className="admin-panel-header"><h2>آخر التعديلات</h2></div>
           {recentAudit.length === 0 ? (
@@ -75,18 +75,20 @@ export default async function DashboardPage() {
           {recentImports.length === 0 ? (
             <p className="admin-empty">لا عمليات استيراد.</p>
           ) : (
-            <table className="admin-table">
-              <thead><tr><th>المصدر</th><th>الحالة</th><th>العناصر</th></tr></thead>
-              <tbody>
-                {recentImports.map((j) => (
-                  <tr key={j.id}>
-                    <td>{j.source}</td>
-                    <td><span className="admin-badge on">{j.status}</span></td>
-                    <td>{fmt(j.processed)}/{fmt(j.totalItems)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <div className="admin-table-wrap">
+              <table className="admin-table">
+                <thead><tr><th>المصدر</th><th>الحالة</th><th>العناصر</th></tr></thead>
+                <tbody>
+                  {recentImports.map((j) => (
+                    <tr key={j.id}>
+                      <td>{j.source}</td>
+                      <td><span className="admin-badge on">{j.status}</span></td>
+                      <td>{fmt(j.processed)}/{fmt(j.totalItems)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </section>
       </div>

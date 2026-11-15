@@ -58,7 +58,7 @@ export default async function OffersPage() {
         </Link>
       </div>
 
-      <div style={{ display: "flex", gap: "14px", marginBottom: "20px" }}>
+      <div className="admin-offer-stats">
         <div className="admin-panel" style={{ flex: 1, padding: "14px 18px" }}>
           <small style={{ color: "var(--muted)" }}>إجمالي العروض</small>
           <div style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--brand)" }}>

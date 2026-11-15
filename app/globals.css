@@ -139,7 +139,7 @@ a { color: inherit; }
 .hero h1 {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.7rem, 10vw, 4.8rem);
+  font-size: clamp(2rem, 7.5vw, 4.4rem);
   line-height: 1.12;
   color: var(--gold-soft);
   text-shadow: 0 3px 0 rgba(0, 0, 0, 0.22);
@@ -165,6 +165,7 @@ a { color: inherit; }
   justify-content: center;
   gap: 8px;
   padding: 10px 18px;
+  min-height: 44px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.3);
   background: rgba(255, 255, 255, 0.08);
@@ -235,6 +236,7 @@ a { color: inherit; }
   border: 0;
   background: transparent;
   padding: 8px 16px;
+  min-height: 40px;
   border-radius: 999px;
   color: var(--brand);
   font-weight: 700;
@@ -301,6 +303,7 @@ a { color: inherit; }
   align-items: center;
   gap: 6px;
   padding: 6px 14px;
+  min-height: 38px;
   border: 1px solid var(--line);
   border-radius: 999px;
   background: #fff;
@@ -895,6 +898,7 @@ a { color: inherit; }
   position: relative;
   width: min(92vw, 540px);
   max-height: 90vh;
+  max-height: 90dvh;
   display: flex;
   flex-direction: column;
   background: var(--bg);
@@ -1189,6 +1193,15 @@ a { color: inherit; }
   transform: translateY(-2px);
   box-shadow: 0 16px 32px -6px rgba(43, 27, 24, 0.8), 0 0 0 1px rgba(201, 143, 43, 0.5);
 }
+@media (max-width: 360px) {
+  .floating-cart-btn {
+    padding: 0 12px;
+    height: 52px;
+  }
+  .floating-cart-start { gap: 8px; }
+  .floating-cart-title { font-size: 0.9rem; }
+  .floating-cart-total b { font-size: 1.15rem; }
+}
 
 .floating-cart-start {
   display: flex;
@@ -1272,6 +1285,7 @@ a { color: inherit; }
   bottom: 0;
   inset-inline-end: 0;
   width: min(100%, 460px);
+  max-height: 100dvh;
   display: flex;
   flex-direction: column;
   background: var(--bg);
@@ -1331,6 +1345,7 @@ html[dir='ltr'] .cart-panel {
 
 .cart-body {
   flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 16px 20px;
@@ -2025,6 +2040,7 @@ html[dir='ltr'] .cart-panel {
   .modal-panel {
     width: 100%;
     max-height: 88vh;
+    max-height: 88dvh;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-top-left-radius: 24px;
@@ -2051,6 +2067,7 @@ html[dir='ltr'] .cart-panel {
     inset-inline: 0;
     width: 100%;
     max-height: 92vh;
+    max-height: 92dvh;
     border-top-left-radius: 24px;
     border-top-right-radius: 24px;
     animation: sheet-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;

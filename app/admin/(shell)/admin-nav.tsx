@@ -18,7 +18,7 @@ const LINKS = [
 export default function AdminNav({ fullName }: { fullName: string }) {
   const pathname = usePathname();
   return (
-    <>
+    <nav className="admin-nav" aria-label="التنقل الرئيسي">
       {LINKS.map((l) => (
         <Link
           key={l.href}
@@ -32,9 +32,9 @@ export default function AdminNav({ fullName }: { fullName: string }) {
       <a className="admin-nav-link" href="/ar" target="_blank" rel="noopener noreferrer">
         فتح الموقع العام ↗
       </a>
-      <span className="admin-nav-link" style={{ opacity: 0.8, cursor: "default" }}>
+      <span className="admin-nav-user">
         {fullName}
       </span>
-    </>
+    </nav>
   );
 }

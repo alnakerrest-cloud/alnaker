@@ -260,9 +260,8 @@ export default function AddonForm({ action, initial, products, submitLabel }: Pr
             {options.map((opt, idx) => (
               <div
                 key={idx}
+                className="admin-addon-option"
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr 100px 90px auto",
                   gap: 10,
                   alignItems: "center",
                   padding: "10px 14px",

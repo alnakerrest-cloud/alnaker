@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { getSessionAdmin } from "@/lib/auth";
 import { logoutAction } from "../actions";
-import AdminNav from "./admin-nav";
+import AdminSidebar from "./admin-sidebar";
 
 export const dynamic = "force-dynamic";
 
@@ -14,15 +14,11 @@ export default async function ShellLayout({ children }: { children: ReactNode })
 
   return (
     <div className="admin-shell">
-      <aside className="admin-sidebar">
-        <div className="admin-brand">قرية الناقر</div>
-        <AdminNav fullName={admin.displayName} />
-        <form action={logoutAction}>
-          <button type="submit" className="admin-btn admin-nav-logout" style={{ width: "100%" }}>
-            تسجيل الخروج
-          </button>
-        </form>
-      </aside>
+      <AdminSidebar
+        adminName={admin.displayName}
+        adminRole={admin.role}
+        logoutAction={logoutAction}
+      />
       <main className="admin-main">{children}</main>
     </div>
   );

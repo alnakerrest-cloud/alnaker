@@ -21,13 +21,13 @@ export default function PasswordChangeForm({ mode, onSuccess }: Props) {
   useEffect(() => {
     if (state.success) {
       if (mode === "forced") {
-        router.replace("/admin/dashboard");
+        window.location.href = "/admin/dashboard";
       } else {
         formRef.current?.reset();
         onSuccess?.();
       }
     }
-  }, [state.success, mode, router, onSuccess]);
+  }, [state.success, mode, onSuccess]);
 
   return (
     <form ref={formRef} action={formAction} className="admin-login-form" style={{ maxWidth: mode === "voluntary" ? "520px" : undefined }}>

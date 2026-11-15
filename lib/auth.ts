@@ -96,36 +96,41 @@ export async function createAtomicLoginSession(
   adminId: string,
   expectedPasswordHash: string,
 ): Promise<{ rawToken: string } | null> {
-  return await prisma.$transaction(async (tx) => {
-    // 1 & 2: CAS مشروط بقفل حصري للصف في AdminUser
-    const casResult = await tx.adminUser.updateMany({
-      where: {
-        id: adminId,
-        passwordHash: expectedPasswordHash,
-        isActive: true,
-      },
-      data: {
-        lastLoginAt: new Date(),
-      },
-    });
+  return await withDbRetry(() =>
+    prisma.$transaction(
+      async (tx) => {
+        // 1 & 2: CAS مشروط بقفل حصري للصف في AdminUser
+        const casResult = await tx.adminUser.updateMany({
+          where: {
+            id: adminId,
+            passwordHash: expectedPasswordHash,
+            isActive: true,
+          },
+          data: {
+            lastLoginAt: new Date(),
+          },
+        });
 
-    if (casResult.count !== 1) {
-      // الهاش تغير أو الحساب تعطل تزامناً مع فحص bcrypt
-      return null;
-    }
+        if (casResult.count !== 1) {
+          // الهاش تغير أو الحساب تعطل تزامناً مع فحص bcrypt
+          return null;
+        }
 
-    // 3: إنشاء الجلسة داخل نفس المعاملة
-    const { rawToken, tokenHash, expiresAt } = generateSessionToken();
-    await tx.session.create({
-      data: {
-        adminId,
-        tokenHash,
-        expiresAt,
+        // 3: إنشاء الجلسة داخل نفس المعاملة
+        const { rawToken, tokenHash, expiresAt } = generateSessionToken();
+        await tx.session.create({
+          data: {
+            adminId,
+            tokenHash,
+            expiresAt,
+          },
+        });
+
+        return { rawToken };
       },
-    });
-
-    return { rawToken };
-  });
+      { maxWait: 10000, timeout: 15000 },
+    ),
+  );
 }
 
 /**
@@ -140,43 +145,48 @@ export async function executeAtomicPasswordChange(
   currentPasswordHash: string,
   newPasswordHash: string,
 ): Promise<{ newRawToken: string } | null> {
-  return await prisma.$transaction(async (tx) => {
-    // 1. CAS لتحديث كلمة المرور وإلغاء راية الإجبار
-    const cas = await tx.adminUser.updateMany({
-      where: {
-        id: adminId,
-        passwordHash: currentPasswordHash,
-        isActive: true,
+  return await withDbRetry(() =>
+    prisma.$transaction(
+      async (tx) => {
+        // 1. CAS لتحديث كلمة المرور وإلغاء راية الإجبار
+        const cas = await tx.adminUser.updateMany({
+          where: {
+            id: adminId,
+            passwordHash: currentPasswordHash,
+            isActive: true,
+          },
+          data: {
+            passwordHash: newPasswordHash,
+            mustChangePassword: false,
+            updatedAt: new Date(),
+          },
+        });
+
+        if (cas.count !== 1) {
+          // فشل التحديث المشروط لوجود تعديل متزامن
+          return null;
+        }
+
+        // 2. إبطال كافة الجلسات السابقة للمستخدم نهائياً
+        await tx.session.deleteMany({
+          where: { adminId },
+        });
+
+        // 3. تدوير الجلسة بإنشاء جلسة جديدة للمسؤول الحالي
+        const { rawToken, tokenHash, expiresAt } = generateSessionToken();
+        await tx.session.create({
+          data: {
+            adminId,
+            tokenHash,
+            expiresAt,
+          },
+        });
+
+        return { newRawToken: rawToken };
       },
-      data: {
-        passwordHash: newPasswordHash,
-        mustChangePassword: false,
-        updatedAt: new Date(),
-      },
-    });
-
-    if (cas.count !== 1) {
-      // فشل التحديث المشروط لوجود تعديل متزامن
-      return null;
-    }
-
-    // 2. إبطال كافة الجلسات السابقة للمستخدم نهائياً
-    await tx.session.deleteMany({
-      where: { adminId },
-    });
-
-    // 3. تدوير الجلسة بإنشاء جلسة جديدة للمسؤول الحالي
-    const { rawToken, tokenHash, expiresAt } = generateSessionToken();
-    await tx.session.create({
-      data: {
-        adminId,
-        tokenHash,
-        expiresAt,
-      },
-    });
-
-    return { newRawToken: rawToken };
-  });
+      { maxWait: 10000, timeout: 15000 },
+    ),
+  );
 }
 
 /* ---- التحقق من الجلسات والصلاحيات (Session Validation) ---- */
