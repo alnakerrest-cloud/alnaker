@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import ProductRowActions from "./row-actions";
+import AdminFilterBar, { FilterFieldConfig, QuickChip } from "../admin-filter-bar";
 
 export const dynamic = "force-dynamic";
 
@@ -50,6 +51,74 @@ export default async function ProductsPage({
 
   const activeSections = cat ? cats.find((c) => c.id === cat)?.sections ?? [] : [];
 
+  const productFilters: FilterFieldConfig[] = [
+    {
+      name: "cat",
+      label: "القسم",
+      value: cat ?? "",
+      options: [
+        { value: "", label: "كل الأقسام" },
+        ...cats.map((c) => ({ value: c.id, label: c.nameAr })),
+      ],
+    },
+    ...(cat && activeSections.length > 0
+      ? [
+          {
+            name: "sec",
+            label: "العنبر",
+            value: sec ?? "",
+            options: [
+              { value: "", label: "كل العنابر" },
+              ...activeSections.map((s) => ({ value: s.id, label: s.titleAr ?? "(بدون عنوان)" })),
+            ],
+          },
+        ]
+      : []),
+    {
+      name: "vis",
+      label: "الظهور",
+      value: vis ?? "",
+      options: [
+        { value: "", label: "الظهور: الكل" },
+        { value: "visible", label: "ظاهر" },
+        { value: "hidden", label: "مخفي" },
+      ],
+    },
+    {
+      name: "avail",
+      label: "التوفر",
+      value: avail ?? "",
+      options: [
+        { value: "", label: "التوفر: الكل" },
+        { value: "available", label: "متوفر" },
+        { value: "unavailable", label: "غير متوفر" },
+      ],
+    },
+  ];
+
+  const buildQuery = (params: Record<string, string | undefined>) => {
+    const sp = new URLSearchParams();
+    if (q) sp.set("q", q);
+    if (cat) sp.set("cat", cat);
+    if (sec) sp.set("sec", sec);
+    if (vis) sp.set("vis", vis);
+    if (avail) sp.set("avail", avail);
+    for (const [k, v] of Object.entries(params)) {
+      if (v) sp.set(k, v);
+      else sp.delete(k);
+    }
+    const str = sp.toString();
+    return str ? `/admin/products?${str}` : "/admin/products";
+  };
+
+  const quickChips: QuickChip[] = [
+    { label: "الكل", href: buildQuery({ vis: undefined, avail: undefined }), active: !vis && !avail },
+    { label: "ظاهر", href: buildQuery({ vis: "visible" }), active: vis === "visible" },
+    { label: "مخفي", href: buildQuery({ vis: "hidden" }), active: vis === "hidden" },
+    { label: "متوفر", href: buildQuery({ avail: "available" }), active: avail === "available" },
+    { label: "غير متوفر", href: buildQuery({ avail: "unavailable" }), active: avail === "unavailable" },
+  ];
+
   return (
     <>
       <div className="admin-topbar">
@@ -57,60 +126,40 @@ export default async function ProductsPage({
         <Link href="/admin/products/new" className="admin-btn admin-btn-primary">+ منتج جديد</Link>
       </div>
 
-      <form className="admin-panel" style={{ marginBottom: 18 }} method="GET" action="/admin/products">
-        <div className="admin-panel-header">
-          <div className="admin-toolbar">
-            <input type="search" name="q" defaultValue={q ?? ""} placeholder="ابحث باسم المنتج…" />
-            <select name="cat" defaultValue={cat ?? ""}>
-              <option value="">كل الأقسام</option>
-              {cats.map((c) => <option key={c.id} value={c.id}>{c.nameAr}</option>)}
-            </select>
-            {cat ? (
-              <select name="sec" defaultValue={sec ?? ""}>
-                <option value="">كل العنابر</option>
-                {activeSections.map((s) => <option key={s.id} value={s.id}>{s.titleAr ?? "(بدون عنوان)"}</option>)}
-              </select>
-            ) : null}
-            <select name="vis" defaultValue={vis ?? ""}>
-              <option value="">الظهور: الكل</option>
-              <option value="visible">ظاهر</option>
-              <option value="hidden">مخفي</option>
-            </select>
-            <select name="avail" defaultValue={avail ?? ""}>
-              <option value="">التوفر: الكل</option>
-              <option value="available">متوفر</option>
-              <option value="unavailable">غير متوفر</option>
-            </select>
-            <button className="admin-btn" type="submit">تطبيق</button>
-            {(q || cat || sec || vis || avail) ? <Link href="/admin/products" className="admin-btn">مسح</Link> : null}
-          </div>
-          <span className="admin-user-chip">{products.length} منتج</span>
-        </div>
-      </form>
+      <AdminFilterBar
+        action="/admin/products"
+        searchValue={q ?? ""}
+        searchPlaceholder="ابحث باسم المنتج…"
+        totalCount={products.length}
+        countLabel="منتج"
+        clearHref="/admin/products"
+        quickChips={quickChips}
+        filters={productFilters}
+      />
 
       <section className="admin-panel">
         <div className="admin-table-wrap">
-        <table className="admin-table">
+        <table className="admin-table admin-table-cards">
           <thead>
             <tr><th>المنتج</th><th>القسم</th><th>السعر</th><th>أسعار</th><th>شارة</th><th>ظاهر</th><th>متوفر</th><th>مميّز</th><th>ترتيب</th><th></th></tr>
           </thead>
           <tbody>
             {products.map((p) => (
               <tr key={p.id}>
-                <td>{p.nameAr}</td>
-                <td style={{ color: "var(--muted)", fontSize: 13 }}>
+                <td className="cell-primary" data-label="المنتج"><strong>{p.nameAr}</strong></td>
+                <td data-label="القسم" style={{ color: "var(--muted)", fontSize: 13 }}>
                   {p.section.category.nameAr}{p.section.titleAr ? " › " + p.section.titleAr : ""}
                 </td>
-                <td>{priceLabel(p.variants)}</td>
-                <td>{p.variants.length}</td>
-                <td>
+                <td data-label="السعر">{priceLabel(p.variants)}</td>
+                <td data-label="عدد الأسعار">{p.variants.length}</td>
+                <td data-label="الشارة">
                   {p.badge ? <span className="admin-badge gold">{p.badge === "SIGNATURE" ? "مميز" : "عرض"}</span> : "—"}
                 </td>
-                <td><span className={`admin-badge ${p.isVisible ? "on" : "off"}`}>{p.isVisible ? "نعم" : "لا"}</span></td>
-                <td><span className={`admin-badge ${p.isAvailable ? "on" : "off"}`}>{p.isAvailable ? "نعم" : "لا"}</span></td>
-                <td>{p.isFeatured ? "★" : "—"}</td>
-                <td>{p.sortOrder}</td>
-                <td>
+                <td data-label="الظهور"><span className={`admin-badge ${p.isVisible ? "on" : "off"}`}>{p.isVisible ? "ظاهر" : "مخفي"}</span></td>
+                <td data-label="التوفر"><span className={`admin-badge ${p.isAvailable ? "on" : "off"}`}>{p.isAvailable ? "متوفر" : "غير متوفر"}</span></td>
+                <td data-label="مميّز">{p.isFeatured ? "★ نعم" : "—"}</td>
+                <td data-label="الترتيب">{p.sortOrder}</td>
+                <td className="cell-actions">
                   <div className="row-actions">
                     <Link href={`/admin/products/${p.id}`} className="admin-btn admin-btn-sm">تعديل</Link>
                     <ProductRowActions

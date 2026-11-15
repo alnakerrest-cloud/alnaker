@@ -1,111 +1,104 @@
-# PRODUCTION DEPLOYMENT & RELEASE OPERATIONAL CHECKLIST
+# NAQER MENU — PRODUCTION DEPLOYMENT CHECKLIST
 
-**Document Version:** 1.0.0  
-**Audit Date:** 2026-11-14  
-**Project:** Naqer Menu  
-**Repository:** `E:\real projects\naqer-menu`  
-**Classification:** Authoritative Release Handbook for DevOps / Release Lead  
-
----
-
-## 1. Production Environment Variables (The Exact 7 Keys)
-
-Configure these exact 7 environment variables in your production hosting platform (e.g., Vercel Project Settings > Environment Variables). **Never commit secret values to version control.**
-
-| # | Environment Variable Key | Scope | Description & Requirements |
-|---|--------------------------|-------|----------------------------|
-| 1 | `DATABASE_URL` | Server | Production Neon PostgreSQL pooled connection string (`postgres://...sslmode=verify-full`). Must point to the production database (`ep-withered-bread-bemwq8ns`). |
-| 2 | `SESSION_SECRET` | Server | High-entropy cryptographic string (≥64 characters) used as HMAC-SHA256 secret key for hashing admin session tokens. |
-| 3 | `CLOUDINARY_CLOUD_NAME` | Server | Cloudinary account identifier for media storage and dynamic transformation. |
-| 4 | `CLOUDINARY_API_KEY` | Server | Cloudinary API access key for authenticated uploads and deletions. |
-| 5 | `CLOUDINARY_API_SECRET` | Server | Cloudinary API secret key. Server-only; never exposed to browser bundles. |
-| 6 | `CLOUDINARY_SECURE_FOLDER`| Server | Root folder prefix inside Cloudinary (e.g., `naqer-menu`). Isolates restaurant media into subfolders (`/products`, `/categories`, `/branding`, `/offers`). |
-| 7 | `NEXT_PUBLIC_SITE_URL` | Universal | Fully qualified public canonical URL (e.g., `https://menu.naqer.com`). Used for OpenGraph metadata, QR code deep linking, and sitemap generation. |
+**Target Environment:** Vercel Serverless / Node.js Production Host  
+**Release Version:** Naqer Menu 1.0.0 Release Candidate  
+**Target Git Branch:** `main`  
+**Neon Database Cluster:** `ep-withered-bread-bemwq8ns-pooler.c-9.us-east-2.aws.neon.tech`  
 
 ---
 
-## 2. Pre-Deployment Database Preparation (Non-Destructive)
+## 1. PRE-DEPLOYMENT PREREQUISITES
 
-> [!IMPORTANT]
-> Never execute `prisma db push --force-reset` or `prisma migrate reset` against production.
+Execute these checks before triggering any deployment:
 
-1. **Verify Database Connection:**
-   Ensure `DATABASE_URL` connects to the production Neon project (`ep-withered-bread-bemwq8ns`).
-2. **Apply Migrations Safely:**
-   Execute standard forward-only migration deployment:
-   ```bash
-   npx prisma migrate deploy
-   ```
-   *Expected Result:* `All migrations have been successfully applied.`
-3. **Verify Database Record Count:**
-   Confirm that all 151 restaurant products, 17 categories, and 2 active branches are preserved intact:
-   ```bash
-   node scripts/verify-final-db-integrity.mjs
-   ```
-
----
-
-## 3. Initial OWNER Account Provisioning
-
-If the production database does not yet have an OWNER account:
-1. Run the safe provisioning script in a secure administrative shell:
-   ```bash
-   OWNER_EMAIL="client-owner@naqer.com" OWNER_PASSWORD="<generated-secure-passphrase>" node scripts/provision-owner.mjs
-   ```
-2. Verify that the script outputs `OWNER account created successfully.` without echoing credentials.
-3. Test login at `https://<production-domain>/admin/login`.
+- [ ] **1.1 Git Commit State:**
+  - Verify working tree is clean on `origin/main`.
+  - Confirm latest release commit hash matches the verified release build.
+- [ ] **1.2 Secrets & Environment Variables:**
+  - Verify the following production environment variables are configured in the hosting provider (e.g. Vercel Project Settings):
+    - `DATABASE_URL`: Connection string pointing to Neon pooler (`sslmode=require`).
+    - `DIRECT_URL`: Direct unpooled Neon connection string for migrations.
+    - `ADMIN_SESSION_SECRET`: Cryptographically strong random string (>= 32 characters).
+    - `CLOUDINARY_CLOUD_NAME`: Production Cloudinary cloud name.
+    - `CLOUDINARY_API_KEY`: Production Cloudinary API key.
+    - `CLOUDINARY_API_SECRET`: Production Cloudinary API secret.
+    - `CLOUDINARY_SECURE_FOLDER`: `naqer-menu` (or designated prod folder).
+    - `NEXT_PUBLIC_SITE_URL`: Production canonical domain (e.g., `https://menu.naqer.com`).
+- [ ] **1.3 Database Backup:**
+  - Confirm a snapshot or backup exists for the Production Neon database before initiating deployment.
 
 ---
 
-## 4. Vercel Hosting Configuration
+## 2. DATABASE PREPARATION & MIGRATION
 
-1. **Build & Development Settings:**
-   - Framework Preset: `Next.js`
-   - Build Command: `next build` (or leave default)
-   - Output Directory: `.next`
-   - Node.js Version: `20.x` or `22.x`
-2. **Root Turbopack Setting:**
-   In `next.config.mjs`, external server packages are configured:
-   ```js
-   serverExternalPackages: ["@prisma/client", "@prisma/adapter-pg", "pg", "cloudinary"],
-   experimental: { serverActions: { bodySizeLimit: "8mb" } }
-   ```
-
----
-
-## 5. Domain, DNS & SSL Configuration
-
-1. In DNS registrar, create a CNAME record:
-   - Host: `menu` (or `@` for apex)
-   - Value: `cname.vercel-dns.com`
-2. In Vercel, assign domain `menu.naqer.com` and verify automatic TLS/SSL certificate issuance.
+- [ ] **2.1 Migration Status Check:**
+  - Run Prisma migration status in a secure CI/CD or deployment runner:
+    ```bash
+    npx prisma migrate status
+    ```
+  - Verify that no unapplied migrations exist, or apply pending migrations using:
+    ```bash
+    npx prisma migrate deploy
+    ```
+  - *(Note: Never run `prisma db push` or `prisma migrate reset` in production!)*
+- [ ] **2.2 Connection Pooling:**
+  - Ensure `DATABASE_URL` connects through the Neon PgBouncer pooler (`-pooler` suffix) to prevent serverless connection exhaustion.
 
 ---
 
-## 6. Branch-Specific WhatsApp Verification
+## 3. DEPLOYMENT EXECUTION
 
-Verify that each branch's WhatsApp ordering number is configured in `Branch` records:
-- **Gamasa Branch:** `01094965222` (+201094965222)
-- **New Damietta Branch:** `01094965222` (+201094965222)
-Confirm that test orders click through to `https://wa.me/201094965222?text=...` with correct URL-encoded order details.
+- [ ] **3.1 Production Build Verification:**
+  - Confirm build completes with zero errors:
+    ```bash
+    npm run build
+    ```
+  - Expected output: All 27 routes pre-rendered statically or dynamically mapped.
+- [ ] **3.2 Vercel / Hosting Deployment:**
+  - Push changes to `main` branch to trigger automated production deployment pipeline.
+  - Monitor deployment build logs for successful Turbopack bundling and Prisma client generation.
 
 ---
 
-## 7. Post-Deployment 12-Point Smoke Test Protocol
+## 4. POST-DEPLOYMENT SMOKE TEST PROTOCOL
 
-This 12-point smoke test distinguishes tests already verified in the isolated staging environment from the live checks required on the production domain immediately upon launch:
+Conduct live smoke testing immediately following deployment:
 
-| # | Smoke Test Checkpoint | Staging Verification Evidence | Production Domain Verification Procedure |
-|---|-----------------------|-------------------------------|------------------------------------------|
-| 1 | **Public Menu Arabic RTL** | PASSED (`tests/00-baseline.spec.ts`) | Load `https://menu.naqer.com/ar`. Confirm Arabic headings, RTL layout, 17 categories, and 151 dish cards render with photography. |
-| 2 | **English LTR Toggle** | PASSED (`tests/00-baseline.spec.ts`) | Click English language toggle. Confirm route switches to `/en`, LTR alignment applies cleanly, and product names/descriptions render. |
-| 3 | **Hidden Products & Categories Filtering** | PASSED (`tests/03-hidden-filtering.spec.ts`) | Verify hidden/unavailable products do not render on public menu and cannot be fetched via client payload. |
-| 4 | **Cart & WhatsApp Ordering** | PASSED (`tests/07-interactive-cart.spec.ts`) | Add items, select add-on options, choose branch, verify sticky drawer total, click WhatsApp button, verify `wa.me/201094965222` URL payload. |
-| 5 | **LiveSync Polling & Freshness** | PASSED (`tests/01-live-sync.spec.ts` - 425ms-5.3s) | Inspect browser Network tab on `/ar`. Verify `/api/content-version` responds with `{ "v": "..." }` HTTP 200 every 15s. |
-| 6 | **Admin Login & Secure Cookie** | PASSED (`tests/04-security.spec.ts`) | Access `/admin/login`, submit valid credentials. Confirm redirect to `/admin/dashboard` and verify `__Host-` or `admin_session` cookie is `HttpOnly`, `Secure`, and `SameSite=Lax`. |
-| 7 | **Role Separation (OWNER vs EDITOR)** | PASSED (`tests/04-security.spec.ts`) | Log in as EDITOR. Confirm access to products/categories/offers. Verify user management (`/admin/users`) and deletion buttons return 403 or are withheld. |
-| 8 | **Product CRUD Workflow** | PASSED (`tests/05-crud-acceptance.spec.ts`) | Create test dish, edit details, toggle availability, and soft-delete/hide. Confirm public menu reflects changes without server restart. |
-| 9 | **Image Upload & Replacement** | *SKIPPED on staging via safety lock* | Upload a test dish image in Admin, verify Cloudinary CDN delivery, replace image, and verify thumbnail in public menu. *(First live test of Cloudinary API keys)*. |
-| 10 | **Offers & Add-ons Rendering** | PASSED (`tests/09-card-layouts-and-offers.spec.ts`) | Confirm promotional banner displays active discount/offer, and product add-ons (extra cheese, sauces) appear in modal and add to cart price. |
-| 11 | **Branch Selector & Store Context** | PASSED (`tests/08-addons-and-branches.spec.ts`) | Switch between "Gamasa" and "New Damietta" branches. Verify branch phone, hours, and WhatsApp redirect target update. |
-| 12 | **Admin Logout & Session Invalidation** | PASSED (`tests/04-security.spec.ts`) | Click Logout in admin navbar. Confirm cookie deletion, redirection to `/admin/login`, and that pressing back button does not grant dashboard access. |
+- [ ] **4.1 Public Menu (Arabic):**
+  - Navigate to `https://<domain>/ar`.
+  - Confirm hero banner, branch status, and categories render.
+  - Test on mobile device or responsive emulator (375px) — verify 0px horizontal scroll.
+- [ ] **4.2 Public Menu (English):**
+  - Navigate to `https://<domain>/en`.
+  - Confirm English localization and LTR layout.
+- [ ] **4.3 Product Modal & Customization:**
+  - Click any food item; verify modal opens with price and description.
+- [ ] **4.4 Cart & WhatsApp Link Generation:**
+  - Add an item to the cart; open cart drawer.
+  - Verify subtotal and service charges.
+  - Click WhatsApp checkout button; confirm browser prompts to open WhatsApp with encoded order text.
+- [ ] **4.5 Tabletop QR Route:**
+  - Navigate to `https://<domain>/ar/qr`.
+  - Verify high-resolution QR code renders clearly for scanning.
+- [ ] **4.6 LiveSync Cache Invalidation:**
+  - Query `GET https://<domain>/api/content-version`.
+  - Verify HTTP 200 response with valid `contentVersion` string.
+- [ ] **4.7 Admin Dashboard Authentication:**
+  - Navigate to `https://<domain>/admin/login`.
+  - Sign in with authorized production OWNER credentials.
+  - Verify successful redirect to `/admin/dashboard`.
+- [ ] **4.8 Admin Responsive Cards:**
+  - Inspect `/admin/products` and `/admin/categories` on mobile viewport; confirm vertical cards display with status badges and edit links.
+- [ ] **4.9 Media Asset Delivery:**
+  - Inspect product images; verify images load from Cloudinary CDN without 404 or broken icons.
+
+---
+
+## 5. MONITORING & ROLLBACK READINESS
+
+- [ ] **5.1 Error Monitoring:**
+  - Monitor Vercel Runtime Logs and Serverless Function metrics for any uncaught 500 errors.
+- [ ] **5.2 Rollback Plan:**
+  - In the event of an unforeseen production regression:
+    1. Instant rollback via Vercel Dashboard: Click "Promote to Production" on the previous stable deployment.
+    2. Refer to [DATABASE_MIGRATION_AND_ROLLBACK.md](file:///C:/Users/ibrah/.gemini/antigravity/brain/c80176dd-bad0-4a03-9018-f631103b1647/DATABASE_MIGRATION_AND_ROLLBACK.md) for database recovery steps.

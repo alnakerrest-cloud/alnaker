@@ -55,3 +55,8 @@ run-*.ps1
 downloaded-images-data.json
 product-inventory-data.json
 backup-product-images-before-real-photos.json
+scratch/
+release-evidence/
+acceptance-evidence/
+responsive-audit-evidence/
+search-filters-evidence/

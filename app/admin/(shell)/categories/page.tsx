@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import CategoryRowActions from "./row-actions";
+import AdminFilterBar from "../admin-filter-bar";
 
 export const dynamic = "force-dynamic";
 
@@ -34,42 +35,52 @@ export default async function CategoriesPage({
         <Link href="/admin/categories/new" className="admin-btn admin-btn-primary">+ قسم جديد</Link>
       </div>
 
-      <form className="admin-panel" style={{ marginBottom: 18 }} method="GET" action="/admin/categories">
-        <div className="admin-panel-header">
-          <div className="admin-toolbar">
-            <input type="search" name="q" defaultValue={q ?? ""} placeholder="ابحث باسم القسم…" />
-            <select name="group" defaultValue={group ?? ""}>
-              <option value="">كل المجموعات</option>
-              <option value="FOOD">أطعمة</option>
-              <option value="DRINKS">مشروبات</option>
-            </select>
-            <button className="admin-btn" type="submit">تطبيق</button>
-            {(q || group) ? <Link href="/admin/categories" className="admin-btn">مسح</Link> : null}
-          </div>
-          <span className="admin-user-chip">{cats.length} قسم</span>
-        </div>
-      </form>
+      <AdminFilterBar
+        action="/admin/categories"
+        searchValue={q ?? ""}
+        searchPlaceholder="ابحث باسم القسم…"
+        totalCount={cats.length}
+        countLabel="قسم"
+        clearHref="/admin/categories"
+        quickChips={[
+          { label: "الكل", href: "/admin/categories" + (q ? `?q=${encodeURIComponent(q)}` : ""), active: !group },
+          { label: "أطعمة", href: `/admin/categories?group=FOOD` + (q ? `&q=${encodeURIComponent(q)}` : ""), active: group === "FOOD" },
+          { label: "مشروبات", href: `/admin/categories?group=DRINKS` + (q ? `&q=${encodeURIComponent(q)}` : ""), active: group === "DRINKS" },
+        ]}
+        filters={[
+          {
+            name: "group",
+            label: "المجموعة",
+            value: group ?? "",
+            options: [
+              { value: "", label: "كل المجموعات" },
+              { value: "FOOD", label: "أطعمة" },
+              { value: "DRINKS", label: "مشروبات" },
+            ],
+          },
+        ]}
+      />
 
       <section className="admin-panel">
         <div className="admin-table-wrap">
-        <table className="admin-table">
+        <table className="admin-table admin-table-cards">
           <thead>
             <tr><th>أيقونة</th><th>الاسم</th><th>slug</th><th>مجموعة</th><th>عرض</th><th>منتجات</th><th>الحالة</th><th>ترتيب</th><th></th></tr>
           </thead>
           <tbody>
             {cats.map((c) => (
               <tr key={c.id}>
-                <td>{c.icon ?? "—"}</td>
-                <td>{c.nameAr}</td>
-                <td dir="ltr" style={{ color: "var(--muted)", fontSize: 12 }}>{c.slug}</td>
-                <td>{c.group === "FOOD" ? "أطعمة" : "مشروبات"}</td>
-                <td>{c.layout === "TRAYS" ? "صواني" : "قائمة"}</td>
-                <td>{productCount(c)}</td>
-                <td>
+                <td data-label="الأيقونة">{c.icon ?? "—"}</td>
+                <td className="cell-primary" data-label="الاسم"><strong>{c.nameAr}</strong></td>
+                <td data-label="المعرّف (slug)"><code dir="ltr" style={{ color: "var(--muted)", fontSize: 12 }}>{c.slug}</code></td>
+                <td data-label="المجموعة">{c.group === "FOOD" ? "أطعمة" : "مشروبات"}</td>
+                <td data-label="طريقة العرض">{c.layout === "TRAYS" ? "صواني" : "قائمة"}</td>
+                <td data-label="عدد المنتجات">{productCount(c)}</td>
+                <td data-label="الحالة">
                   <span className={`admin-badge ${c.isVisible ? "on" : "off"}`}>{c.isVisible ? "ظاهر" : "مخفي"}</span>
                 </td>
-                <td>{c.sortOrder}</td>
-                <td>
+                <td data-label="الترتيب">{c.sortOrder}</td>
+                <td className="cell-actions">
                   <div className="row-actions">
                     <Link href={`/admin/categories/${c.id}`} className="admin-btn admin-btn-sm">تعديل</Link>
                     <CategoryRowActions id={c.id} nameAr={c.nameAr} isVisible={c.isVisible} canDelete={canDelete} />

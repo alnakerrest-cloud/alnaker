@@ -33,17 +33,17 @@ export default async function ImportPage() {
       <section className="admin-panel" style={{ marginTop: 18 }}>
         <div className="admin-panel-header"><h2>آخر عمليات الاستيراد</h2></div>
         <div className="admin-table-wrap">
-        <table className="admin-table">
+        <table className="admin-table admin-table-cards">
           <thead><tr><th>المصدر</th><th>الحالة</th><th>الإجمالي</th><th>معالَج</th><th>فاشل</th><th>التاريخ</th></tr></thead>
           <tbody>
             {lastJobs.map((j) => (
               <tr key={j.id}>
-                <td>{j.source}</td>
-                <td><span className={`admin-badge ${j.status === "SUCCESS" ? "on" : j.status === "FAILED" ? "off" : "gold"}`}>{j.status}</span></td>
-                <td>{j.totalItems}</td>
-                <td>{j.processed}</td>
-                <td>{j.failed}</td>
-                <td dir="ltr" style={{ color: "var(--muted)", fontSize: 12 }}>{j.createdAt.toISOString().slice(0, 16).replace("T", " ")}</td>
+                <td className="cell-primary" data-label="المصدر"><strong>{j.source}</strong></td>
+                <td data-label="الحالة"><span className={`admin-badge ${j.status === "SUCCESS" ? "on" : j.status === "FAILED" ? "off" : "gold"}`}>{j.status}</span></td>
+                <td data-label="الإجمالي">{j.totalItems}</td>
+                <td data-label="معالَج">{j.processed}</td>
+                <td data-label="فاشل">{j.failed}</td>
+                <td data-label="التاريخ" dir="ltr" style={{ color: "var(--muted)", fontSize: 12 }}>{j.createdAt.toISOString().slice(0, 16).replace("T", " ")}</td>
               </tr>
             ))}
             {lastJobs.length === 0 ? <tr><td colSpan={6} className="admin-empty">لا عمليات بعد.</td></tr> : null}

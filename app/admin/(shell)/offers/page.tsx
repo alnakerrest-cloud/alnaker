@@ -2,6 +2,10 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import OfferRowActions from "./row-actions";
+import AdminFilterBar from "../admin-filter-bar";
+
+const VALID_OFFER_TYPES = ["PERCENTAGE", "FIXED_AMOUNT", "SPECIAL_PRICE", "BUNDLE", "BUY_X_GET_Y"] as const;
+type ValidOfferType = (typeof VALID_OFFER_TYPES)[number];
 
 export const dynamic = "force-dynamic";
 
@@ -22,11 +26,25 @@ function getOfferTypeLabel(type: string): string {
   }
 }
 
-export default async function OffersPage() {
+export default async function OffersPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ q?: string; status?: string; type?: string }>;
+}) {
   const admin = await requireAdmin(["OWNER", "EDITOR"]);
   const canDelete = admin.role === "OWNER";
+  const { q, status, type } = (await searchParams) ?? {};
+
+  const now = new Date();
 
   const offers = await prisma.offer.findMany({
+    where: {
+      AND: [
+        q ? { titleAr: { contains: q, mode: "insensitive" } } : {},
+        status === "active" ? { isActive: true } : status === "inactive" ? { isActive: false } : {},
+        type && VALID_OFFER_TYPES.includes(type as ValidOfferType) ? { offerType: type as ValidOfferType } : {},
+      ],
+    },
     orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
     include: {
       productTargets: { select: { productId: true } },
@@ -35,7 +53,6 @@ export default async function OffersPage() {
     },
   });
 
-  const now = new Date();
   const totalCount = offers.length;
   const activeCount = offers.filter((o) => {
     if (!o.isActive) return false;
@@ -73,7 +90,47 @@ export default async function OffersPage() {
         </div>
       </div>
 
-      <div className="admin-panel" style={{ overflowX: "auto" }}>
+      <AdminFilterBar
+        action="/admin/offers"
+        searchValue={q ?? ""}
+        searchPlaceholder="ابحث باسم العرض…"
+        totalCount={offers.length}
+        countLabel="عرض"
+        clearHref="/admin/offers"
+        quickChips={[
+          { label: "الكل", href: "/admin/offers" + (q ? `?q=${encodeURIComponent(q)}` : ""), active: !status },
+          { label: "مفعّل", href: `/admin/offers?status=active` + (q ? `&q=${encodeURIComponent(q)}` : ""), active: status === "active" },
+          { label: "معطّل", href: `/admin/offers?status=inactive` + (q ? `&q=${encodeURIComponent(q)}` : ""), active: status === "inactive" },
+        ]}
+        filters={[
+          {
+            name: "status",
+            label: "الحالة",
+            value: status ?? "",
+            options: [
+              { value: "", label: "الحالة: الكل" },
+              { value: "active", label: "مفعّل" },
+              { value: "inactive", label: "معطّل" },
+            ],
+          },
+          {
+            name: "type",
+            label: "نوع العرض",
+            value: type ?? "",
+            options: [
+              { value: "", label: "النوع: الكل" },
+              { value: "PERCENTAGE", label: "نسبة مئوية" },
+              { value: "FIXED_AMOUNT", label: "خصم ثابت" },
+              { value: "SPECIAL_PRICE", label: "سعر خاص" },
+              { value: "BUNDLE", label: "باقة كومبو" },
+              { value: "BUY_X_GET_Y", label: "اشترِ واحصل" },
+            ],
+          },
+        ]}
+      />
+
+      <div className="admin-panel">
+        <div className="admin-table-wrap">
         {offers.length === 0 ? (
           <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--muted)" }}>
             <p style={{ fontSize: "1.1rem", marginBottom: "14px" }}>لا توجد عروض مضافة حتى الآن.</p>
@@ -82,7 +139,7 @@ export default async function OffersPage() {
             </Link>
           </div>
         ) : (
-          <table className="admin-table">
+          <table className="admin-table admin-table-cards">
             <thead>
               <tr>
                 <th>العرض</th>
@@ -158,7 +215,7 @@ export default async function OffersPage() {
 
                 return (
                   <tr key={offer.id}>
-                    <td>
+                    <td className="cell-primary" data-label="العرض">
                       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         {offer.imageUrl && (
                           <img
@@ -195,32 +252,34 @@ export default async function OffersPage() {
                         </div>
                       </div>
                     </td>
-                    <td>
+                    <td data-label="نوع العرض">
                       <span className="admin-badge" style={{ background: "var(--bg-2)", color: "var(--brand)" }}>
                         {getOfferTypeLabel(offer.offerType)}
                       </span>
                     </td>
-                    <td>
+                    <td data-label="القيمة / السعر">
                       <strong style={{ color: "var(--brand)" }}>{valueDisplay}</strong>
                     </td>
-                    <td>
+                    <td data-label="المستهدف">
                       <small style={{ color: "var(--muted)" }}>{targetDesc.join(" • ")}</small>
                     </td>
-                    <td>{statusBadge}</td>
-                    <td>
+                    <td data-label="الحالة">{statusBadge}</td>
+                    <td data-label="الفترة الزمنية">
                       <small style={{ color: "var(--muted)", whiteSpace: "nowrap" }}>
                         {offer.startDate ? new Date(offer.startDate).toLocaleDateString("ar-EG") : "فور التفعيل"}
                         {" → "}
                         {offer.endDate ? new Date(offer.endDate).toLocaleDateString("ar-EG") : "مستمر"}
                       </small>
                     </td>
-                    <td>
+                    <td className="cell-actions">
+                      <div className="row-actions">
                       <OfferRowActions
                         id={offer.id}
                         titleAr={offer.titleAr}
                         isActive={offer.isActive}
                         canDelete={canDelete}
                       />
+                      </div>
                     </td>
                   </tr>
                 );
@@ -228,6 +287,7 @@ export default async function OffersPage() {
             </tbody>
           </table>
         )}
+        </div>
       </div>
     </div>
   );

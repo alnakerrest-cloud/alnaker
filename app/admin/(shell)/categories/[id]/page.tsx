@@ -48,14 +48,14 @@ export default async function EditCategoryPage({ params }: { params: Promise<{ i
       <section className="admin-panel" style={{ marginTop: 18 }}>
         <div className="admin-panel-header"><h2>العنابر/الأقسام الفرعية ({c.sections.length})</h2></div>
         <div className="admin-table-wrap">
-          <table className="admin-table">
+          <table className="admin-table admin-table-cards">
             <thead><tr><th>العنوان</th><th>منتجات</th><th>ترتيب</th></tr></thead>
             <tbody>
               {c.sections.map((s) => (
                 <tr key={s.id}>
-                  <td>{s.titleAr ?? <em style={{ color: "var(--muted)" }}>(بدون عنوان)</em>}</td>
-                  <td>{s._count.products}</td>
-                  <td>{s.sortOrder}</td>
+                  <td className="cell-primary" data-label="العنوان"><strong>{s.titleAr ?? <em style={{ color: "var(--muted)" }}>(بدون عنوان)</em>}</strong></td>
+                  <td data-label="عدد المنتجات">{s._count.products} منتج</td>
+                  <td data-label="الترتيب">{s.sortOrder}</td>
                 </tr>
               ))}
             </tbody>

@@ -2,6 +2,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { importApproved, type ImportActionState } from "./actions";
 import type { ImportCandidate } from "@/lib/admin/import-source";
+import { SearchIcon, CloseIcon } from "@/components/Icons";
 
 type EditPrice = { labelAr: string; price: string; maxPrice: string };
 type Row = {
@@ -125,14 +126,53 @@ export default function ImportReview({ candidates, existing }: { candidates: Imp
 
   return (
     <section className="admin-panel">
-      <div className="admin-panel-header">
-        <div className="admin-toolbar">
-          <input type="search" value={q} onChange={(e) => changeQ(e.target.value)} placeholder="ابحث في المرشّحات…" />
-          <select value={show} onChange={(e) => changeFilter(e.target.value as typeof show)}>
-            <option value="all">الكل ({rows.length})</option>
-            <option value="new">الجديد فقط ({rows.filter((r) => !isDup(r)).length})</option>
-            <option value="dup">الموجود/المكرر ({rows.filter(isDup).length})</option>
-          </select>
+      <div className="admin-panel-header" style={{ gap: 12 }}>
+        <div className="admin-toolbar" style={{ flex: 1, minWidth: 260 }}>
+          <div className="admin-search-wrap" style={{ flex: 1, minWidth: 160 }}>
+            <span className="admin-search-icon">
+              <SearchIcon width={16} height={16} />
+            </span>
+            <input
+              type="search"
+              value={q}
+              onChange={(e) => changeQ(e.target.value)}
+              placeholder="ابحث في المرشّحات…"
+              className="admin-search-input"
+            />
+            {q ? (
+              <button
+                type="button"
+                onClick={() => changeQ("")}
+                className="admin-search-clear"
+                aria-label="مسح نص البحث"
+              >
+                <CloseIcon width={14} height={14} />
+              </button>
+            ) : null}
+          </div>
+          <div className="admin-quick-chips">
+            <button
+              type="button"
+              className={`admin-chip ${show === "all" ? "active" : ""}`}
+              onClick={() => changeFilter("all")}
+            >
+              الكل ({rows.length})
+            </button>
+            <button
+              type="button"
+              className={`admin-chip ${show === "new" ? "active" : ""}`}
+              onClick={() => changeFilter("new")}
+            >
+              الجديد ({rows.filter((r) => !isDup(r)).length})
+            </button>
+            <button
+              type="button"
+              className={`admin-chip ${show === "dup" ? "active" : ""}`}
+              onClick={() => changeFilter("dup")}
+            >
+              المكرر ({rows.filter(isDup).length})
+            </button>
+          </div>
         </div>
         <div className="admin-toolbar">
           <button type="button" className="admin-btn admin-btn-sm" onClick={() => bulkApprove(false)}>اعتماد الكل</button>
@@ -164,26 +204,18 @@ export default function ImportReview({ candidates, existing }: { candidates: Imp
       </p>
 
       <div className="admin-table-wrap">
-      <table className="admin-table" style={{ marginTop: 8 }}>
+      <table className="admin-table admin-table-cards" style={{ marginTop: 8 }}>
         <thead>
-          <tr><th>اعتماد</th><th>القسم / العنبر</th><th>اسم المنتج</th><th>الأسعار</th><th>صفحة المصدر</th><th>الحالة</th><th>الأسعار الحالية</th><th></th></tr>
+          <tr><th>اعتماد</th><th>اسم المنتج</th><th>القسم / العنبر</th><th>الأسعار</th><th>صفحة المصدر</th><th>الحالة</th><th>الأسعار الحالية</th><th></th></tr>
         </thead>
         <tbody>
           {slice.map((r) => {
             const dup = isDup(r);
             return (
               <tr key={r.key}>
-                <td><input type="checkbox" checked={r.approve} onChange={(e) => setRow(r.key, { approve: e.target.checked })} /></td>
+                <td data-label="اعتماد"><label style={{ display: "inline-flex", alignItems: "center", gap: 6 }}><input type="checkbox" checked={r.approve} onChange={(e) => setRow(r.key, { approve: e.target.checked })} /> <span>تضمين في الاستيراد</span></label></td>
                 {r.editing ? (
-                  <td style={{ minWidth: 160 }}>
-                    <input style={{ width: "100%", marginBottom: 4 }} value={r.categoryAr} onChange={(e) => setRow(r.key, { categoryAr: e.target.value })} placeholder="القسم" />
-                    <input style={{ width: "100%" }} value={r.sectionAr} onChange={(e) => setRow(r.key, { sectionAr: e.target.value })} placeholder="العنبر (اختياري)" />
-                  </td>
-                ) : (
-                  <td>{r.categoryAr}{r.sectionAr ? " › " + r.sectionAr : ""}</td>
-                )}
-                {r.editing ? (
-                  <td style={{ minWidth: 200 }}>
+                  <td className="cell-primary" data-label="اسم المنتج" style={{ minWidth: 200 }}>
                     <input style={{ width: "100%" }} value={r.nameAr} onChange={(e) => setRow(r.key, { nameAr: e.target.value })} />
                     <div className="grid-2" style={{ marginTop: 6, gridTemplateColumns: "1fr 1fr", gap: 6 }}>
                       <textarea style={{ width: "100%" }} rows={2} value={r.descAr} onChange={(e) => setRow(r.key, { descAr: e.target.value })} placeholder="الوصف (لا تختلق)" />
@@ -198,10 +230,18 @@ export default function ImportReview({ candidates, existing }: { candidates: Imp
                     </div>
                   </td>
                 ) : (
-                  <td>{r.nameAr}{r.badge ? <span className="admin-badge gold" style={{ marginInlineStart: 6 }}>{r.badge === "SIGNATURE" ? "مميز" : "عرض"}</span> : null}</td>
+                  <td className="cell-primary" data-label="اسم المنتج"><strong>{r.nameAr}</strong>{r.badge ? <span className="admin-badge gold" style={{ marginInlineStart: 6 }}>{r.badge === "SIGNATURE" ? "مميز" : "عرض"}</span> : null}</td>
                 )}
                 {r.editing ? (
-                  <td>
+                  <td data-label="القسم / العنبر" style={{ minWidth: 160 }}>
+                    <input style={{ width: "100%", marginBottom: 4 }} value={r.categoryAr} onChange={(e) => setRow(r.key, { categoryAr: e.target.value })} placeholder="القسم" />
+                    <input style={{ width: "100%" }} value={r.sectionAr} onChange={(e) => setRow(r.key, { sectionAr: e.target.value })} placeholder="العنبر (اختياري)" />
+                  </td>
+                ) : (
+                  <td data-label="القسم / العنبر">{r.categoryAr}{r.sectionAr ? " › " + r.sectionAr : ""}</td>
+                )}
+                {r.editing ? (
+                  <td data-label="الأسعار">
                     <div className="admin-variants">
                       {r.prices.map((p, i) => (
                         <div key={i} className="admin-variant-row" style={{ gridTemplateColumns: "1fr 70px 70px auto", minWidth: 240 }}>
@@ -215,12 +255,12 @@ export default function ImportReview({ candidates, existing }: { candidates: Imp
                     <button type="button" className="admin-btn admin-btn-sm" style={{ marginTop: 6 }} onClick={() => addPrice(r.key)}>+ سعر</button>
                   </td>
                 ) : (
-                  <td>{priceText(r.prices)}</td>
+                  <td data-label="الأسعار">{priceText(r.prices)}</td>
                 )}
-                <td>{r.editing ? <input type="number" min="1" style={{ width: 70 }} value={r.sourcePage} onChange={(e) => setRow(r.key, { sourcePage: e.target.value })} placeholder="—" /> : (r.sourcePage || "—")}</td>
-                <td><span className={`admin-badge ${dup ? "off" : "on"}`}>{dup ? "موجود — سيُتخطّى" : "جديد — سيُنشأ"}</span></td>
-                <td style={{ color: "var(--muted)", fontSize: 13 }}>{dup ? (r.existingPrices ?? "—") : "—"}</td>
-                <td><button type="button" className="admin-btn admin-btn-sm" onClick={() => setRow(r.key, { editing: !r.editing })}>{r.editing ? "إغلاق" : "تعديل"}</button></td>
+                <td data-label="صفحة المصدر">{r.editing ? <input type="number" min="1" style={{ width: 70 }} value={r.sourcePage} onChange={(e) => setRow(r.key, { sourcePage: e.target.value })} placeholder="—" /> : (r.sourcePage || "—")}</td>
+                <td data-label="الحالة"><span className={`admin-badge ${dup ? "off" : "on"}`}>{dup ? "موجود — سيُتخطّى" : "جديد — سيُنشأ"}</span></td>
+                <td data-label="الأسعار الحالية" style={{ color: "var(--muted)", fontSize: 13 }}>{dup ? (r.existingPrices ?? "—") : "—"}</td>
+                <td className="cell-actions"><div className="row-actions"><button type="button" className="admin-btn admin-btn-sm" onClick={() => setRow(r.key, { editing: !r.editing })}>{r.editing ? "إغلاق" : "تعديل"}</button></div></td>
               </tr>
             );
           })}

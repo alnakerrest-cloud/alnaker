@@ -489,6 +489,7 @@ function MenuViewInner({
                 aria-label={t.search}
                 enterKeyHint="search"
                 autoComplete="off"
+                suppressHydrationWarning
               />
               {query && (
                 <button type="button" className="clear" onClick={() => setQuery('')} aria-label="Clear">

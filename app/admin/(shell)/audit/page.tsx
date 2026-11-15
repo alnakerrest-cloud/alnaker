@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
+import AdminFilterBar from "../admin-filter-bar";
 
 export const dynamic = "force-dynamic";
 
@@ -42,32 +43,46 @@ export default async function AuditPage({
         <span className="admin-user-chip">آخر {logs.length} عملية</span>
       </div>
 
-      <form className="admin-panel" style={{ marginBottom: 18 }} method="GET" action="/admin/audit">
-        <div className="admin-panel-header">
-          <div className="admin-toolbar">
-            <input type="search" name="q" defaultValue={q ?? ""} placeholder="ابحث في الملخص…" />
-            <select name="type" defaultValue={type ?? ""}>
-              <option value="">كل الأنواع</option>
-              {entityTypes.map((e) => <option key={e.entityType} value={e.entityType}>{e.entityType}</option>)}
-            </select>
-            <button className="admin-btn" type="submit">تطبيق</button>
-            {(q || type) ? <a href="/admin/audit" className="admin-btn">مسح</a> : null}
-          </div>
-        </div>
-      </form>
+      <AdminFilterBar
+        action="/admin/audit"
+        searchValue={q ?? ""}
+        searchPlaceholder="ابحث في الملخص…"
+        totalCount={logs.length}
+        countLabel="عملية"
+        clearHref="/admin/audit"
+        quickChips={[
+          { label: "الكل", href: "/admin/audit" + (q ? `?q=${encodeURIComponent(q)}` : ""), active: !type },
+          ...entityTypes.map((e) => ({
+            label: e.entityType,
+            href: `/admin/audit?type=${encodeURIComponent(e.entityType)}` + (q ? `&q=${encodeURIComponent(q)}` : ""),
+            active: type === e.entityType,
+          })),
+        ]}
+        filters={[
+          {
+            name: "type",
+            label: "نوع الكيان",
+            value: type ?? "",
+            options: [
+              { value: "", label: "كل الأنواع" },
+              ...entityTypes.map((e) => ({ value: e.entityType, label: e.entityType })),
+            ],
+          },
+        ]}
+      />
 
       <section className="admin-panel">
         <div className="admin-table-wrap">
-        <table className="admin-table">
+        <table className="admin-table admin-table-cards">
           <thead><tr><th>الوقت</th><th>المستخدم</th><th>العملية</th><th>الكيان</th><th>الملخص</th></tr></thead>
           <tbody>
             {logs.map((l) => (
               <tr key={l.id}>
-                <td dir="ltr" style={{ color: "var(--muted)", fontSize: 12, whiteSpace: "nowrap" }}>{l.createdAt.toISOString().slice(0, 16).replace("T", " ")}</td>
-                <td>{l.admin?.displayName ?? "—"}</td>
-                <td><span className="admin-badge gold">{ACTION_LABEL[l.action] ?? l.action}</span></td>
-                <td>{l.entityType}</td>
-                <td>{l.summary ?? "—"}</td>
+                <td data-label="الوقت" dir="ltr" style={{ color: "var(--muted)", fontSize: 12 }}>{l.createdAt.toISOString().slice(0, 16).replace("T", " ")}</td>
+                <td data-label="المستخدم">{l.admin?.displayName ?? "—"}</td>
+                <td className="cell-primary" data-label="العملية"><span className="admin-badge gold">{ACTION_LABEL[l.action] ?? l.action}</span></td>
+                <td data-label="الكيان">{l.entityType}</td>
+                <td data-label="الملخص">{l.summary ?? "—"}</td>
               </tr>
             ))}
             {logs.length === 0 ? <tr><td colSpan={5} className="admin-empty">لا سجلات.</td></tr> : null}
