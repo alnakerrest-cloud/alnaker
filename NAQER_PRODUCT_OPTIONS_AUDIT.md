@@ -74,16 +74,21 @@
 - **Current implementation:** the customer-facing UI provides a free-text **item notes** field (`itemNotesLabel` / `itemNotesPlaceholder`) in `ProductDetailModal.tsx` and general order notes in cart/checkout flows. There is **no DB-driven predefined note chips/tags** system exposed on the public product modal in the inspected codebase beyond option groups and free text.  
 - **Recommendation (no code change in this audit):** if predefined notes are required (e.g. “بدون بصل”), implement via either (a) a dedicated OptionGroup named for notes assigned per product, or (b) a future `ProductNoteTemplate` model — both must be menu-driven and assigned selectively. Until then, record as **NEEDS BUSINESS CONFIRMATION** per product where predefined notes are expected.
 
-## High-priority data/assignment issues flagged (from audit)
-1. **“إضافات” group is single-select in DB (`maxSelect: 1`)** for all assignments observed — contradicts common “extras/add-ons” expectation (multi). **NEEDS BUSINESS CONFIRMATION**; fix in Admin → Add-ons if multi is intended.
-2. **Likely incorrect group assignments** (examples): `أرز مندي سادة` (row 30) has grill/mandi-style groups attached; `دقوس` (33) sauce has heavy groups; `سجق مشوي` (39) may be mismatched. These are **data issues in DB/admin assignments**, not missing UI features — **must be corrected in admin (or via controlled DB change) after business confirmation**. Do **not** “fix” by inventing options in code.
-3. **Menu implies choices not modeled as DB option groups** for some Bedouin items in `data/menu.ts` text (e.g. `كبدة ضاني` “بدوي أو اسكندراني”, `موزة ضاني` “أرز أحمر أو مكرونة مبكبكة”). These appear with **no option groups** in dump → **NEEDS BUSINESS CONFIRMATION** whether to add targeted groups per product.
-4. **Grills/Mandi trays: semantic fit of “حجم المشويات/نوع الأرز/درجة الحرارة/إضافات”** on some products (e.g. plain rice, certain mandi items) is questionable — **NEEDS BUSINESS CONFIRMATION** per business rules.
+## Flagged assignments table (actionable review)
 
-## Verification status for this audit artifact
-- **Reviewed (data-backed):** All 42 products listed above with their actual DB variant counts and DB option-group attachments.  
-- **Not verified by live browser here:** Whether every public card opens modal correctly for each of these 42 in a running app (requires running server + DB). Use this table as the checklist for QA.
+Use this table to decide safe admin/data changes in an **isolated** environment only. Do **not** change production. If any row is “Requires business approval? Yes”, keep behavior as-is (or hide by unassigning only if clearly wrong and approved) — do not guess.
 
-## Files produced/updated by this audit step
-- `NAQER_PRODUCT_OPTIONS_AUDIT.md` (this file) — **created/updated** in repo (see commit).  
-- Temporary analysis artifacts under `scratch/` may exist locally; do not commit secrets. (If you want them excluded, add to `.gitignore` separately.)
+| Product (AR) | Current option group(s) attached (DB) | Problem (observed) | Evidence (from audit dump / code context) | Recommended action | Requires business approval? |
+|---|---|---|---|---|---|
+| جميع المنتجات (عينة مراجعة المرفقات) | مجموعة “إضافات” (`maxSelect: 1`) مرفقة لعدة منتجات مشوية/مندي/صواني | التوقع الشائع “إضافات متعددة” مقابل اختيار واحد فقط | `NAQER_PRODUCT_OPTIONS_AUDIT.md` — مجموعة “إضافات” في اللقطات كـ single-select (`maxSelect 1`) | إذا كان العمل يحتاج تعدد إضافات: في لوحة الأدمن عدّل مجموعة “إضافات” إلى متعددة وحدّد min/max مناسبين، ثم تأكد أن كل منتج يستحقها | نعم |
+| أرز مندي سادة (row 30) | حجم المشويات، نوع الأرز، درجة الحرارة، إضافات | مجموعات غير منطقية لأرز سادة | Audit dump: 4 مجموعات مرفقة لمنتج أرز سادة فقط | إزالة ربط هذه المجموعات عن المنتج في الأدمن (أو تعطيل المجموعات غير المناسبة لهذا المنتج) بعد تأكيد العمل | نعم |
+| دقوس (row 33) | حجم المشويات، نوع الأرز، درجة الحرارة، إضافات | مجموعات ثقيلة/غير مناسبة لصوص | Audit dump: نفس المجموعات مربوطة بمنتج صوص | إزالة الربط إلا إذا وُجد سبب تجاري موثق | نعم |
+| سجق مشوي (row 39) | حجم المشويات، نوع الأرز، درجة الحرارة، إضافات | احتمال عدم ملاءمة (مقارنة بمنتجات مشويات أخرى) | Audit dump: مجموعات مرفقة؛ لا يوجد نص قائمة يثبت كل هذه الاختيارات لهذا الصنف | التحقق من القائمة الفعلية: إما الإبقاء إذا مؤكد، أو إزالة المجموعات غير المناسبة | نعم |
+| وجبة نصف فرخة مشوية (row 40) | حجم المشويات، نوع الأرز، درجة الحرارة، إضافات | ملاءمة “الحجم/الحرارة/الأرز/إضافات” تحتاج تحقق | Audit dump: مجموعات مرفقة | تأكيد الملاءمة من القائمة؛ إن لم تكن مؤكدة أزل الربط أو عدّل المجموعات | نعم |
+| كبدة ضاني (row 34) | (لا يوجد) | القائمة النصية في `data/menu.ts` تذكر نمط (بدوي أو إسكندراني) غير ممثَّل في DB كخيار | Audit + مقارنة مع `data/menu.ts` (نص “بدوي أو اسكندراني”) | لا تضف خيارات من عندك؛ إن طُلب رسميًا أضف OptionGroup مستهدف لهذا المنتج فقط بعد موافقة العمل | نعم |
+| موزة ضاني (row 37, مأكولات بدوية 600جم) | (لا يوجد) | نص القائمة يذكر “أرز أحمر أو مكرونة مبكبكة” غير ممثَّل كخيار DB | Audit + `data/menu.ts` | لا تضف خيارات افتراضية؛ إن لزم، أضف مجموعة خيارات مخصصة لهذا المنتج فقط بموافقة العمل | نعم |
+| موزة فتة (ضاني أو بتلو) (row 3) | (لا يوجد) | لا توجد مجموعات مربوطة — هل مطلوب تخصيص؟ | Audit dump فارغ للمجموعات | إن لم يُذكر في القائمة خيارات، يبقى بدون خيارات (حاليًا صحيح). تأكيد عمل إن وُجدت استثناءات | نعم (تأكيد) |
+| وجبة الأطفال (row 2)، وجبة توفير (9)، وجبة كفتة مشوية (14)، وجبة شيش طاووق (18)، وجبة الأكيل (25)، تحميرة (41)، طبق مبكبكة (42) وغيرها بلا مجموعات | (لا يوجد) | تحقق من عدم وجود خيارات ضمنية في القائمة | Audit dump | لا تعرض تخصيصات غير موجودة؛ إبقاء السلوك الحالي ما لم تؤكد القائمة غير ذلك | نعم عند الشك |
+| نفر لحم مندي (ضاني/كندوز)، موزة/ضلع مندي، دجاج مندي (rows 4,12,15,20,24,26) مع مجموعات مشويات/أرز/حرارة/إضافات | مجموعات متعددة مرفقة | ملاءمة الدلالات قد تختلف عن المشويات بالوزن | Audit dump + منطق القائمة | مراجعة عمل: إبقاء فقط ما هو مؤكد في القائمة؛ غير المؤكد يحتاج إزالة ربط أو تعديل مجموعة | نعم |
+
+> **ملاحظة:** هذا الجدول هو نقطة الانطلاق. أي تعديل بيانات (إزالة/إضافة ربط مجموعات، تغيير min/max) يجب أن يتم في **بيئة معزولة** وبموافقة العمل، مع اختبار بعد التعديل.

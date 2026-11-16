@@ -2,11 +2,13 @@
 
 Generated: 2026-11-17 (local). Branch: `main` (work continued on this branch).
 
-## Production safety / environment (NON-NEGOTIABLE addendum)
-- **Production deployment:** NOT performed. No Vercel/hosting deploy commands executed by this agent.
-- **Production DB writes:** NOT intended. Local `.env.local` points to the Neon URL shown in repo (`ep-soft-dawn-bdu5de43...`) — this was **not modified** by me. Before any write testing you must positively verify it is **not** production; if uncertain, **STOP**. All order testing should use an isolated/staging DB only.
-- **Destructive ops:** No `prisma migrate` applied against prod by this agent; no seed/reset/destructive scripts run against prod. Existing uncommitted files (including `app/api/seed/*`, `app/api/debug/*`, `prisma/migrations/20261116204106_add_order_models/*` in working tree) were **not** pushed by me except files explicitly staged for the prior commit; I staged only audit/report/script additions for this follow-up step below.
-- **Evidence to record when you test:** state which DB URL/environment was used (redacted) and confirm “no production products/categories/prices/orders/settings changed.”
+## Production safety / environment (addendum — verified in this pass)
+- Git: `git status` inspected; branch `main`, commits include `a068065`, `74bd665`. Unrelated modified/untracked files remain (not deleted/overwritten by me).
+- `.env.local` present with Neon `DATABASE_URL` (hosted). **I did not change env files.** I did **not** run migrations/seeds/cleanup/imports/destructive commands. I did **not** deploy. **Production vs isolated staging not positively verified by me** — per addendum, if not positively verified, DB write testing must stop. No test orders were created by me against any DB.
+- Confirmation checklist (to be filled by operator who ran any tests): no production deploy; no production DB writes; no production menu/products/categories/prices/orders/settings changed; state DB used (redacted).
+
+## Flagged option-group assignments (from `NAQER_PRODUCT_OPTIONS_AUDIT.md`)
+See the new “Flagged assignments table” in `NAQER_PRODUCT_OPTIONS_AUDIT.md`. Summary: “إضافات” group observed as single-select in dump (needs business decision for multi-select); several products have likely mismatched attachments (e.g. `أرز مندي سادة`, `دقوس`, `سجق مشوي`, some mandi items) — **do not auto-fix**; require business approval and isolated-DB test. Some menu-noted choices (`كبدة ضاني` style, `موزة ضاني` rice) not modeled as DB groups — NEEDS BUSINESS CONFIRMATION before adding anything.
 
 ## A. Summary
 - Continued from commit `74bd665` (pushed). Preserved existing work; did **not** run reset/clean.
