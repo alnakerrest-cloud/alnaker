@@ -13,6 +13,7 @@ import {
   CartIcon,
 } from './Icons';
 import { calculateCartTotals } from '@/lib/cart';
+import CheckoutModal from './CheckoutModal';
 
 export default function CartDrawer({
   locale,
@@ -20,14 +21,14 @@ export default function CartDrawer({
   restaurantName,
   phoneIntl,
   vatNote,
-  serviceNote,
+  deliveryFee,
 }: {
   locale: Locale;
   currency: string;
   restaurantName: string;
   phoneIntl: string;
   vatNote?: string;
-  serviceNote?: string;
+  deliveryFee?: number;
 }) {
   const {
     cart,
@@ -48,6 +49,8 @@ export default function CartDrawer({
     totalQuantity,
     getWhatsAppUrl,
   } = useCart();
+
+  const [showCheckout, setShowCheckout] = useState(false);
 
   const t = ui[locale];
   const [confirmClear, setConfirmClear] = useState(false);
@@ -83,7 +86,7 @@ export default function CartDrawer({
     selectedBranch?.whatsappNumber?.trim() || selectedBranch?.phoneIntl?.trim() || phoneIntl
   );
 
-  const whatsAppUrl = getWhatsAppUrl(phoneIntl, restaurantName, vatNote, serviceNote);
+  const whatsAppUrl = getWhatsAppUrl(phoneIntl, restaurantName, vatNote);
   const itemsLabel = totalQuantity === 1 ? t.itemsSingular : t.itemsPlural;
 
   const handleEditItem = (itemId: string) => {
@@ -421,12 +424,6 @@ export default function CartDrawer({
                       </p>
                     )}
 
-                    {serviceNote && (
-                      <p className="cart-summary-note">
-                        <span>◆</span> {serviceNote}
-                      </p>
-                    )}
-
                     <div className="cart-summary-total">
                       <span>{t.total}</span>
                       <span className="total-amount">
@@ -443,31 +440,32 @@ export default function CartDrawer({
         {/* Drawer Footer with WhatsApp Action */}
         {cart.length > 0 && (
           <div className="cart-footer">
-            {isBranchOrderable ? (
-              <a
-                href={whatsAppUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-whatsapp"
-              >
-                <WhatsAppIcon width={22} height={22} />
-                <span>{t.sendViaWhatsApp}</span>
-              </a>
-            ) : (
-              <button
-                type="button"
-                className="btn-whatsapp disabled"
-                disabled
-                title={t.branchUnavailable}
-              >
-                <WhatsAppIcon width={22} height={22} />
-                <span>{t.branchUnavailable}</span>
-              </button>
-            )}
+            <button
+              type="button"
+              className="btn-checkout"
+              onClick={() => { closeCart(); setShowCheckout(true); }}
+            >
+              <span>{t.checkout || (locale === 'ar' ? 'إتمام الطلب' : 'Checkout')}</span>
+              <span className="btn-checkout-total">
+                <b>{total}</b> {currency}
+              </span>
+            </button>
             <p className="whatsapp-notice">{t.whatsappNotice}</p>
           </div>
         )}
       </div>
+      
+      <CheckoutModal
+        locale={locale}
+        currency={currency}
+        restaurantName={restaurantName}
+        phoneIntl={phoneIntl}
+        vatNote={vatNote}
+        deliveryFee={deliveryFee}
+        isOpen={showCheckout}
+        onClose={() => setShowCheckout(false)}
+        onOrderSuccess={() => setShowCheckout(false)}
+      />
     </div>
   );
 }

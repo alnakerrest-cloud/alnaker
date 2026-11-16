@@ -131,9 +131,8 @@ export const settingsSchema = z.object({
   phoneIntl: z.string().trim().max(32).optional(),
   logoUrl: z.string().trim().max(600).optional(),
   vatNoteAr: z.string().trim().max(400).optional(),
-  serviceNoteAr: z.string().trim().max(400).optional(),
-  serviceChargePct: z.number().min(0).max(100).nullable(),
   currencyAr: z.string().trim().min(1, "العملة مطلوبة").max(16),
+  deliveryFee: z.number().min(0).nullable(),
 });
 
 /* ---------- Import (استيراد نصي — إنشاء فقط، بلا دمج تلقائي) ---------- */

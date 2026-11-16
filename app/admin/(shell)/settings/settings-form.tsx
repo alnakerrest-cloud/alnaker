@@ -8,9 +8,8 @@ export type SettingsFormValues = {
   phoneDisplay: string;
   phoneIntl: string;
   currencyAr: string;
-  serviceChargePct: string; // نص للـ input؛ "" = null
   vatNoteAr: string;
-  serviceNoteAr: string;
+  deliveryFee: string; // نص للـ input؛ "" = null
 };
 
 type Props = {
@@ -57,19 +56,14 @@ export default function SettingsForm({ action, initial, submitLabel, readOnly = 
             <input id="currencyAr" name="currencyAr" defaultValue={v.currencyAr} />
           </div>
           <div className="admin-field">
-            <label htmlFor="serviceChargePct">نسبة خدمة % (اتركه فارغًا = بدون)</label>
-            <input id="serviceChargePct" name="serviceChargePct" type="number" step="0.5" min="0" max="100" defaultValue={v.serviceChargePct} />
+            <label htmlFor="deliveryFee">رسوم التوصيل (ج.م) — اتركه فارغًا = بدون</label>
+            <input id="deliveryFee" name="deliveryFee" type="number" step="0.5" min="0" defaultValue={v.deliveryFee} />
           </div>
         </div>
 
         <div className="admin-field">
           <label htmlFor="vatNoteAr">ملاحظة الضريبة (تظهر أسفل المنيو)</label>
           <textarea id="vatNoteAr" name="vatNoteAr" defaultValue={v.vatNoteAr} />
-        </div>
-
-        <div className="admin-field">
-          <label htmlFor="serviceNoteAr">ملاحظة الخدمة/الإضافات</label>
-          <textarea id="serviceNoteAr" name="serviceNoteAr" defaultValue={v.serviceNoteAr} />
         </div>
 
         <p className="hint" style={{ margin: 0 }}>

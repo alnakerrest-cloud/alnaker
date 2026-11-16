@@ -8,6 +8,7 @@ const LINKS = [
   { href: "/admin/products", label: "المنتجات" },
   { href: "/admin/offers", label: "العروض والخصومات" },
   { href: "/admin/addons", label: "الإضافات" },
+  { href: "/admin/orders", label: "الطلبات" },
   { href: "/admin/branches", label: "الفروع" },
   { href: "/admin/images", label: "إدارة الصور" },
   { href: "/admin/import", label: "استيراد المنيو" },
@@ -32,9 +33,7 @@ export default function AdminNav({ fullName }: { fullName: string }) {
       <a className="admin-nav-link" href="/ar" target="_blank" rel="noopener noreferrer">
         فتح الموقع العام ↗
       </a>
-      <span className="admin-nav-user">
-        {fullName}
-      </span>
+      <span className="admin-nav-user">{fullName}</span>
     </nav>
   );
 }

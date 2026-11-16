@@ -42,7 +42,7 @@ export default function Footer({ locale, site }: { locale: Locale; site: SiteDat
         </div>
 
         <p className="footer-note">
-          {site.vat} · {site.service}
+          {site.vat}
         </p>
         <p className="footer-copy">
           © {year} {site.brand} — {t.rights}

@@ -32,10 +32,6 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
         <div className="container">
           <p className="notice">
             <span>{site.vat}</span>
-            <span className="dot" aria-hidden>
-              ◆
-            </span>
-            <span>{site.service}</span>
           </p>
         </div>
         <MenuView

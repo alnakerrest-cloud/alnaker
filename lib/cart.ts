@@ -98,7 +98,6 @@ export type WhatsAppOrderParams = {
   subtotal: number;
   total: number;
   vatNote?: string;
-  serviceNote?: string;
   customerNotes?: string;
   locale: Locale;
 };
@@ -118,7 +117,6 @@ export function formatWhatsAppMessage(params: WhatsAppOrderParams): string {
     subtotal,
     total,
     vatNote,
-    serviceNote,
     customerNotes,
     locale,
   } = params;
@@ -185,9 +183,6 @@ export function formatWhatsAppMessage(params: WhatsAppOrderParams): string {
   lines.push(`💰 *${t.subtotal}:* ${subtotal} ${currency}`);
   if (vatNote) {
     lines.push(`ℹ️ ${vatNote}`);
-  }
-  if (serviceNote) {
-    lines.push(`ℹ️ ${serviceNote}`);
   }
   lines.push(`🧾 *${t.total}:* ${total} ${currency}`);
 

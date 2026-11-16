@@ -18,9 +18,8 @@ export default async function SettingsPage() {
     phoneDisplay: s?.phoneDisplay ?? "",
     phoneIntl: s?.phoneIntl ?? "",
     currencyAr: s?.currencyAr ?? "ج.م",
-    serviceChargePct: s?.serviceChargePct == null ? "" : String(Number(s.serviceChargePct)),
     vatNoteAr: s?.vatNoteAr ?? "",
-    serviceNoteAr: s?.serviceNoteAr ?? "",
+    deliveryFee: s?.deliveryFee == null ? "" : String(Number(s.deliveryFee)),
   };
 
   return (

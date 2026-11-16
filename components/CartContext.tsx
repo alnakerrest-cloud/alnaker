@@ -73,12 +73,11 @@ interface CartContextValue {
   subtotal: number;
   total: number;
   hasHydrated: boolean;
-  getWhatsAppUrl: (
-    fallbackPhone: string,
-    restaurantName: string,
-    vatNote?: string,
-    serviceNote?: string
-  ) => string;
+    getWhatsAppUrl: (
+      fallbackPhone: string,
+      restaurantName: string,
+      vatNote?: string
+    ) => string;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -414,8 +413,7 @@ export function CartProvider({
     (
       fallbackPhone: string,
       restaurantName: string,
-      vatNote?: string,
-      serviceNote?: string
+      vatNote?: string
     ) => {
       // Prioritize selected branch's phone/whatsapp number, fallback to settings
       const branchTargetPhone =
@@ -432,7 +430,6 @@ export function CartProvider({
         subtotal: totals.subtotal,
         total: totals.total,
         vatNote,
-        serviceNote,
         customerNotes,
         locale,
       });

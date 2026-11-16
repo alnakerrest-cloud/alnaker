@@ -28,11 +28,11 @@ export type SiteData = {
   brand: string;
   tagline: string;
   vat: string;
-  service: string;
   currency: string;
   phoneDisplay: string;
   phoneIntl: string;
   logoUrl?: string;
+  deliveryFee?: number;
   branches: VBranch[];
 };
 
@@ -63,10 +63,10 @@ export function getStaticSiteData(locale: Locale): SiteData {
     brand: t.brand,
     tagline: t.tagline,
     vat: t.vat,
-    service: t.service,
     currency: t.currency,
     phoneDisplay: PHONE_DISPLAY,
     phoneIntl: PHONE_INTL,
+    deliveryFee: undefined,
     branches: staticBranchesView(locale),
   };
 }
@@ -108,15 +108,14 @@ export async function getSiteData(locale: Locale): Promise<SiteData> {
     });
 
     return {
-      // Arabic DB is the source of truth for AR chrome; curated English is kept from the static UI.
       brand: locale === "en" ? t.brand : s?.brandNameAr ?? t.brand,
       tagline: locale === "en" ? t.tagline : s?.taglineAr ?? t.tagline,
       vat: locale === "en" ? t.vat : s?.vatNoteAr ?? t.vat,
-      service: locale === "en" ? t.service : s?.serviceNoteAr ?? t.service,
       currency: locale === "en" ? t.currency : s?.currencyAr ?? t.currency,
       phoneDisplay: s?.phoneDisplay ?? PHONE_DISPLAY,
       phoneIntl: s?.phoneIntl ?? PHONE_INTL,
       logoUrl: s?.logoUrl ?? undefined,
+      deliveryFee: s?.deliveryFee ? Number(s.deliveryFee) : undefined,
       branches: branches.length ? branches : staticBranchesView(locale),
     };
   } catch {

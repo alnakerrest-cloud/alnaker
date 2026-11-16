@@ -32,12 +32,14 @@ function read(fd: FormData) {
     serviceNoteAr: fdStrOpt(fd, "serviceNoteAr"),
     serviceChargePct: fdNumOrNull(fd, "serviceChargePct"),
     currencyAr: fdStr(fd, "currencyAr") || "ج.م",
+    deliveryFee: fdNumOrNull(fd, "deliveryFee"),
   };
 }
 
 type Snapshot = {
   brandNameAr: string; taglineAr: string | null; phoneDisplay: string | null; phoneIntl: string | null;
   vatNoteAr: string | null; serviceNoteAr: string | null; serviceChargePct: unknown; currencyAr: string;
+  deliveryFee: unknown;
 };
 /** لقطة نظيفة للسجل: Decimal → number، ونستثني الحقول الحسّاسة/غير المهمة. */
 function snapshot(o: Snapshot) {
@@ -50,6 +52,7 @@ function snapshot(o: Snapshot) {
     serviceNoteAr: o.serviceNoteAr,
     serviceChargePct: o.serviceChargePct == null ? null : Number(o.serviceChargePct),
     currencyAr: o.currencyAr,
+    deliveryFee: o.deliveryFee == null ? null : Number(o.deliveryFee),
   };
 }
 
@@ -66,9 +69,10 @@ export async function updateSettings(_prev: ActionState, fd: FormData): Promise<
     phoneDisplay: d.phoneDisplay ?? null,
     phoneIntl: d.phoneIntl ?? null,
     vatNoteAr: d.vatNoteAr ?? null,
-    serviceNoteAr: d.serviceNoteAr ?? null,
-    serviceChargePct: d.serviceChargePct,
+    serviceNoteAr: null,
+    serviceChargePct: null,
     currencyAr: d.currencyAr,
+    deliveryFee: d.deliveryFee,
   };
   const after = await prisma.restaurantSettings.upsert({
     where: { id: "default" },
