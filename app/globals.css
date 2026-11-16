@@ -134,7 +134,8 @@ a { color: inherit; }
 .hero-inner > :nth-child(3) { animation-delay: 0.16s; }
 .hero-inner > :nth-child(4) { animation-delay: 0.24s; }
 
-.brand-mark { filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35)); animation: float 6s ease-in-out infinite !important; }
+.brand-mark { filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35)); color: var(--gold-soft); animation: float 6s ease-in-out infinite; }
+.footer-brand > svg { color: var(--gold-soft); }
 
 .hero h1 {
   font-family: var(--font-display);
@@ -315,6 +316,7 @@ a { color: inherit; }
   transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.25s;
 }
 .chip:hover { border-color: var(--gold); }
+.chip-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .chip[aria-current='true'] {
   background: var(--gold);
   border-color: var(--gold);
@@ -357,6 +359,7 @@ a { color: inherit; }
   line-height: 1.2;
   color: var(--brand);
 }
+.cat-img { flex: none; width: 64px; height: 64px; border-radius: 16px; }
 .cat-rule {
   flex: 1;
   height: 2px;
@@ -2712,4 +2715,286 @@ html[dir='ltr'] .cart-panel {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   [data-reveal] .cat-head, [data-reveal] .sub-title, [data-reveal] .card { opacity: 1 !important; transform: none !important; }
   .modal-backdrop, .cart-backdrop, .modal-panel, .cart-panel, .floating-cart-wrapper { animation: none !important; }
+}
+
+/* ───────────────────────── final mobile composition ─────────────────────────
+ * The phone layout is composed as a compact brand header, a one-screen category
+ * navigator, and a two-card product grid. Desktop rules above remain unchanged.
+ */
+@media (max-width: 700px) {
+  .hero { padding: 10px 0 26px; }
+  .hero::after { height: 16px; background-size: 20px 20px; }
+
+  .hero-top { position: absolute; top: 10px; inset-inline-end: 16px; z-index: 3; }
+  .lang-switch { min-height: 34px; padding: 6px 11px; font-size: 0.78rem; }
+
+  .hero-inner {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'logo title'
+      'tag tag'
+      'actions actions';
+    column-gap: 12px;
+    row-gap: 5px;
+    justify-items: start;
+    text-align: start;
+    padding-top: 44px;
+  }
+  .brand-mark {
+    grid-area: logo;
+    --logo-size: 64px;
+    align-self: center;
+    animation: none;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.28));
+  }
+  .hero h1 {
+    grid-area: title;
+    align-self: center;
+    font-size: clamp(1.65rem, 8.5vw, 2.2rem);
+    line-height: 1.12;
+    text-align: start;
+    text-shadow: none;
+  }
+  .hero .tag {
+    grid-area: tag;
+    justify-self: start;
+    max-width: 100%;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    text-align: start;
+  }
+  .hero-actions {
+    grid-area: actions;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 5px;
+  }
+  .hero-actions .btn {
+    min-height: 36px;
+    padding: 7px 8px;
+    gap: 4px;
+    border-radius: 12px;
+    font-size: 0.74rem;
+    line-height: 1.15;
+  }
+  .hero-actions .btn.primary {
+    grid-column: 1 / -1;
+    min-height: 40px;
+    font-size: 0.82rem;
+  }
+  .hero-actions .btn span { min-width: 0; overflow-wrap: anywhere; }
+  .hero-actions .btn svg { flex: none; width: 14px; height: 14px; }
+
+  .notice {
+    margin: 6px auto 2px;
+    padding: 6px 9px;
+    gap: 1px 5px;
+    border-radius: 14px;
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+  .notice .dot { display: none; }
+
+  .bar { margin-top: 6px; }
+  .bar-row { gap: 6px; padding: 7px 0 5px; }
+  .tabs { padding: 3px; }
+  .tab { min-height: 34px; padding: 5px 9px; font-size: 0.8rem; }
+  .search input { height: 38px; padding-inline: 34px 30px; font-size: 0.82rem; }
+  .search-icon { inset-inline-start: 10px; }
+  .search-icon svg { width: 16px; height: 16px; }
+  .clear { inset-inline-end: 6px; width: 24px; height: 24px; }
+
+  .chips { gap: 6px; padding: 1px 2px 7px; }
+  .chip {
+    max-width: min(72vw, 200px);
+    min-height: 32px;
+    padding: 3px 10px;
+    gap: 4px;
+    font-size: 0.78rem;
+  }
+  .chip > span[aria-hidden] { flex: none; line-height: 1; }
+  .chip-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+
+  .cat { padding-top: 18px; }
+  .cat-head { gap: 8px; margin-bottom: 8px; }
+  .cat-icon { width: 40px; height: 40px; border-radius: 12px; font-size: 18px; }
+  .cat-img { width: 40px; height: 40px; border-radius: 12px; }
+  .cat-title { font-size: clamp(1.25rem, 6vw, 1.65rem); }
+  .cat-alt { font-size: 0.7rem; }
+  .cat-rule { display: none; }
+  .sub + .sub { margin-top: 14px; }
+  .sub-title { margin-bottom: 6px; padding: 2px 10px; font-size: 0.78rem; }
+
+  /* A real two-up product grid on phones; rich platters keep their own image-first card. */
+  .grid,
+  .grid[data-kind='platter'],
+  .grid[data-kind='meal'],
+  .grid[data-kind='side'],
+  .grid[data-kind='drink'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .grid,
+  .grid[data-kind='platter'],
+  .grid[data-kind='meal'] { gap: 10px; }
+  .grid[data-kind='side'],
+  .grid[data-kind='drink'] { gap: 8px; }
+  .card { min-width: 0; border-radius: 14px; }
+  .card > * { min-width: 0; }
+
+  .platter-media { aspect-ratio: 4 / 3; padding: 8px; }
+  .platter-num {
+    top: 7px;
+    inset-inline-start: 7px;
+    padding: 1px 5px;
+    font-size: 0.58rem;
+  }
+  .card--platter .badge.on-dark {
+    top: 7px;
+    inset-inline-end: 7px;
+    padding: 0 5px;
+    font-size: 0.52rem;
+  }
+  .platter-body { gap: 4px; padding: 8px 9px 4px; }
+  .card--platter .card-title {
+    font-size: 0.94rem;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  .card--platter .desc {
+    font-size: 0.74rem;
+    line-height: 1.4;
+    -webkit-line-clamp: 2;
+  }
+  .tags-wrap { margin-top: 5px; }
+  .tags { gap: 3px; max-height: 24px; }
+  .tags li { padding: 1px 5px; font-size: 0.58rem; line-height: 1.4; }
+  .tags-more { display: none; }
+  .platter-foot { padding: 6px 9px 9px; }
+  .prices.big {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+  .prices.big .price {
+    align-items: baseline;
+    gap: 3px;
+    padding: 3px 6px;
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+  .prices.big .price b { font-size: 1.25rem; }
+  .prices.big .price i { font-size: 0.56rem; }
+  .prices.big .price small { font-size: 0.58rem; }
+
+  .card--meal .card-body { gap: 3px; padding: 8px 8px 3px; }
+  .card--meal .card-title,
+  .side-main .card-title,
+  .drink-main .card-title {
+    font-size: 0.88rem;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  .card--meal .desc,
+  .side-main .desc,
+  .drink-main .desc {
+    font-size: 0.74rem;
+    line-height: 1.35;
+    -webkit-line-clamp: 2;
+  }
+  .card--meal .card-foot { padding: 6px 8px 8px; }
+  .price { gap: 3px; padding: 3px 7px; border-radius: 8px; }
+  .price b { font-size: 0.92rem; }
+  .price i { font-size: 0.54rem; }
+  .price small { font-size: 0.56rem; }
+  .badge { padding: 0 5px; font-size: 0.52rem; }
+  .badge.on-media { top: 6px; inset-inline-start: 6px; }
+
+  .card--side,
+  .card--drink { min-height: 0; padding: 8px; border-radius: 14px; }
+  .card-top-row { gap: 6px; margin-bottom: 6px; }
+  .side-thumb,
+  .drink-thumb { width: 44px; height: 44px; border-radius: 9px; }
+  .side-main,
+  .drink-main { gap: 2px; margin-bottom: 6px; }
+  .side-foot,
+  .drink-foot { padding-top: 5px; }
+
+  .ph--meal .ph-icon,
+  .ph--platter .ph-icon { width: 42px; height: 42px; }
+  .ph-icon { font-size: 22px; }
+  .ph--side .ph-icon,
+  .ph--drink .ph-icon { font-size: 18px; }
+
+  /* Offers become a compact horizontal card instead of a second full-screen hero. */
+  .offers-section { padding: 12px 0 18px; }
+  .offers-header { align-items: center; gap: 8px; margin-bottom: 8px; }
+  .offers-badge { margin-bottom: 2px; padding: 1px 7px; font-size: 0.62rem; }
+  .offers-title { font-size: 1.1rem; }
+  .offers-subtitle { margin-top: 1px; font-size: 0.68rem; line-height: 1.3; }
+  .offers-slider-controls { gap: 2px; padding: 2px 4px; }
+  .slider-nav-btn { width: 26px; height: 26px; }
+  .slider-counter { padding: 0 2px; font-size: 0.65rem; }
+  .offer-card--featured {
+    grid-template-columns: minmax(104px, 0.42fr) minmax(0, 1fr);
+    min-height: 0;
+    border-radius: 14px;
+  }
+  .offer-media--featured { height: 100%; min-height: 156px; max-height: 210px; }
+  .offer-content--featured { padding: 9px 10px; }
+  .offer-meta-top { margin-bottom: 4px; }
+  .offer-branch-pill { padding: 1px 6px; font-size: 0.62rem; }
+  .offer-name--featured { margin: 2px 0; font-size: 0.98rem; line-height: 1.25; }
+  .offer-product-pill { margin: 2px 0 4px; padding: 2px 5px; font-size: 0.62rem; }
+  .offer-desc--featured { margin: 3px 0 6px; font-size: 0.7rem; line-height: 1.35; }
+  .offer-footer--featured { gap: 6px; padding-top: 6px; }
+  .offer-price-row { gap: 4px; }
+  .offer-orig-price { font-size: 0.68rem; }
+  .offer-promo-price--lg { font-size: 1.05rem; }
+  .offer-savings-badge { padding: 1px 5px; font-size: 0.58rem; }
+  .btn-claim-offer--featured { gap: 4px; padding: 6px 9px; font-size: 0.65rem; }
+  .btn-claim-arrow { font-size: 0.8rem; }
+  .offers-slider-dots { gap: 5px; margin-top: 8px; }
+  .slider-dot { width: 8px; height: 8px; }
+  .slider-dot--active { width: 22px; }
+}
+
+@media (max-width: 480px) {
+  .offers-subtitle { display: none; }
+}
+
+/* Tablet keeps the richer offer card but stops it from becoming another hero. */
+@media (min-width: 701px) and (max-width: 900px) {
+  .offers-section { padding: 14px 0 18px; }
+  .offers-header { margin-bottom: 10px; }
+  .offer-card--featured {
+    grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1fr);
+    min-height: 260px;
+  }
+  .offer-media--featured { min-height: 240px; max-height: 300px; }
+  .offer-content--featured { padding: 14px 18px; }
+  .offer-name--featured { font-size: 1.15rem; }
+  .offer-desc--featured { margin: 4px 0 10px; -webkit-line-clamp: 2; }
+}
+
+@media (max-width: 359px) {
+  .hero-inner { column-gap: 8px; }
+  .brand-mark { --logo-size: 56px; }
+  .hero h1 { font-size: 1.55rem; }
+  .hero .tag { font-size: 0.74rem; }
+  .hero-actions .btn { padding-inline: 6px; font-size: 0.68rem; }
+  .hero-actions .btn.primary { font-size: 0.78rem; }
+  .chip { max-width: 76vw; }
+  .offer-card--featured { grid-template-columns: minmax(92px, 0.42fr) minmax(0, 1fr); }
+  .offer-media--featured { min-height: 150px; }
+  .offer-content--featured { padding-inline: 8px; }
+  .card--platter .desc { -webkit-line-clamp: 1; }
 }

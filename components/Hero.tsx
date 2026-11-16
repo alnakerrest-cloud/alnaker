@@ -13,7 +13,7 @@ export default function Hero({ locale, site }: { locale: Locale; site: SiteData 
         </div>
 
         <div className="hero-inner">
-          <Logo className="brand-mark" src={site.logoUrl} />
+          <Logo className="brand-mark" src={site.logoUrl} priority />
           <h1>{site.brand}</h1>
           <p className="tag">{site.tagline}</p>
 

@@ -1,9 +1,23 @@
 import Image from "next/image";
+import { NAQER_LOGO_PATH, NAQER_LOGO_VIEWBOX } from "@/lib/naqer-logo-path";
 
 /**
- * شعار المطعم. إن وُجد شعار مرفوع (src من Cloudinary) يُعرض، وإلا يظهر الشعار الرمزي الافتراضي.
+ * شعار المطعم. إن وُجد شعار مرفوع (src من Cloudinary) يُعرض، وإلا يظهر الشعار
+ * المتجهي المشتق من ملف naqerlogo.pdf مع الحفاظ على الجمل العربي ورمز الهجن والنخيل.
  */
-export default function Logo({ size = 84, className, src }: { size?: number; className?: string; src?: string | null }) {
+export default function Logo({
+  size = 84,
+  className,
+  src,
+  priority = false,
+}: {
+  size?: number;
+  className?: string;
+  src?: string | null;
+  priority?: boolean;
+}) {
+  const dimension = `var(--logo-size, ${size}px)`;
+
   if (src) {
     return (
       <Image
@@ -13,37 +27,25 @@ export default function Logo({ size = 84, className, src }: { size?: number; cla
         width={size}
         height={size}
         sizes={`${size}px`}
-        style={{ objectFit: "contain", width: size, height: size }}
+        priority={priority}
+        style={{ objectFit: "contain", width: dimension, height: dimension }}
       />
     );
   }
+
   return (
     <svg
       className={className}
       width={size}
       height={size}
-      viewBox="0 0 100 100"
+      viewBox={NAQER_LOGO_VIEWBOX}
+      style={{ width: dimension, height: dimension }}
       role="img"
       aria-label="Al Naqer"
+      focusable="false"
     >
-      <circle cx="50" cy="50" r="47" fill="none" stroke="#E3B25A" strokeWidth="2" />
-      <circle cx="50" cy="50" r="42" fill="none" stroke="#E3B25A" strokeOpacity=".45" strokeWidth="1" />
-      <path
-        d="M50 10 L58 32 L80 24 L68 44 L90 50 L68 56 L80 76 L58 68 L50 90 L42 68 L20 76 L32 56 L10 50 L32 44 L20 24 L42 32 Z"
-        fill="#E3B25A"
-      />
-      <circle cx="50" cy="50" r="17" fill="#5C2A26" />
-      <text
-        x="50"
-        y="58"
-        textAnchor="middle"
-        fontSize="26"
-        fontWeight="700"
-        fill="#F6E6C3"
-        fontFamily="'Reem Kufi', 'Cairo', serif"
-      >
-        ن
-      </text>
+      <title>Al Naqer</title>
+      <path fill="currentColor" d={NAQER_LOGO_PATH} />
     </svg>
   );
 }

@@ -20,7 +20,7 @@ type Group = 'food' | 'drinks';
 
 /* object-fit + responsive sizes per card archetype (image performance + no distortion). */
 const MEDIA: Record<VKind, { fit: 'cover' | 'contain'; sizes: string }> = {
-  platter: { fit: 'contain', sizes: '(max-width:700px) 92vw, (max-width:1100px) 46vw, 30vw' },
+  platter: { fit: 'contain', sizes: '(max-width:700px) 46vw, (max-width:1100px) 46vw, 30vw' },
   meal: { fit: 'cover', sizes: '(max-width:640px) 46vw, (max-width:900px) 31vw, 23vw' },
   side: { fit: 'cover', sizes: '80px' },
   drink: { fit: 'cover', sizes: '72px' },
@@ -512,7 +512,7 @@ function MenuViewInner({
                   onClick={() => goTo(c.id)}
                 >
                   <span aria-hidden>{c.icon}</span>
-                  {c.name}
+                  <span className="chip-label">{c.name}</span>
                 </button>
               ))}
             </nav>
@@ -533,7 +533,7 @@ function MenuViewInner({
             <Reveal key={`${c.id}-${searching ? 's' : 'n'}`} id={c.id}>
               <div className={`cat-head cat-head--${c.kind}`}>
                 {c.img ? (
-                  <Image className="cat-img" src={c.img} alt={c.name} width={96} height={96} sizes="96px" style={{ objectFit: 'cover', borderRadius: 16, width: 64, height: 64 }} />
+                  <Image className="cat-img" src={c.img} alt={c.name} width={96} height={96} sizes="(max-width: 700px) 40px, 64px" style={{ objectFit: 'cover' }} />
                 ) : (
                   <span className="cat-icon" aria-hidden>
                     {c.icon}

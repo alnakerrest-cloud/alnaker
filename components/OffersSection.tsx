@@ -158,7 +158,7 @@ export default function OffersSection({
                         src={offer.imageUrl}
                         alt={offer.title}
                         fill
-                        sizes="(max-width: 768px) 100vw, 580px"
+                        sizes="(max-width: 700px) 42vw, 580px"
                         style={{ objectFit: 'cover' }}
                         priority
                       />
@@ -268,7 +268,7 @@ export default function OffersSection({
                             src={offer.imageUrl}
                             alt={offer.title}
                             fill
-                            sizes="(max-width: 768px) 100vw, 580px"
+                            sizes="(max-width: 700px) 42vw, 580px"
                             style={{ objectFit: 'cover' }}
                             priority={idx === 0}
                           />
