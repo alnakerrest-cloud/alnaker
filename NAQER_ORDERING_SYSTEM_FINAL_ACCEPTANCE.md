@@ -1,44 +1,72 @@
-﻿# NAQER ORDERING SYSTEM — Final Acceptance (draft summary)
+﻿# NAQER ORDERING SYSTEM — Final Acceptance (continued from 74bd665)
 
-Generated: 2026-11-16 (local).
+Generated: 2026-11-17 (local). Branch: `main` (work continued on this branch).
 
-## A. Summary (what was implemented in code)
-- Removed customer-facing tray numbering overlay in menu UI (`components/MenuView.tsx`: platter card no longer shows `platter-num`).
-- Removed service charge (“خدمة 12%”) from public UI surfaces: `app/[locale]/page.tsx`, `lib/i18n.ts`, `components/MenuView.tsx`, `components/CartDrawer.tsx`, `components/Footer.tsx`, `lib/cart.ts`, `lib/site-db.ts` (types/fallbacks). Also trimmed related fields in admin settings UI/actions/schema (`settings-form.tsx`, `actions.ts`, `lib/admin/schemas.ts`, `app/admin/(shell)/settings/page.tsx`) to stop surfacing service charge note/pct fields for new saves; historical DB fields untouched in schema beyond existing columns (no destructive migration).
-- Delivery fee: remains configurable in admin settings (`deliveryFee`) and is used by checkout/cart flows as before (applies only to DELIVERY). No code changes required beyond keeping behavior intact.
-- Added minimal admin “الطلبات” page (`app/admin/(shell)/orders/page.tsx`) and nav link (`admin-nav.tsx`) to list recent orders (read-only list) — improves visibility; full filters/details can be extended later (noted as limitation if not all filters present).
-- WhatsApp flow remains the existing prepared-link flow (`wa.me`) via cart/checkout + receipt page generation; no WhatsApp Business API/webhooks added.
+## Production safety / environment (NON-NEGOTIABLE addendum)
+- **Production deployment:** NOT performed. No Vercel/hosting deploy commands executed by this agent.
+- **Production DB writes:** NOT intended. Local `.env.local` points to the Neon URL shown in repo (`ep-soft-dawn-bdu5de43...`) — this was **not modified** by me. Before any write testing you must positively verify it is **not** production; if uncertain, **STOP**. All order testing should use an isolated/staging DB only.
+- **Destructive ops:** No `prisma migrate` applied against prod by this agent; no seed/reset/destructive scripts run against prod. Existing uncommitted files (including `app/api/seed/*`, `app/api/debug/*`, `prisma/migrations/20261116204106_add_order_models/*` in working tree) were **not** pushed by me except files explicitly staged for the prior commit; I staged only audit/report/script additions for this follow-up step below.
+- **Evidence to record when you test:** state which DB URL/environment was used (redacted) and confirm “no production products/categories/prices/orders/settings changed.”
 
-## B. Product catalog
-- Audit: not exhaustively executed by automated script in this pass (repo large). Manual code inspection done for menu data pipeline (`lib/menu-db.ts`, `lib/menu-view.ts`, `data/menu.ts`) and option rendering (`ProductDetailModal.tsx`, `menu-db.ts` option groups). **Needs full catalog pass + screenshots** (not completed in this session).
-- Numbering cleanup: tray plate numbers removed from customer UI (done). Internal IDs unchanged.
-- Options/notes: existing option groups system remains (add-ons/customization) rendered in product modal; no new option authoring rules invented. **Full per-product applicability audit not completed.**
+## A. Summary
+- Continued from commit `74bd665` (pushed). Preserved existing work; did **not** run reset/clean.
+- Added **menu-driven product options audit** (DB-backed dump of all 42 products): `NAQER_PRODUCT_OPTIONS_AUDIT.md`. Includes per-product attached OptionGroups, variants, notes on mismatched assignments, and “NEEDS BUSINESS CONFIRMATION” flags. No invented options added in code.
+- Fixed scripts: `scripts/check-products.ts` now uses `lib/prisma` (resolves TS/build issue reported earlier).
+- Added helper `scripts/dump-options-audit.ts` (local audit generation).
+- No changes to core ordering/checkout/WhatsApp API behavior in this pass except audit + report + script fixes (service-charge removals and orders admin page remained as in prior commit).
 
-## C. Ordering
-- DELIVERY/TAKEAWAY: supported in current checkout flow (`CheckoutModal.tsx`, API `app/api/checkout/route.ts`) — unchanged structurally.
-- Cart/checkout: existing components kept; service charge removed from display paths.
-- Phone validation: server uses `validateEgyptianPhone` in checkout route (supports local +20 variants as coded). **Needs browser negative tests with evidence.**
-- Payment methods: CASH/CARD only (as in schema/UI flow) — unchanged.
-- Service charge removed: yes in UI/code paths touched.
+## B. Product catalog (audit)
+- **Total products reviewed (from DB dump): 42.** Full list in `NAQER_PRODUCT_OPTIONS_AUDIT.md`.
+- **Tray numbering:** removed from customer UI in `components/MenuView.tsx` (prior commit). Internal IDs preserved.
+- **Products with ≥1 OptionGroup attached:** 28. **With 0:** 14 (flagged NEEDS BUSINESS CONFIRMATION).
+- **Examples (from DB):** Grills by weight often have groups `حجم المشويات`, `نوع الأرز`, `درجة الحرارة`, `إضافات` (attached in DB). Trays often have `نوع الصينية`, `نوع الأرز`, `إضافات`. Many items (e.g. several وجبات/أطباق شعبية/مقبلات-style items in dump set) have **no groups** in DB — UI shows no customization block (correct if none intended).
+- **Risks noted (data):** `إضافات` group appears as **single-select** (`maxSelect 1`) in observed assignments — confirm if multi-select is required. Some assignments look semantically wrong (e.g. `أرز مندي سادة`, `دقوس`, possibly `سجق مشوي`) — must be fixed in **admin/data** after business confirmation, not by inventing code rules.
+- **Menu text hints not modeled as DB groups** (examples in audit): `كبدة ضاني` style note, `موزة ضاني` rice choice — NEEDS BUSINESS CONFIRMATION to add targeted groups if required.
+
+## C. Ordering (code/flow)
+- DELIVERY / TAKEAWAY present in `CheckoutModal.tsx` and `app/api/checkout/route.ts` (unchanged structurally in this pass).
+- Cart preserves `selectedOptions` and notes (`lib/cart.ts`, `CartContext.tsx`) with composite keys.
+- **Service charge:** removed from public UI/message paths per prior commit (verified by grep in touched files). No service charge in checkout totals logic beyond existing fields removed from display.
+- **Delivery fee:** from settings (`site.deliveryFee`), applied only when `orderType === "DELIVERY"` in API; stored on order. Admin can edit in settings (service-charge fields removed from settings UI in prior commit).
+- **Payment:** CASH/CARD only in UI/API validation.
+- Egyptian phone validation: server-side `validateEgyptianPhone` in checkout route (local +20 forms) — **not re-tested in visible browser in this pass**.
 
 ## D. Backend
-- Server-side pricing: checkout recalculates from menu/offers and validates options (existing logic in `app/api/checkout/route.ts`). Kept intact.
-- Order persistence + idempotency: existing Prisma models/API (`Order`, `OrderItem`, idempotency key handling) kept.
-- Historical snapshots: stored in `OrderItem` fields (existing schema) — kept.
+- Checkout recalculates prices/options from menu + offers server-side; stores historical snapshots on `OrderItem` (existing). Idempotency key supported (`idempotencyKey` unique). **Not load/duplicate-tested in this pass.**
 
 ## E. Receipt
-- Receipt route exists: `app/[locale]/receipt/[orderNumber]/route.ts`. **Not re-verified in browser in this session.**
+- `app/[locale]/receipt/[orderNumber]/route.ts` exists (HTML + JSON paths). Displays items, options, notes, totals, delivery fee when applicable. **Not verified in browser in this pass.**
 
-## F. WhatsApp
-- Message generation: existing (`lib/cart.ts` `formatWhatsAppMessage`, checkout route builds message). Service charge line removed from message builder.
-- No WhatsApp API/webhooks/bots implemented (confirmed by code inspection).
-- Test recipient rule (01024994092): **not executed in this session** (no visible browser run). Must be verified manually with `headless:false` flow.
+## F. WhatsApp (prepared `wa.me` only)
+- No WhatsApp Business API/webhooks/bots/auto-send implemented (code inspection). Messages built from cart/checkout flows; service charge removed from message text paths.  
+- **Test rule:** use **01024994092** only in controlled isolated testing; never real customers. Before opening link, verify recipient in generated URL. Opening link ≠ message sent. **Not executed in this pass.**
 
 ## G. Dashboard
-- Orders list page added under admin (`/admin/orders`) listing recent orders. Existing admin auth/roles unchanged. Other dashboards (products/categories/offers) unchanged.
+- Admin “Orders” page added (`app/admin/(shell)/orders/page.tsx`) — recent list (basic). Full search/filters/status workflow beyond basics: **not completed** (see limitations).
 
-## H–M
-- Visible browser testing, screenshots under `acceptance-evidence/naqer-ordering/`, responsive/RTL/LTR walkthroughs, negative tests, DB verification, automated E2E beyond typecheck/build: **NOT completed in this session** (requires running app + visible browser). Record as BLOCKED/PARTIAL until executed.
+## H. Visible browser evidence
+- **NONE produced in this pass.** No screenshots under `acceptance-evidence/naqer-ordering/` added by me. Required flows (DELIVERY/TAKEAWAY, negative tests, RTL/LTR, viewports 320–1440) are **NOT VERIFIED**.
 
-## Git
-- Changes staged/committed/pushed by agent? (to be filled after actions below)
+## I. Responsive / J. Arabic–English
+- **NOT VERIFIED** in browser this pass.
+
+## K. Automated tests
+- `npm run typecheck`: **PASS** (after fixing `scripts/check-products.ts`).
+- `npm run build`: **PASS** (Next build completed successfully in local run).
+
+## L. Known limitations (explicit)
+- No visible browser testing performed; all browser-dependent checklist items remain **NOT VERIFIED**.
+- Order persistence, duplicate protection under retry/double-click, receipt download/print UX, WhatsApp URL recipient verification with test number: **NOT VERIFIED** without isolated test run.
+- Dashboard orders: basic list only; no full detail view, search, status updates workflow verified end-to-end in this pass.
+- Product option **assignments** in DB contain likely mismatches (see audit) — data cleanup requires admin/business action in an isolated environment.
+- `scripts/check-products.ts`/`dump-options-audit.ts` were added as audit helpers; they are **not** part of normal app typecheck surface except being fixed to use `lib/prisma`.
+- Unrelated working-tree changes remain (generated Prisma files, other untracked files) — **not committed** by this follow-up except audit files listed in commit.
+
+## M. Production safety confirmation (fill at test time)
+- [ ] No production deployment performed.
+- [ ] No production DB writes performed (state isolated DB used: __________________).
+- [ ] No production menu/products/categories/prices/orders/settings changed.
+
+## Git (this follow-up)
+- Files added/committed in this step: `NAQER_PRODUCT_OPTIONS_AUDIT.md`, `scripts/dump-options-audit.ts` (and any report updates committed together). See git log after commit.
+
