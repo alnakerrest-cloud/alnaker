@@ -1717,6 +1717,48 @@
         "createdAt": "2026-11-18T21:18:12.647Z",
         "updatedAt": "2026-11-18T21:18:12.647Z"
       }
+    ],
+    "Order": [
+      {
+        "id": "fdcdca95-11b0-4454-a23f-8576591e1843",
+        "orderNumber": "ORD-20261119-371371",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CARD",
+        "customerName": "ابراهيم شعيب 3",
+        "customerPhone": "201010814966",
+        "customerNotes": "100 شقه",
+        "deliveryAddress": "االصحبجيه",
+        "deliveryFee": 30,
+        "branchId": "6d6528bd-dbd4-4672-aa5f-953063d3a36e",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1850,
+        "idempotencyKey": "checkout-1795108501179-fzvo32mq",
+        "items": {
+          "create": [
+            {
+              "id": "item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-19T17:15:03.773Z",
+        "updatedAt": "2026-11-19T17:15:03.773Z"
+      }
     ]
   },
   "deleted": {}
