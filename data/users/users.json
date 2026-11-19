@@ -2,25 +2,25 @@
   {
     "id": "usr-admin-owner-001",
     "email": "admin@naqer-restaurant.local",
-    "passwordHash": "$2b$12$eDVXBXydF1ZgSUr.JvK9tuXNWXE65GxITX5k2JdNpdY2vYoV4jpIW",
+    "passwordHash": "$2b$12$YPzbal0C4iE44n/Za2OD.uSpHhJdKwg2Z0khFFGpi1yR6HQXVeLHq",
     "displayName": "إبراهيم شعيب (مدير عام المطعم)",
     "role": "OWNER",
     "isActive": true,
     "mustChangePassword": false,
     "createdAt": "2026-11-18T18:43:54.679Z",
-    "updatedAt": "2026-11-19T00:16:20.944Z",
+    "updatedAt": "2026-11-19T00:47:44.656Z",
     "lastLoginAt": "2026-11-19T00:27:06.567Z"
   },
   {
     "id": "usr-staff-orders-002",
     "email": "orders-staff@naqer-restaurant.local",
-    "passwordHash": "$2b$12$APObownPQQR6iNJQeP/xT.hbCk1tpHoLZqCDT.dLBauw8.JNvjEyG",
+    "passwordHash": "$2b$12$.IS6DEgyOA3cgpLXWhuH9ez3MD3cYlCuJpqQ3q8g9BARjmhmJJvIu",
     "displayName": "موظف استقبال وتجهيز الطلبات",
     "role": "ORDERS_STAFF",
     "isActive": true,
     "mustChangePassword": false,
     "createdAt": "2026-11-18T18:43:54.679Z",
-    "updatedAt": "2026-11-19T00:16:21.349Z",
+    "updatedAt": "2026-11-19T00:47:45.109Z",
     "lastLoginAt": "2026-11-18T19:44:04.348Z"
   }
 ]

@@ -5,7 +5,7 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createHmac, randomBytes } from "node:crypto";
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import bcrypt from "bcryptjs";
 import {
   findSessionByTokenHash,
@@ -51,11 +51,47 @@ export function hashToken(token: string): string {
   return createHmac("sha256", getSessionSecret()).update(token).digest("hex");
 }
 
+/** توقيع بيانات الجلسة رقمياً بـ HMAC-SHA256 لضمان استمرارية الجلسة على serverless حتى عند انقطاع قاعدة البيانات */
+export function signSessionPayload(userId: string, expiresAt: number): string {
+  const nonce = randomBytes(16).toString("hex");
+  const payload = `${userId}:${expiresAt}:${nonce}`;
+  const sig = createHmac("sha256", getSessionSecret()).update(payload).digest("hex");
+  return `${Buffer.from(payload).toString("base64url")}.${sig}`;
+}
+
+/** التحقق من صحة التوقيع الرقمي للجلسة */
+export function verifySessionPayload(token: string): { userId: string; expiresAt: number } | null {
+  try {
+    if (!token || !token.includes(".")) return null;
+    const [b64Payload, sig] = token.split(".");
+    if (!b64Payload || !sig) return null;
+
+    const payload = Buffer.from(b64Payload, "base64url").toString("utf8");
+    const expectedSig = createHmac("sha256", getSessionSecret()).update(payload).digest("hex");
+
+    const bufSig = Buffer.from(sig, "hex");
+    const bufExpected = Buffer.from(expectedSig, "hex");
+
+    if (bufSig.length !== bufExpected.length) return null;
+    if (!timingSafeEqual(bufSig, bufExpected)) return null;
+
+    const [userId, expiresAtStr] = payload.split(":");
+    const expiresAt = Number(expiresAtStr);
+    if (!userId || !expiresAt || Number.isNaN(expiresAt) || expiresAt <= Date.now()) {
+      return null;
+    }
+
+    return { userId, expiresAt };
+  } catch {
+    return null;
+  }
+}
+
 /** توليد رمز جلسة خام مع التجزئة المشفرة وتاريخ الانتهاء */
-export function generateSessionToken(): { rawToken: string; tokenHash: string; expiresAt: Date } {
-  const rawToken = randomBytes(32).toString("hex");
-  const tokenHash = hashToken(rawToken);
+export function generateSessionToken(adminId?: string): { rawToken: string; tokenHash: string; expiresAt: Date } {
   const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
+  const rawToken = adminId ? signSessionPayload(adminId, expiresAt.getTime()) : randomBytes(32).toString("hex");
+  const tokenHash = hashToken(rawToken);
   return { rawToken, tokenHash, expiresAt };
 }
 
@@ -92,7 +128,7 @@ export async function createAtomicLoginSession(
 
   await touchLastLogin(adminId);
 
-  const { rawToken, tokenHash, expiresAt } = generateSessionToken();
+  const { rawToken, tokenHash, expiresAt } = generateSessionToken(adminId);
   await createStoreSession(adminId, tokenHash, expiresAt);
 
   return { rawToken };
@@ -116,7 +152,7 @@ export async function executeAtomicPasswordChange(
     mustChangePassword: false,
   });
 
-  const { rawToken, tokenHash, expiresAt } = generateSessionToken();
+  const { rawToken, tokenHash, expiresAt } = generateSessionToken(adminId);
   await createStoreSession(adminId, tokenHash, expiresAt);
 
   return { newRawToken: rawToken };
@@ -133,19 +169,39 @@ export async function getSessionAdmin(): Promise<SessionAdmin | null> {
   if (!token) return null;
 
   const tokenHash = hashToken(token);
-  const result = await findSessionByTokenHash(tokenHash);
-  if (!result) return null;
 
-  const { user } = result;
-  if (!user.isActive) return null;
+  // 1. Primary: Try looking up DB/file session by token hash
+  try {
+    const result = await findSessionByTokenHash(tokenHash);
+    if (result && result.user && result.user.isActive) {
+      return {
+        id: result.user.id,
+        email: result.user.email,
+        displayName: result.user.displayName,
+        role: result.user.role,
+        mustChangePassword: Boolean(result.user.mustChangePassword),
+      };
+    }
+  } catch (err) {
+    console.warn("[auth] Session hash lookup failed, checking signature fallback:", err);
+  }
 
-  return {
-    id: user.id,
-    email: user.email,
-    displayName: user.displayName,
-    role: user.role,
-    mustChangePassword: Boolean(user.mustChangePassword),
-  };
+  // 2. Resilient cryptographic fallback (Serverless / Neon quota outage)
+  const verified = verifySessionPayload(token);
+  if (verified) {
+    const user = await findUserById(verified.userId);
+    if (user && user.isActive) {
+      return {
+        id: user.id,
+        email: user.email,
+        displayName: user.displayName,
+        role: user.role,
+        mustChangePassword: Boolean(user.mustChangePassword),
+      };
+    }
+  }
+
+  return null;
 }
 
 /**

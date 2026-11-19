@@ -5,9 +5,9 @@
     "verificationToken": "459af3ab4b2bdad75e7d8fded49e06a7",
     "verificationCode": "NQR-3493",
     "createdAt": "2026-11-18T23:58:56.514Z",
-    "updatedAt": "2026-11-18T23:58:56.514Z",
+    "updatedAt": "2026-11-19T00:43:49.078Z",
     "expiresAt": "2026-11-19T00:28:56.514Z",
-    "status": "PENDING_WHATSAPP",
+    "status": "EXPIRED",
     "type": "TAKEAWAY",
     "paymentMethod": "CASH",
     "customerName": "كنافة نابلسية بالجبنة",
@@ -58,6 +58,14 @@
         "action": "created_order",
         "toStatus": "PENDING_WHATSAPP",
         "note": "Order created, waiting for customer to dispatch WhatsApp message"
+      },
+      {
+        "timestamp": "2026-11-19T00:43:49.078Z",
+        "actor": "system",
+        "action": "expire_unconfirmed_order",
+        "fromStatus": "PENDING_WHATSAPP",
+        "toStatus": "EXPIRED",
+        "note": "Order unconfirmed by customer within TTL period"
       }
     ]
   },
@@ -67,9 +75,9 @@
     "verificationToken": "8722e324632912fdb0af2c2861c00dc4",
     "verificationCode": "NQR-2459",
     "createdAt": "2026-11-18T23:58:56.306Z",
-    "updatedAt": "2026-11-18T23:58:56.306Z",
+    "updatedAt": "2026-11-19T00:43:49.078Z",
     "expiresAt": "2026-11-19T00:28:56.306Z",
-    "status": "PENDING_WHATSAPP",
+    "status": "EXPIRED",
     "type": "TAKEAWAY",
     "paymentMethod": "CASH",
     "customerName": "طلب مميز باختيارات مختلفة",
@@ -164,6 +172,14 @@
         "action": "created_order",
         "toStatus": "PENDING_WHATSAPP",
         "note": "Order created, waiting for customer to dispatch WhatsApp message"
+      },
+      {
+        "timestamp": "2026-11-19T00:43:49.078Z",
+        "actor": "system",
+        "action": "expire_unconfirmed_order",
+        "fromStatus": "PENDING_WHATSAPP",
+        "toStatus": "EXPIRED",
+        "note": "Order unconfirmed by customer within TTL period"
       }
     ]
   },
@@ -173,9 +189,9 @@
     "verificationToken": "acf65fc2967a87b73af87f6c792088c9",
     "verificationCode": "NQR-1339",
     "createdAt": "2026-11-18T23:58:56.115Z",
-    "updatedAt": "2026-11-18T23:58:56.115Z",
+    "updatedAt": "2026-11-19T00:43:49.078Z",
     "expiresAt": "2026-11-19T00:28:56.115Z",
-    "status": "PENDING_WHATSAPP",
+    "status": "EXPIRED",
     "type": "TAKEAWAY",
     "paymentMethod": "CASH",
     "customerName": "اختبار تلاعب بالسعر",
@@ -241,6 +257,14 @@
         "action": "created_order",
         "toStatus": "PENDING_WHATSAPP",
         "note": "Order created, waiting for customer to dispatch WhatsApp message"
+      },
+      {
+        "timestamp": "2026-11-19T00:43:49.078Z",
+        "actor": "system",
+        "action": "expire_unconfirmed_order",
+        "fromStatus": "PENDING_WHATSAPP",
+        "toStatus": "EXPIRED",
+        "note": "Order unconfirmed by customer within TTL period"
       }
     ]
   },

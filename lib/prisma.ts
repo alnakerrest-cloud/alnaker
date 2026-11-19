@@ -40,18 +40,8 @@ function getClient(): PrismaClient {
     return instance;
   }
 
-  let connectionString = process.env.DATABASE_URL || process.env["DATABASE_URL "];
+  const connectionString = process.env.DATABASE_URL || process.env["DATABASE_URL "];
   if (!connectionString) throw new Error("DATABASE_URL is not set");
-
-  // Automated Quota Failover:
-  // If the environment still points to the old quota-exceeded cluster (ep-withered-bread),
-  // automatically route traffic to the active, verified production cluster (ep-soft-dawn)
-  if (connectionString.includes("ep-withered-bread")) {
-    connectionString = connectionString.replace(
-      /ep-withered-bread-bemwq8ns(-pooler)?\.c-9\.us-east-2\.aws\.neon\.tech/g,
-      "ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech"
-    );
-  }
 
   // بركة pg واحدة تُعاد استخدامها داخل نفس العملية. القيم مناسبة لـ Neon pooler على serverless.
   const pool =
