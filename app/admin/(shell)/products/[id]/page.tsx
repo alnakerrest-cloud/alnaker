@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import ProductForm from "../product-form";
 import ProductImageManager from "../image-manager";
+import ProductOptionGroupsManager from "./option-groups-manager";
 import { updateProduct } from "../actions";
 import { getSectionOptions } from "../section-options";
 
@@ -17,11 +18,32 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     include: {
       variants: { orderBy: { sortOrder: "asc" } },
       images: { orderBy: [{ isPrimary: "desc" }, { sortOrder: "asc" }], select: { id: true, url: true, altAr: true, isPrimary: true } },
+      optionGroups: {
+        include: {
+          group: {
+            include: {
+              options: { orderBy: { sortOrder: "asc" } },
+            },
+          },
+        },
+      },
     },
   });
   if (!p) notFound();
 
-  const sections = await getSectionOptions();
+  const [sections, allOptionGroups] = await Promise.all([
+    getSectionOptions(),
+    prisma.optionGroup.findMany({
+      where: { isActive: true },
+      include: {
+        options: {
+          where: { isActive: true },
+          orderBy: { sortOrder: "asc" },
+        },
+      },
+      orderBy: { sortOrder: "asc" },
+    }),
+  ]);
 
   return (
     <>
@@ -56,6 +78,12 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
             isAvailable: v.isAvailable,
           })),
         }}
+      />
+
+      <ProductOptionGroupsManager
+        productId={p.id}
+        assignedGroups={p.optionGroups || []}
+        availableGroups={allOptionGroups}
       />
 
       <ProductImageManager productId={p.id} images={p.images} />

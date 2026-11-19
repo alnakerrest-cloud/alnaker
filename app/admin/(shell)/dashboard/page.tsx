@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth";
+import Logo from "@/components/Logo";
 
 export const dynamic = "force-dynamic";
 
 const fmt = (n: number) => new Intl.NumberFormat("ar-EG").format(n);
 
 export default async function DashboardPage() {
+  await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const [categories, products, available, hidden, variants, images, recentAudit, recentImports] =
     await Promise.all([
       prisma.category.count(),
@@ -34,7 +37,27 @@ export default async function DashboardPage() {
   return (
     <>
       <div className="admin-topbar">
-        <h1>الرئيسية</h1>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+          <div
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: "50%",
+              background: "radial-gradient(circle at 50% 35%, var(--brand-2, #5c2a26), var(--brand-deep, #2b1311))",
+              border: "1.5px solid var(--gold-2, #e3b25a)",
+              boxShadow: "0 4px 12px rgba(67, 32, 29, 0.25)",
+              display: "grid",
+              placeItems: "center",
+              flexShrink: 0,
+            }}
+          >
+            <Logo size={30} variant="gold" emblemOnly />
+          </div>
+          <div>
+            <h1 style={{ margin: 0, fontSize: 22, fontFamily: "var(--font-display)" }}>لوحة التحكم الرئيسية</h1>
+            <p style={{ margin: "2px 0 0", fontSize: 13, color: "var(--muted)" }}>قرية الناقر — إدارة المنيو والطلبات والفروع</p>
+          </div>
+        </div>
         <span className="admin-user-chip">مرحبًا 👋</span>
       </div>
 

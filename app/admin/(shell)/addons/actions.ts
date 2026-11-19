@@ -66,7 +66,7 @@ function read(fd: FormData) {
 }
 
 export async function createOptionGroup(_prev: AddonActionState, fd: FormData): Promise<AddonActionState> {
-  const admin = await requireAdmin(["OWNER", "EDITOR"]);
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const parsed = optionGroupSchema.safeParse(read(fd));
   if (!parsed.success) return { error: firstIssue(parsed.error) };
   const d = parsed.data;
@@ -113,7 +113,7 @@ export async function createOptionGroup(_prev: AddonActionState, fd: FormData): 
 }
 
 export async function updateOptionGroup(_prev: AddonActionState, fd: FormData): Promise<AddonActionState> {
-  const admin = await requireAdmin(["OWNER", "EDITOR"]);
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const id = String(fd.get("id") ?? "").trim();
   if (!id) return { error: "معرّف المجموعة مفقود" };
 
@@ -212,7 +212,7 @@ export async function updateOptionGroup(_prev: AddonActionState, fd: FormData): 
 }
 
 export async function deleteOptionGroup(fd: FormData): Promise<void> {
-  const admin = await requireAdmin(["OWNER", "EDITOR"]);
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const id = String(fd.get("id") ?? "").trim();
   if (!id) return;
 
@@ -236,7 +236,7 @@ export async function deleteOptionGroup(fd: FormData): Promise<void> {
 }
 
 export async function toggleOptionGroupActive(fd: FormData): Promise<void> {
-  const admin = await requireAdmin(["OWNER", "EDITOR"]);
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const id = String(fd.get("id") ?? "").trim();
   if (!id) return;
 

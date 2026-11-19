@@ -17,6 +17,13 @@ export default function LiveSync({ intervalMs = 4000 }: { intervalMs?: number })
   const dirty = useRef(false);
 
   useEffect(() => {
+    if (
+      typeof window !== "undefined" &&
+      (window.location.search.includes("no_sync=1") ||
+        (window as unknown as { __DISABLE_LIVE_SYNC__?: boolean }).__DISABLE_LIVE_SYNC__)
+    ) {
+      return;
+    }
     let stopped = false;
     let timer: ReturnType<typeof setTimeout>;
     const controller = new AbortController();

@@ -11,7 +11,7 @@ export default async function EditAddonPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAdmin(["OWNER", "EDITOR"]);
+  await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const { id } = await params;
 
   const [group, products] = await Promise.all([

@@ -21,7 +21,7 @@ export type CartOfferDiscount = {
 };
 
 export type CartItem = {
-  /** Unique composite key: `${productId}__${variantIndex}[__${sortedOptionIds}]` */
+  /** Unique composite key: `${productId}__${variantIndex}[__${sortedOptionIds}][__no:${sortedRemoved}]` */
   id: string;
   productId: string;
   name: string;
@@ -29,6 +29,7 @@ export type CartItem = {
   variantLabel?: string;
   baseUnitPrice: number;
   selectedOptions?: SelectedOption[];
+  removedIngredients?: string[];
   appliedOffer?: CartOfferDiscount;
   unitPrice: number;
   quantity: number;
@@ -41,16 +42,22 @@ export type CartItem = {
 export function buildCartItemId(
   productId: string,
   variantIndex: number,
-  options?: SelectedOption[]
+  options?: SelectedOption[],
+  removedIngredients?: string[]
 ): string {
-  if (!options || options.length === 0) {
-    return `${productId}__${variantIndex}`;
+  const parts = [`${productId}__${variantIndex}`];
+  if (options && options.length > 0) {
+    const sortedOptionIds = [...options]
+      .map((o) => o.id)
+      .sort()
+      .join('-');
+    parts.push(sortedOptionIds);
   }
-  const sortedOptionIds = [...options]
-    .map((o) => o.id)
-    .sort()
-    .join('-');
-  return `${productId}__${variantIndex}__${sortedOptionIds}`;
+  if (removedIngredients && removedIngredients.length > 0) {
+    const sortedRemoved = [...removedIngredients].sort().join('-');
+    parts.push(`no:${sortedRemoved}`);
+  }
+  return parts.join('__');
 }
 
 /** Extracts numeric unit price from number or range string (e.g. "60 – 95" -> 60) */
@@ -159,6 +166,11 @@ export function formatWhatsAppMessage(params: WhatsAppOrderParams): string {
         .map((o) => `${o.name}${o.price > 0 ? ` (+${o.price} ${currency})` : ''}`)
         .join('، ');
       lines.push(`   • ${isAr ? 'الإضافات' : 'Add-ons'}: ${optsStr}`);
+    }
+
+    // Excluded / removed ingredients
+    if (item.removedIngredients && item.removedIngredients.length > 0) {
+      lines.push(`   🚫 ${isAr ? 'بدون' : 'Without'}: ${item.removedIngredients.join('، ')}`);
     }
 
     lines.push(`   • ${isAr ? 'السعر النهائي' : 'Final Price'}: ${item.unitPrice} ${currency} (${item.quantity} × ${item.unitPrice} = ${item.quantity * item.unitPrice} ${currency})`);
@@ -284,7 +296,11 @@ export function reconcileCart(rawStored: unknown, categories: VCategory[]): Cart
         ? Math.min(Math.floor(candidate.quantity), 99)
         : 1;
 
-    const id = buildCartItemId(item.id, variantIndex, validOptions);
+    const removedIngredients = Array.isArray(candidate.removedIngredients)
+      ? candidate.removedIngredients.filter((r) => typeof r === 'string' && r.trim().length > 0)
+      : undefined;
+
+    const id = buildCartItemId(item.id, variantIndex, validOptions, removedIngredients);
 
     validItems.push({
       id,
@@ -294,6 +310,7 @@ export function reconcileCart(rawStored: unknown, categories: VCategory[]): Cart
       variantLabel: authoritativePriceObj.label,
       baseUnitPrice: rawUnitPrice,
       selectedOptions: validOptions.length > 0 ? validOptions : undefined,
+      removedIngredients: removedIngredients && removedIngredients.length > 0 ? removedIngredients : undefined,
       appliedOffer,
       unitPrice,
       quantity,

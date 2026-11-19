@@ -6,6 +6,7 @@
 import { prisma } from "@/lib/prisma";
 import { branches as staticBranches, mapsUrl, PHONE_DISPLAY, PHONE_INTL } from "@/lib/site";
 import { ui, type Locale } from "@/lib/i18n";
+import { getBackupSiteData } from "@/lib/backup-menu-db";
 
 export type VBranch = {
   id: string;
@@ -20,6 +21,7 @@ export type VBranch = {
   phoneIntl?: string;
   whatsappNumber?: string;
   isOrderable: boolean;
+  isActive: boolean;
   openingHours?: string;
   openingHoursAr?: string;
   openingHoursEn?: string;
@@ -53,6 +55,7 @@ function staticBranchesView(locale: Locale): VBranch[] {
     phoneIntl: PHONE_INTL,
     whatsappNumber: PHONE_INTL,
     isOrderable: true,
+    isActive: true,
   }));
 }
 
@@ -72,6 +75,11 @@ export function getStaticSiteData(locale: Locale): SiteData {
 }
 
 export async function getSiteData(locale: Locale): Promise<SiteData> {
+  // Primary original preview: read from the verified backup to serve original settings & branches
+  if (process.env.USE_BACKUP_DATA !== "false") {
+    return getBackupSiteData(locale);
+  }
+
   try {
     const [s, bs] = await Promise.all([
       prisma.restaurantSettings.findUnique({ where: { id: "default" } }),
@@ -101,6 +109,7 @@ export async function getSiteData(locale: Locale): Promise<SiteData> {
         phoneIntl: b.phoneIntl ?? s?.phoneIntl ?? PHONE_INTL,
         whatsappNumber: b.whatsappNumber ?? b.phoneIntl ?? undefined,
         isOrderable: b.isOrderable,
+        isActive: b.isActive,
         openingHours,
         openingHoursAr: b.openingHoursAr ?? undefined,
         openingHoursEn: b.openingHoursEn ?? undefined,
@@ -114,11 +123,12 @@ export async function getSiteData(locale: Locale): Promise<SiteData> {
       currency: locale === "en" ? t.currency : s?.currencyAr ?? t.currency,
       phoneDisplay: s?.phoneDisplay ?? PHONE_DISPLAY,
       phoneIntl: s?.phoneIntl ?? PHONE_INTL,
-      logoUrl: s?.logoUrl ?? undefined,
+      logoUrl: s?.logoUrl || "/brand/naqer-official-logo.png",
       deliveryFee: s?.deliveryFee ? Number(s.deliveryFee) : undefined,
       branches: branches.length ? branches : staticBranchesView(locale),
     };
-  } catch {
-    return getStaticSiteData(locale);
+  } catch (err) {
+    console.error("[getSiteData] Live database query failed:", err);
+    throw err;
   }
 }

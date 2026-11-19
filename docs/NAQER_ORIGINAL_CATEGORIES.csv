@@ -1,0 +1,19 @@
+﻿categoryId,slug,nameAr,nameEn,group,layout,icon,sortOrder,isVisible,noteAr,sectionsCount,productsCount,createdAt,updatedAt
+cmw1374a7001m0svy6pq8l0xh,cat-mw13741w,سبانخ,,FOOD,LIST,🍽️,0,true,سباااانخ,1,0,2026-11-03T17:34:42.031Z,2026-11-03T17:34:42.031Z
+20f9b85f-9e8b-450a-9c58-a9cf010b6856,trays,الصواني,Family Trays,FOOD,TRAYS,🍽️,0,true,,1,8,2026-11-03T15:31:51.851Z,2026-11-08T13:33:11.001Z
+cdba4eea-17a5-4cb6-a605-e183b8622a6e,mandi,المندي,Mandi,FOOD,LIST,🍚,1,true,,1,8,2026-11-03T15:31:51.851Z,2026-11-04T10:44:22.716Z
+0da7f2c7-97f9-499f-b7b2-96550628bb1a,grills,المشويات,Grills,FOOD,LIST,🔥,2,true,,2,12,2026-11-03T15:31:51.851Z,2026-11-03T15:31:51.851Z
+7797a335-0b64-4991-963d-e225bf45e100,meals,الوجبات,Meals,FOOD,LIST,🍱,3,true,,1,5,2026-11-03T15:31:51.851Z,2026-11-03T15:31:51.851Z
+d3c2878e-9026-4fbc-b311-61e3bb118e70,soups,الشوربة,Soups,FOOD,LIST,🍜,9999,true,,1,5,2026-11-03T15:31:51.851Z,2026-11-05T13:54:08.503Z
+0f65d7c6-8b04-4d18-8f25-e9e96cebf781,starters,المقبلات,Starters,FOOD,LIST,🥗,9999,true,,1,10,2026-11-03T15:31:51.851Z,2026-11-05T16:27:16.679Z
+06001b21-1c4e-421a-975d-3a12fc481a72,oriental,الشرقي,Oriental,FOOD,LIST,🥘,9999,true,,1,12,2026-11-03T15:31:51.851Z,2026-11-05T18:14:36.950Z
+25a5ddcb-f41c-4fa3-ba1b-13a65d1cf3e9,iced,المثلجات,Iced & Frozen,DRINKS,LIST,🧊,9999,true,,2,11,2026-11-03T15:31:51.851Z,2026-11-05T08:48:41.445Z
+a5148bfc-4bc2-4597-88fa-6b2aa290bf98,desserts,الحلويات,Desserts,DRINKS,LIST,🧇,9999,true,,1,7,2026-11-03T15:31:51.851Z,2026-11-04T16:33:39.943Z
+eda019a4-0940-4ffb-a197-2b2d81a40e06,homestyle,الأطباق الشعبية,Home-Style Dishes,FOOD,LIST,🍛,9999,true,,1,12,2026-11-03T15:31:51.851Z,2026-11-05T18:07:16.450Z
+e7b16f56-b9c0-4f8d-ad37-c38a01db1e7a,shakes,الميلك شيك والسموزي,Milkshakes & Smoothies,DRINKS,LIST,🥛,9999,true,,1,5,2026-11-03T15:31:51.851Z,2026-11-04T18:06:11.810Z
+804a1e24-3683-4a62-8d4f-3e1c96e3d286,hot,المشروبات الساخنة,Hot Drinks,DRINKS,LIST,🍵,9999,true,,4,11,2026-11-03T15:31:51.851Z,2026-11-05T11:40:21.823Z
+bd3cfef0-b404-4fcc-9d2c-4e8d5fbb77dd,soft,سوفت درينكز,Soft Drinks,DRINKS,LIST,💧,9999,true,,1,2,2026-11-03T15:31:51.851Z,2026-11-04T16:25:40.270Z
+676ce120-5f56-45d8-8228-45dda93370e6,bedouin,المأكولات البدوية,Bedouin Dishes,FOOD,LIST,🏜️,9999,true,,3,7,2026-11-03T15:31:51.851Z,2026-11-08T09:54:50.477Z
+745ac269-8cb9-42b0-8e9d-b286d2a82f30,cocktails,الكوكتيلات,Cocktails,DRINKS,LIST,🥤,9999,true,,1,14,2026-11-03T15:31:51.851Z,2026-11-05T09:31:01.998Z
+8350be8b-2d4e-401b-b586-6b93b98cbd0a,juices,العصائر,Fresh Juices,DRINKS,LIST,🍹,9999,true,,1,10,2026-11-03T15:31:51.851Z,2026-11-05T09:36:14.606Z
+d206b480-58d8-4fe4-b72a-d277929eb647,coffee,القهوة,Coffee,DRINKS,LIST,☕,9999,true,,3,12,2026-11-03T15:31:51.851Z,2026-11-05T12:46:25.287Z

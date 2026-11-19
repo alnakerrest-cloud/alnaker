@@ -136,3 +136,13 @@ export type OfferCategoryTarget = Prisma.OfferCategoryTargetModel
  * 
  */
 export type OfferLocationTarget = Prisma.OfferLocationTargetModel
+/**
+ * Model Order
+ * 
+ */
+export type Order = Prisma.OrderModel
+/**
+ * Model OrderItem
+ * 
+ */
+export type OrderItem = Prisma.OrderItemModel

@@ -1,12 +1,17 @@
-node_modules
-.next
-out
+﻿# Dependencies
+node_modules/
+
+# Next.js build output
+.next/
+out/
 next-env.d.ts
 *.tsbuildinfo
+
 # Environment files: real values must never be committed.
-# Example templates stay trackable via the negations below.
 .env
 .env.*
+.env.local
+.env.test.local
 !.env.example
 !*.env.example
 .vercel
@@ -14,49 +19,44 @@ next-env.d.ts
 # Prisma 7 generated client (recreate with `npx prisma generate`)
 lib/generated/prisma
 
+# Local backups & archives
+.phase1-backup/
+*.rar
+*.zip
+*.tar.gz
+extracted-logo/
+pdf-images/
 
-# Local backups created during Phase 1
-.phase1-backup
-
-# Production database backups — never commit or track SQL dumps
-backups/
-*.sql
+# Database dumps (keep migrations)
 *.dump
 *.backup
-
-# Prisma migration SQL is required source — keep it trackable even though `*.sql`
-# above targets database dumps.
 !prisma/migrations/**/*.sql
 
-# Logs
+# Logs & temp files
 *.log
-dev.log
-server.log
-diag.log
-build*.log
-pw-*.log
-
-# QA / E2E generated artifacts (screenshots, reports, traces)
-qa-*.png
-qa2-*.png
-e2e-*.png
-qa-final/
-qa-premium/
-playwright-report/
-test-results/
-pdf-images/
-50500.pdf
-
-# Local verification scratch files
 build*.txt
 tc*.txt
 typecheck*.txt
 run-*.ps1
+
+# QA / E2E test runs & reports
+playwright-report/
+test-results/
+*-evidence/
+e2e-*.png
+qa-*.png
+qa2-*.png
+qa-final/
+qa-premium/
+50500.pdf
+
+# Local session state (keep users.json, ignore ephemeral sessions)
+data/users/sessions.json
+
+# Scratch & temporary scripts
+scratch/
+test.mjs
+scripts/_tmp-schema-diff.sql
 downloaded-images-data.json
 product-inventory-data.json
 backup-product-images-before-real-photos.json
-scratch/
-release-evidence/
-acceptance-evidence/
-responsive-audit-evidence/
-search-filters-evidence/

@@ -1,0 +1,1673 @@
+{
+  "updated": {
+    "Branch": {
+      "7fa2be20-67bd-4060-a83a-81ded2550018": {
+        "nameAr": "فرع جمصة",
+        "nameEn": "Gamasa Branch",
+        "addressAr": "الطريق الدولي الساحلي، أمام جامعة الدلتا",
+        "addressEn": "International Coastal Road, opposite Delta University",
+        "cityAr": "جمصة، مصر",
+        "mapQuery": "Al Naqer Village International Coastal Road Gamasa Egypt",
+        "phoneIntl": "+201010814966",
+        "whatsappNumber": "+201010814966",
+        "isOrderable": true,
+        "openingHoursAr": "يومياً: ١٠:٠٠ ص – ١:٠٠ ص",
+        "openingHoursEn": "Daily: 10:00 AM – 1:00 AM",
+        "isActive": true,
+        "sortOrder": 0
+      }
+    },
+    "RestaurantSettings": {
+      "default": {
+        "brandNameAr": "قرية الناقر",
+        "taglineAr": "أصالة المندي والمشويات والمأكولات البدوية",
+        "phoneDisplay": "01094965222",
+        "phoneIntl": "+201094965222",
+        "vatNoteAr": "الأسعار الموضحة تشمل ضريبة القيمة المضافة",
+        "serviceNoteAr": null,
+        "serviceChargePct": null,
+        "currencyAr": "ج.م",
+        "deliveryFee": 30
+      }
+    }
+  },
+  "created": {
+    "AuditLog": [
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_AND_ORDER",
+        "changes": {
+          "after": {
+            "mode": "VIEW_AND_ORDER",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T19:42:53.933Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)"
+          }
+        },
+        "id": "acfe82e8-03a1-49c7-945c-9a19a5d4aefb",
+        "createdAt": "2026-11-18T19:42:53.937Z",
+        "updatedAt": "2026-11-18T19:42:53.937Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "2d166fa3-6012-4556-af3b-09df7460978c",
+        "createdAt": "2026-11-18T19:43:41.028Z",
+        "updatedAt": "2026-11-18T19:43:41.028Z"
+      },
+      {
+        "adminId": "usr-staff-orders-002",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-staff-orders-002",
+        "summary": "تسجيل دخول: محمد كمال (موظف إدارة الطلبات) (ORDERS_STAFF)",
+        "id": "edd06f85-2398-4b45-8c87-b159fa4bd123",
+        "createdAt": "2026-11-18T19:44:04.404Z",
+        "updatedAt": "2026-11-18T19:44:04.404Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_ONLY",
+        "changes": {
+          "after": {
+            "mode": "VIEW_ONLY",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T19:48:05.293Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)"
+          }
+        },
+        "id": "f0d431fd-6cb3-464c-8cd9-b188ac056d70",
+        "createdAt": "2026-11-18T19:48:05.296Z",
+        "updatedAt": "2026-11-18T19:48:05.296Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Branch",
+        "entityId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "summary": "تعديل فرع: فرع جمصة",
+        "changes": {
+          "before": {
+            "nameAr": "فرع جمصة",
+            "nameEn": "Gamasa Branch",
+            "addressAr": "الطريق الدولي الساحلي، أمام جامعة الدلتا",
+            "addressEn": "International Coastal Road, opposite Delta University",
+            "cityAr": "جمصة، مصر",
+            "mapQuery": "Al Naqer Village International Coastal Road Gamasa Egypt",
+            "phoneIntl": null,
+            "whatsappNumber": "+201094965222",
+            "isOrderable": true,
+            "openingHoursAr": "يومياً: ١٠:٠٠ ص – ١:٠٠ ص",
+            "openingHoursEn": "Daily: 10:00 AM – 1:00 AM",
+            "isActive": true,
+            "sortOrder": 0
+          },
+          "after": {
+            "nameAr": "فرع جمصة",
+            "nameEn": "Gamasa Branch",
+            "addressAr": "الطريق الدولي الساحلي، أمام جامعة الدلتا",
+            "addressEn": "International Coastal Road, opposite Delta University",
+            "cityAr": "جمصة، مصر",
+            "mapQuery": "Al Naqer Village International Coastal Road Gamasa Egypt",
+            "phoneIntl": "+201010814966",
+            "whatsappNumber": "+201010814966",
+            "isOrderable": true,
+            "openingHoursAr": "يومياً: ١٠:٠٠ ص – ١:٠٠ ص",
+            "openingHoursEn": "Daily: 10:00 AM – 1:00 AM",
+            "isActive": true,
+            "sortOrder": 0
+          }
+        },
+        "id": "d2caf85a-ba18-49fe-9d2e-030906df1fad",
+        "createdAt": "2026-11-18T19:50:30.275Z",
+        "updatedAt": "2026-11-18T19:50:30.275Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_AND_ORDER",
+        "changes": {
+          "after": {
+            "mode": "VIEW_AND_ORDER",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T19:51:02.699Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)"
+          }
+        },
+        "id": "2d2813bf-a8c3-4a11-97e1-f5d003e20e77",
+        "createdAt": "2026-11-18T19:51:02.701Z",
+        "updatedAt": "2026-11-18T19:51:02.701Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cade3c5c-1ab4-4fa5-ad3e-f2b026495cbc",
+        "summary": "تغيير حالة الطلب ORD-20261118-EA367E من PENDING_WHATSAPP إلى RECEIVED",
+        "changes": {
+          "before": {
+            "status": "PENDING_WHATSAPP"
+          },
+          "after": {
+            "status": "RECEIVED"
+          }
+        },
+        "id": "c02dbd56-da4f-408b-a5b1-617933c8de06",
+        "createdAt": "2026-11-18T19:57:10.185Z",
+        "updatedAt": "2026-11-18T19:57:10.185Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cade3c5c-1ab4-4fa5-ad3e-f2b026495cbc",
+        "summary": "تغيير حالة الطلب ORD-20261118-EA367E من RECEIVED إلى CONFIRMED",
+        "changes": {
+          "before": {
+            "status": "RECEIVED"
+          },
+          "after": {
+            "status": "CONFIRMED"
+          }
+        },
+        "id": "cb1f6959-ab87-4b02-a307-edc15a34fb04",
+        "createdAt": "2026-11-18T19:57:15.669Z",
+        "updatedAt": "2026-11-18T19:57:15.669Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cade3c5c-1ab4-4fa5-ad3e-f2b026495cbc",
+        "summary": "تغيير حالة الطلب ORD-20261118-EA367E من CONFIRMED إلى PREPARING",
+        "changes": {
+          "before": {
+            "status": "CONFIRMED"
+          },
+          "after": {
+            "status": "PREPARING"
+          }
+        },
+        "id": "877a1d36-4a23-48a7-8cdf-7ba2c046e0eb",
+        "createdAt": "2026-11-18T19:57:18.628Z",
+        "updatedAt": "2026-11-18T19:57:18.628Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cade3c5c-1ab4-4fa5-ad3e-f2b026495cbc",
+        "summary": "تغيير حالة الطلب ORD-20261118-EA367E من PREPARING إلى READY",
+        "changes": {
+          "before": {
+            "status": "PREPARING"
+          },
+          "after": {
+            "status": "READY"
+          }
+        },
+        "id": "ea42d929-f4c8-4ef3-8567-d011b3d03e4e",
+        "createdAt": "2026-11-18T19:57:22.083Z",
+        "updatedAt": "2026-11-18T19:57:22.083Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cade3c5c-1ab4-4fa5-ad3e-f2b026495cbc",
+        "summary": "تغيير حالة الطلب ORD-20261118-EA367E من READY إلى OUT_FOR_DELIVERY",
+        "changes": {
+          "before": {
+            "status": "READY"
+          },
+          "after": {
+            "status": "OUT_FOR_DELIVERY"
+          }
+        },
+        "id": "17eba5c4-dc48-4577-9e0a-3382e9db8302",
+        "createdAt": "2026-11-18T19:57:25.022Z",
+        "updatedAt": "2026-11-18T19:57:25.022Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cade3c5c-1ab4-4fa5-ad3e-f2b026495cbc",
+        "summary": "تغيير حالة الطلب ORD-20261118-EA367E من OUT_FOR_DELIVERY إلى COMPLETED",
+        "changes": {
+          "before": {
+            "status": "OUT_FOR_DELIVERY"
+          },
+          "after": {
+            "status": "COMPLETED"
+          }
+        },
+        "id": "6d1cf144-faef-4384-8a8d-ad405825d0f0",
+        "createdAt": "2026-11-18T19:57:27.909Z",
+        "updatedAt": "2026-11-18T19:57:27.909Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Settings",
+        "entityId": "default",
+        "summary": "تحديث إعدادات المطعم: قرية الناقر",
+        "changes": {
+          "before": {
+            "brandNameAr": "قرية الناقر",
+            "taglineAr": "أصالة المندي والمشويات والمأكولات البدوية",
+            "phoneDisplay": "01094965222",
+            "phoneIntl": "+201094965222",
+            "vatNoteAr": "الأسعار الموضحة تشمل ضريبة القيمة المضافة",
+            "serviceNoteAr": "يتم إضافة خدمة 12٪ داخل القرية",
+            "serviceChargePct": 12,
+            "currencyAr": "ج.م",
+            "deliveryFee": null
+          },
+          "after": {
+            "brandNameAr": "قرية الناقر",
+            "taglineAr": "أصالة المندي والمشويات والمأكولات البدوية",
+            "phoneDisplay": "01094965222",
+            "phoneIntl": "+201094965222",
+            "vatNoteAr": "الأسعار الموضحة تشمل ضريبة القيمة المضافة",
+            "serviceNoteAr": null,
+            "serviceChargePct": null,
+            "currencyAr": "ج.م",
+            "deliveryFee": 30
+          }
+        },
+        "id": "be080142-6648-40ab-9901-21dc6a0f05b1",
+        "createdAt": "2026-11-18T20:12:00.717Z",
+        "updatedAt": "2026-11-18T20:12:00.717Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_ONLY",
+        "changes": {
+          "after": {
+            "mode": "VIEW_ONLY",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T20:17:56.558Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "enableNotice": true,
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "noticeTitleAr": "الطلبات متوقفة مؤقتًا",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "noticeMessageAr": "يمكنك تصفح المنيو والأسعار، لكن استقبال الطلبات غير متاح حاليًا بسبب الضغط الكبير على الطلبات لضمان جودة الخدمة.",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "expectedResumeAt": "الساعة 7:00 مساءً",
+            "displayPosition": "TOP_BANNER"
+          }
+        },
+        "id": "0b2a93bd-a764-4a66-980b-5d27d182ce7c",
+        "createdAt": "2026-11-18T20:17:56.564Z",
+        "updatedAt": "2026-11-18T20:17:56.564Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_ONLY",
+        "changes": {
+          "after": {
+            "mode": "VIEW_ONLY",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T20:17:56.841Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "enableNotice": true,
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "noticeTitleAr": "الطلبات متوقفة مؤقتًا",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "noticeMessageAr": "يمكنك تصفح المنيو والأسعار، لكن استقبال الطلبات غير متاح حاليًا بسبب الضغط الكبير على الطلبات لضمان جودة الخدمة.",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "expectedResumeAt": "الساعة 7:00 مساءً",
+            "displayPosition": "TOP_BANNER"
+          }
+        },
+        "id": "2706723b-d956-49c4-98c7-91e7aa8c7a37",
+        "createdAt": "2026-11-18T20:17:56.844Z",
+        "updatedAt": "2026-11-18T20:17:56.844Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_ONLY",
+        "changes": {
+          "after": {
+            "mode": "VIEW_ONLY",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T20:20:06.027Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "enableNotice": true,
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "noticeTitleAr": "الطلبات متوقفة مؤقتًا",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "noticeMessageAr": "يمكنك تصفح المنيو والأسعار، لكن استقبال الطلبات غير متاح حاليًا بسبب الضغط الكبير على الطلبات لضمان جودة الخدمة.",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "expectedResumeAt": "الساعة 7:00 مساءً",
+            "displayPosition": "TOP_BANNER"
+          }
+        },
+        "id": "e3502cd0-7f11-4442-9e1f-30b0e8c96de2",
+        "createdAt": "2026-11-18T20:20:06.030Z",
+        "updatedAt": "2026-11-18T20:20:06.030Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_ONLY",
+        "changes": {
+          "after": {
+            "mode": "VIEW_ONLY",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T20:20:08.051Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "enableNotice": false,
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "noticeTitleAr": "الطلبات متوقفة مؤقتًا",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "noticeMessageAr": "يمكنك تصفح المنيو والأسعار، لكن استقبال الطلبات غير متاح حاليًا بسبب الضغط الكبير على الطلبات لضمان جودة الخدمة.",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "expectedResumeAt": "الساعة 7:00 مساءً",
+            "displayPosition": "TOP_BANNER"
+          }
+        },
+        "id": "3509deeb-8255-4780-bd4d-8dbf0bf839f4",
+        "createdAt": "2026-11-18T20:20:08.054Z",
+        "updatedAt": "2026-11-18T20:20:08.054Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_ONLY",
+        "changes": {
+          "after": {
+            "mode": "VIEW_ONLY",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T20:20:08.961Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "enableNotice": true,
+            "reasonCode": "MAINTENANCE",
+            "noticeTitleAr": "أعمال صيانة وتحديث للأنظمة",
+            "noticeTitleEn": "System maintenance in progress",
+            "noticeMessageAr": "يجري حالياً تحديث أنظمة الطلبات لخدمتكم بشكل أفضل.",
+            "noticeMessageEn": "We are upgrading our ordering systems to serve you better.",
+            "expectedResumeAt": "غداً 10:00 صباحاً",
+            "displayPosition": "TOP_BANNER"
+          }
+        },
+        "id": "db2e9b6b-db9c-44f0-809d-eeabf21d5dd5",
+        "createdAt": "2026-11-18T20:20:08.970Z",
+        "updatedAt": "2026-11-18T20:20:08.970Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_AND_ORDER",
+        "changes": {
+          "after": {
+            "mode": "VIEW_AND_ORDER",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T20:20:09.938Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "enableNotice": true,
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "noticeTitleAr": "أعمال صيانة وتحديث للأنظمة",
+            "noticeTitleEn": "System maintenance in progress",
+            "noticeMessageAr": "يجري حالياً تحديث أنظمة الطلبات لخدمتكم بشكل أفضل.",
+            "noticeMessageEn": "We are upgrading our ordering systems to serve you better.",
+            "expectedResumeAt": "غداً 10:00 صباحاً",
+            "displayPosition": "TOP_BANNER"
+          }
+        },
+        "id": "5670b593-482b-4254-b408-58445734d4f7",
+        "createdAt": "2026-11-18T20:20:09.941Z",
+        "updatedAt": "2026-11-18T20:20:09.941Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_ONLY",
+        "changes": {
+          "after": {
+            "mode": "VIEW_ONLY",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T20:20:10.973Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "enableNotice": true,
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "noticeTitleAr": "الطلبات متوقفة مؤقتًا",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "noticeMessageAr": "يمكنك تصفح المنيو والأسعار، لكن استقبال الطلبات غير متاح حاليًا بسبب الضغط الكبير على الطلبات لضمان جودة الخدمة.",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "expectedResumeAt": "الساعة 7:00 مساءً",
+            "displayPosition": "TOP_BANNER"
+          }
+        },
+        "id": "3bc8bf97-bf3f-459e-a4e7-e2bc08be197e",
+        "createdAt": "2026-11-18T20:20:10.977Z",
+        "updatedAt": "2026-11-18T20:20:10.977Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم): الوضع VIEW_AND_ORDER",
+        "changes": {
+          "after": {
+            "mode": "VIEW_AND_ORDER",
+            "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "orderTtlMinutes": 30,
+            "branchOverrides": {
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOrderable": true,
+                "isOpen": true
+              },
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOrderable": true,
+                "isOpen": true
+              }
+            },
+            "updatedAt": "2026-11-18T20:27:29.196Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "enableNotice": true,
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "noticeTitleAr": "الطلبات متوقفة مؤقتًا",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "noticeMessageAr": "يمكنك تصفح المنيو والأسعار، لكن استقبال الطلبات غير متاح حاليًا بسبب الضغط الكبير على الطلبات لضمان جودة الخدمة.",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "expectedResumeAt": "الساعة 7:00 مساءً",
+            "displayPosition": "TOP_BANNER"
+          }
+        },
+        "id": "f2e756b8-456b-4697-b223-10ea55310a85",
+        "createdAt": "2026-11-18T20:27:29.198Z",
+        "updatedAt": "2026-11-18T20:27:29.198Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "9abeb92f-bf08-4e3e-9d8a-439d8de212af",
+        "summary": "تغيير حالة الطلب ORD-20261118-7DCF18 من PENDING_WHATSAPP إلى CONFIRMED (السبب: تمت مراجعة واعتماد الطلب من الإدارة)",
+        "changes": {
+          "before": {
+            "status": "PENDING_WHATSAPP"
+          },
+          "after": {
+            "status": "CONFIRMED",
+            "reason": "تمت مراجعة واعتماد الطلب من الإدارة"
+          }
+        },
+        "id": "aa08bc96-b6bf-4af1-9f41-4f0abf3c223f",
+        "createdAt": "2026-11-18T20:58:02.854Z",
+        "updatedAt": "2026-11-18T20:58:02.854Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "9abeb92f-bf08-4e3e-9d8a-439d8de212af",
+        "summary": "تغيير حالة الطلب ORD-20261118-7DCF18 من CONFIRMED إلى PREPARING (السبب: جاري طهي الوجبة في الفرن)",
+        "changes": {
+          "before": {
+            "status": "CONFIRMED"
+          },
+          "after": {
+            "status": "PREPARING",
+            "reason": "جاري طهي الوجبة في الفرن"
+          }
+        },
+        "id": "72baf48d-8ad6-41bd-a503-0a810c1f0738",
+        "createdAt": "2026-11-18T20:58:03.341Z",
+        "updatedAt": "2026-11-18T20:58:03.341Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "2f902e2f-df74-4423-934f-6b27f022f2e1",
+        "summary": "تغيير حالة الطلب ORD-20261118-C02653 من PENDING_WHATSAPP إلى CONFIRMED (السبب: تم اعتماد الطلب)",
+        "changes": {
+          "before": {
+            "status": "PENDING_WHATSAPP"
+          },
+          "after": {
+            "status": "CONFIRMED",
+            "reason": "تم اعتماد الطلب"
+          }
+        },
+        "id": "e6ceee67-8c38-4f50-b0e0-ce36915c1c68",
+        "createdAt": "2026-11-18T20:58:45.017Z",
+        "updatedAt": "2026-11-18T20:58:45.017Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "2f902e2f-df74-4423-934f-6b27f022f2e1",
+        "summary": "تغيير حالة الطلب ORD-20261118-C02653 من CONFIRMED إلى PREPARING (السبب: الشيف يقوم بالتجهيز والطهي)",
+        "changes": {
+          "before": {
+            "status": "CONFIRMED"
+          },
+          "after": {
+            "status": "PREPARING",
+            "reason": "الشيف يقوم بالتجهيز والطهي"
+          }
+        },
+        "id": "3f3261e1-7326-4e02-9bf5-9dccc3110dcb",
+        "createdAt": "2026-11-18T20:58:45.448Z",
+        "updatedAt": "2026-11-18T20:58:45.448Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "3cdc069b-2233-4095-b751-cb89fad2b030",
+        "summary": "تغيير حالة الطلب ORD-20261119-EA5D1A من PENDING_WHATSAPP إلى RECEIVED",
+        "changes": {
+          "before": {
+            "status": "PENDING_WHATSAPP"
+          },
+          "after": {
+            "status": "RECEIVED"
+          }
+        },
+        "id": "8e19845d-43a5-4c82-a05e-ea84990c1784",
+        "createdAt": "2026-11-18T23:51:35.565Z",
+        "updatedAt": "2026-11-18T23:51:35.565Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "3cdc069b-2233-4095-b751-cb89fad2b030",
+        "summary": "تغيير حالة الطلب ORD-20261119-EA5D1A من RECEIVED إلى CONFIRMED",
+        "changes": {
+          "before": {
+            "status": "RECEIVED"
+          },
+          "after": {
+            "status": "CONFIRMED"
+          }
+        },
+        "id": "d1db34bd-2630-4ff3-a401-c06707c54d64",
+        "createdAt": "2026-11-18T23:51:53.634Z",
+        "updatedAt": "2026-11-18T23:51:53.634Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "3cdc069b-2233-4095-b751-cb89fad2b030",
+        "summary": "تغيير حالة الطلب ORD-20261119-EA5D1A من CONFIRMED إلى PREPARING",
+        "changes": {
+          "before": {
+            "status": "CONFIRMED"
+          },
+          "after": {
+            "status": "PREPARING"
+          }
+        },
+        "id": "bdee53b2-37f7-44bf-826a-2309c60c1220",
+        "createdAt": "2026-11-18T23:52:00.778Z",
+        "updatedAt": "2026-11-18T23:52:00.778Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "2f43f616-4dc1-4761-ad16-2f85860fa36b",
+        "createdAt": "2026-11-18T23:56:36.846Z",
+        "updatedAt": "2026-11-18T23:56:36.846Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "d901e980-5671-4942-97c4-bbf1676c8047",
+        "createdAt": "2026-11-18T23:57:04.727Z",
+        "updatedAt": "2026-11-18T23:57:04.727Z"
+      }
+    ],
+    "OptionGroup": [
+      {
+        "id": "grp-meat-type",
+        "nameAr": "نوع اللحم",
+        "nameEn": "Meat Type",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-spice-level",
+        "nameAr": "مستوى التوابل والحرارة",
+        "nameEn": "Spice & Heat Level",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-bedouin-side",
+        "nameAr": "اختيار الطبق الجانبي",
+        "nameEn": "Choice of Side Dish",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-prep-method",
+        "nameAr": "طريقة التحضير",
+        "nameEn": "Preparation Style",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-tray-monsters-side",
+        "nameAr": "اختيار الصنف الجانبي",
+        "nameEn": "Platter Side Choice",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-soup-cream-type",
+        "nameAr": "نوع شوربة الكريمة",
+        "nameEn": "Cream Soup Variety",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-kunafa-type",
+        "nameAr": "نوع الكنافة النابلسية",
+        "nameEn": "Kunafa Variety",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-icecream-flavor",
+        "nameAr": "نكهة الآيس كريم",
+        "nameEn": "Ice Cream Flavor",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-naqer-sauces",
+        "nameAr": "إضافات وصوصات جانبية",
+        "nameEn": "Extra Sauces & Dips",
+        "isRequired": false,
+        "isMulti": true,
+        "minSelect": 0,
+        "maxSelect": 5,
+        "sortOrder": 99,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      }
+    ],
+    "OptionItem": [
+      {
+        "id": "opt-meat-dani",
+        "groupId": "grp-meat-type",
+        "nameAr": "ضاني",
+        "nameEn": "Lamb",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-meat-betelo",
+        "groupId": "grp-meat-type",
+        "nameAr": "بتلو",
+        "nameEn": "Veal",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-spice-regular",
+        "groupId": "grp-spice-level",
+        "nameAr": "عادي (غير حار)",
+        "nameEn": "Regular (Mild)",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-spice-spicy",
+        "groupId": "grp-spice-level",
+        "nameAr": "سبايسي (حار)",
+        "nameEn": "Spicy",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-side-red-rice",
+        "groupId": "grp-bedouin-side",
+        "nameAr": "أرز أحمر بدوي",
+        "nameEn": "Bedouin Red Rice",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-side-mbakbka",
+        "groupId": "grp-bedouin-side",
+        "nameAr": "مكرونة مبكبكة",
+        "nameEn": "Mbakbka Pasta",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-prep-bedouin",
+        "groupId": "grp-prep-method",
+        "nameAr": "طريقة بدوية",
+        "nameEn": "Bedouin Style",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-prep-alex",
+        "groupId": "grp-prep-method",
+        "nameAr": "طريقة اسكندراني",
+        "nameEn": "Alexandrian Style",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-tray-grape-leaves",
+        "groupId": "grp-tray-monsters-side",
+        "nameAr": "ورق عنب",
+        "nameEn": "Stuffed Grape Leaves",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-tray-potatoes",
+        "groupId": "grp-tray-monsters-side",
+        "nameAr": "صينية بطاطس",
+        "nameEn": "Potato Tray",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-soup-mushroom",
+        "groupId": "grp-soup-cream-type",
+        "nameAr": "بالمشروم",
+        "nameEn": "Mushroom Cream",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-soup-chicken",
+        "groupId": "grp-soup-cream-type",
+        "nameAr": "بالفراخ",
+        "nameEn": "Chicken Cream",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-kunafa-cream",
+        "groupId": "grp-kunafa-type",
+        "nameAr": "بالكريمة (قشطة)",
+        "nameEn": "With Cream",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-kunafa-cheese",
+        "groupId": "grp-kunafa-type",
+        "nameAr": "بالجبنة النابلسية المطاطة",
+        "nameEn": "With Nabulsi Cheese",
+        "price": 35,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-flavor-vanilla",
+        "groupId": "grp-icecream-flavor",
+        "nameAr": "فانيليا",
+        "nameEn": "Vanilla",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-flavor-chocolate",
+        "groupId": "grp-icecream-flavor",
+        "nameAr": "شوكولاتة",
+        "nameEn": "Chocolate",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-flavor-caramel",
+        "groupId": "grp-icecream-flavor",
+        "nameAr": "كراميل",
+        "nameEn": "Caramel",
+        "price": 0,
+        "sortOrder": 3,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-sauce-dagous",
+        "groupId": "grp-naqer-sauces",
+        "nameAr": "صوص دقوس طازج",
+        "nameEn": "Fresh Daqous Sauce",
+        "price": 16,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-sauce-tahina",
+        "groupId": "grp-naqer-sauces",
+        "nameAr": "سلطة طحينة سمسم",
+        "nameEn": "Sesame Tahina Dip",
+        "price": 20,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-sauce-toumya",
+        "groupId": "grp-naqer-sauces",
+        "nameAr": "تومية سورية فاخرة",
+        "nameEn": "Garlic Dip (Toumya)",
+        "price": 28,
+        "sortOrder": 3,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      }
+    ],
+    "ProductOptionGroup": [
+      {
+        "id": "pog-grp-meat-type-499ac912",
+        "productId": "499ac912-6b0b-4039-9854-69be4ee524d0",
+        "groupId": "grp-meat-type",
+        "sortOrder": 1
+      },
+      {
+        "id": "pog-grp-meat-type-12c45358",
+        "productId": "12c45358-a7e4-4467-a501-82946e969f37",
+        "groupId": "grp-meat-type",
+        "sortOrder": 2
+      },
+      {
+        "id": "pog-grp-meat-type-af3b8370",
+        "productId": "af3b8370-5f41-492d-96af-355f8950b716",
+        "groupId": "grp-meat-type",
+        "sortOrder": 3
+      },
+      {
+        "id": "pog-grp-meat-type-88144bbc",
+        "productId": "88144bbc-65d9-44ee-bfd1-fa2b653d682d",
+        "groupId": "grp-meat-type",
+        "sortOrder": 4
+      },
+      {
+        "id": "pog-grp-spice-level-499ac912",
+        "productId": "499ac912-6b0b-4039-9854-69be4ee524d0",
+        "groupId": "grp-spice-level",
+        "sortOrder": 1
+      },
+      {
+        "id": "pog-grp-spice-level-12c45358",
+        "productId": "12c45358-a7e4-4467-a501-82946e969f37",
+        "groupId": "grp-spice-level",
+        "sortOrder": 2
+      },
+      {
+        "id": "pog-grp-spice-level-7a86d7d9",
+        "productId": "7a86d7d9-69ab-412c-8dec-75c14017b1e0",
+        "groupId": "grp-spice-level",
+        "sortOrder": 3
+      },
+      {
+        "id": "pog-grp-spice-level-21c63eb5",
+        "productId": "21c63eb5-f441-47ac-8986-1ba695b41b8a",
+        "groupId": "grp-spice-level",
+        "sortOrder": 4
+      },
+      {
+        "id": "pog-grp-spice-level-b138df8b",
+        "productId": "b138df8b-87ce-4a10-b564-8936d93b7c26",
+        "groupId": "grp-spice-level",
+        "sortOrder": 5
+      },
+      {
+        "id": "pog-grp-bedouin-side-49879a38",
+        "productId": "49879a38-f171-4b04-b5a3-bd0fa3f9dec8",
+        "groupId": "grp-bedouin-side",
+        "sortOrder": 1
+      },
+      {
+        "id": "pog-grp-bedouin-side-7fc1bc3d",
+        "productId": "7fc1bc3d-0b07-4636-b678-cf9def37ad9a",
+        "groupId": "grp-bedouin-side",
+        "sortOrder": 2
+      },
+      {
+        "id": "pog-grp-bedouin-side-bb1e4825",
+        "productId": "bb1e4825-af47-480b-b42f-260a29f0fd30",
+        "groupId": "grp-bedouin-side",
+        "sortOrder": 3
+      },
+      {
+        "id": "pog-grp-bedouin-side-0c37a7a2",
+        "productId": "0c37a7a2-5bd5-48fb-b6e8-f981daae4249",
+        "groupId": "grp-bedouin-side",
+        "sortOrder": 4
+      },
+      {
+        "id": "pog-grp-prep-method-2fbc5a45",
+        "productId": "2fbc5a45-0a43-4bb5-a623-125a49b0137d",
+        "groupId": "grp-prep-method",
+        "sortOrder": 1
+      },
+      {
+        "id": "pog-grp-tray-monsters-side-0a67d363",
+        "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+        "groupId": "grp-tray-monsters-side",
+        "sortOrder": 1
+      },
+      {
+        "id": "pog-grp-soup-cream-type-4b484a28",
+        "productId": "4b484a28-b1ad-44a6-8f5a-f4b0cc7d10f3",
+        "groupId": "grp-soup-cream-type",
+        "sortOrder": 1
+      },
+      {
+        "id": "pog-grp-kunafa-type-64daf798",
+        "productId": "64daf798-26f0-480c-a030-02db28c09fa9",
+        "groupId": "grp-kunafa-type",
+        "sortOrder": 1
+      },
+      {
+        "id": "pog-grp-icecream-flavor-89ccd638",
+        "productId": "89ccd638-36a5-4d91-aab4-d0487b95a954",
+        "groupId": "grp-icecream-flavor",
+        "sortOrder": 1
+      },
+      {
+        "id": "pog-grp-naqer-sauces-499ac912",
+        "productId": "499ac912-6b0b-4039-9854-69be4ee524d0",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 1
+      },
+      {
+        "id": "pog-grp-naqer-sauces-12c45358",
+        "productId": "12c45358-a7e4-4467-a501-82946e969f37",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 2
+      },
+      {
+        "id": "pog-grp-naqer-sauces-af3b8370",
+        "productId": "af3b8370-5f41-492d-96af-355f8950b716",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 3
+      },
+      {
+        "id": "pog-grp-naqer-sauces-88144bbc",
+        "productId": "88144bbc-65d9-44ee-bfd1-fa2b653d682d",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 4
+      },
+      {
+        "id": "pog-grp-naqer-sauces-49879a38",
+        "productId": "49879a38-f171-4b04-b5a3-bd0fa3f9dec8",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 5
+      },
+      {
+        "id": "pog-grp-naqer-sauces-7fc1bc3d",
+        "productId": "7fc1bc3d-0b07-4636-b678-cf9def37ad9a",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 6
+      },
+      {
+        "id": "pog-grp-naqer-sauces-bb1e4825",
+        "productId": "bb1e4825-af47-480b-b42f-260a29f0fd30",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 7
+      },
+      {
+        "id": "pog-grp-naqer-sauces-0c37a7a2",
+        "productId": "0c37a7a2-5bd5-48fb-b6e8-f981daae4249",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 8
+      },
+      {
+        "id": "pog-grp-naqer-sauces-7a86d7d9",
+        "productId": "7a86d7d9-69ab-412c-8dec-75c14017b1e0",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 9
+      },
+      {
+        "id": "pog-grp-naqer-sauces-21c63eb5",
+        "productId": "21c63eb5-f441-47ac-8986-1ba695b41b8a",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 10
+      },
+      {
+        "id": "pog-grp-naqer-sauces-b138df8b",
+        "productId": "b138df8b-87ce-4a10-b564-8936d93b7c26",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 11
+      },
+      {
+        "id": "pog-grp-naqer-sauces-0a67d363",
+        "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+        "groupId": "grp-naqer-sauces",
+        "sortOrder": 12
+      }
+    ],
+    "AddonGroup": [
+      {
+        "id": "grp-meat-type",
+        "nameAr": "نوع اللحم",
+        "nameEn": "Meat Type",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-spice-level",
+        "nameAr": "مستوى التوابل والحرارة",
+        "nameEn": "Spice & Heat Level",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-bedouin-side",
+        "nameAr": "اختيار الطبق الجانبي",
+        "nameEn": "Choice of Side Dish",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-prep-method",
+        "nameAr": "طريقة التحضير",
+        "nameEn": "Preparation Style",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-tray-monsters-side",
+        "nameAr": "اختيار الصنف الجانبي",
+        "nameEn": "Platter Side Choice",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-soup-cream-type",
+        "nameAr": "نوع شوربة الكريمة",
+        "nameEn": "Cream Soup Variety",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-kunafa-type",
+        "nameAr": "نوع الكنافة النابلسية",
+        "nameEn": "Kunafa Variety",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-icecream-flavor",
+        "nameAr": "نكهة الآيس كريم",
+        "nameEn": "Ice Cream Flavor",
+        "isRequired": true,
+        "isMulti": false,
+        "minSelect": 1,
+        "maxSelect": 1,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "grp-naqer-sauces",
+        "nameAr": "إضافات وصوصات جانبية",
+        "nameEn": "Extra Sauces & Dips",
+        "isRequired": false,
+        "isMulti": true,
+        "minSelect": 0,
+        "maxSelect": 5,
+        "sortOrder": 99,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      }
+    ],
+    "Addon": [
+      {
+        "id": "opt-meat-dani",
+        "groupId": "grp-meat-type",
+        "nameAr": "ضاني",
+        "nameEn": "Lamb",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-meat-betelo",
+        "groupId": "grp-meat-type",
+        "nameAr": "بتلو",
+        "nameEn": "Veal",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-spice-regular",
+        "groupId": "grp-spice-level",
+        "nameAr": "عادي (غير حار)",
+        "nameEn": "Regular (Mild)",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-spice-spicy",
+        "groupId": "grp-spice-level",
+        "nameAr": "سبايسي (حار)",
+        "nameEn": "Spicy",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-side-red-rice",
+        "groupId": "grp-bedouin-side",
+        "nameAr": "أرز أحمر بدوي",
+        "nameEn": "Bedouin Red Rice",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-side-mbakbka",
+        "groupId": "grp-bedouin-side",
+        "nameAr": "مكرونة مبكبكة",
+        "nameEn": "Mbakbka Pasta",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-prep-bedouin",
+        "groupId": "grp-prep-method",
+        "nameAr": "طريقة بدوية",
+        "nameEn": "Bedouin Style",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-prep-alex",
+        "groupId": "grp-prep-method",
+        "nameAr": "طريقة اسكندراني",
+        "nameEn": "Alexandrian Style",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-tray-grape-leaves",
+        "groupId": "grp-tray-monsters-side",
+        "nameAr": "ورق عنب",
+        "nameEn": "Stuffed Grape Leaves",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-tray-potatoes",
+        "groupId": "grp-tray-monsters-side",
+        "nameAr": "صينية بطاطس",
+        "nameEn": "Potato Tray",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-soup-mushroom",
+        "groupId": "grp-soup-cream-type",
+        "nameAr": "بالمشروم",
+        "nameEn": "Mushroom Cream",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-soup-chicken",
+        "groupId": "grp-soup-cream-type",
+        "nameAr": "بالفراخ",
+        "nameEn": "Chicken Cream",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-kunafa-cream",
+        "groupId": "grp-kunafa-type",
+        "nameAr": "بالكريمة (قشطة)",
+        "nameEn": "With Cream",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-kunafa-cheese",
+        "groupId": "grp-kunafa-type",
+        "nameAr": "بالجبنة النابلسية المطاطة",
+        "nameEn": "With Nabulsi Cheese",
+        "price": 35,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-flavor-vanilla",
+        "groupId": "grp-icecream-flavor",
+        "nameAr": "فانيليا",
+        "nameEn": "Vanilla",
+        "price": 0,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-flavor-chocolate",
+        "groupId": "grp-icecream-flavor",
+        "nameAr": "شوكولاتة",
+        "nameEn": "Chocolate",
+        "price": 0,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-flavor-caramel",
+        "groupId": "grp-icecream-flavor",
+        "nameAr": "كراميل",
+        "nameEn": "Caramel",
+        "price": 0,
+        "sortOrder": 3,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-sauce-dagous",
+        "groupId": "grp-naqer-sauces",
+        "nameAr": "صوص دقوس طازج",
+        "nameEn": "Fresh Daqous Sauce",
+        "price": 16,
+        "sortOrder": 1,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-sauce-tahina",
+        "groupId": "grp-naqer-sauces",
+        "nameAr": "سلطة طحينة سمسم",
+        "nameEn": "Sesame Tahina Dip",
+        "price": 20,
+        "sortOrder": 2,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      },
+      {
+        "id": "opt-sauce-toumya",
+        "groupId": "grp-naqer-sauces",
+        "nameAr": "تومية سورية فاخرة",
+        "nameEn": "Garlic Dip (Toumya)",
+        "price": 28,
+        "sortOrder": 3,
+        "isActive": true,
+        "createdAt": "2026-11-18T21:18:12.647Z",
+        "updatedAt": "2026-11-18T21:18:12.647Z"
+      }
+    ]
+  },
+  "deleted": {}
+}

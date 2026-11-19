@@ -51,6 +51,18 @@ export default function CartDrawer({
   } = useCart();
 
   const [showCheckout, setShowCheckout] = useState(false);
+  const [menuModeData, setMenuModeData] = useState<{
+    mode: string;
+    closureMessageAr: string;
+    closureMessageEn: string;
+  } | null>(null);
+
+  useEffect(() => {
+    fetch('/api/menu-mode')
+      .then((res) => res.json())
+      .then((data) => setMenuModeData(data))
+      .catch(() => {});
+  }, []);
 
   const t = ui[locale];
   const [confirmClear, setConfirmClear] = useState(false);
@@ -79,7 +91,7 @@ export default function CartDrawer({
     };
   }, [isCartOpen, closeCart]);
 
-  if (!isCartOpen) return null;
+  if (!isCartOpen && !showCheckout) return null;
 
   const isBranchOrderable = selectedBranch ? selectedBranch.isOrderable : true;
   const hasBranchWhatsApp = Boolean(
@@ -295,6 +307,28 @@ export default function CartDrawer({
                           </div>
                         )}
 
+                        {/* Excluded ingredients */}
+                        {item.removedIngredients && item.removedIngredients.length > 0 && (
+                          <div className="cart-item-removed-ingredients" style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px' }}>
+                            {item.removedIngredients.map((ing, i) => (
+                              <span
+                                key={i}
+                                style={{
+                                  fontSize: '11px',
+                                  color: '#dc2626',
+                                  background: '#fef2f2',
+                                  border: '1px solid #fecaca',
+                                  padding: '2px 8px',
+                                  borderRadius: '6px',
+                                  fontWeight: 600,
+                                }}
+                              >
+                                🚫 {locale === 'ar' ? `بدون ${ing}` : `Without ${ing}`}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
                         {item.notes && (
                           <p className="cart-item-note">
                             <span>📝</span> {item.notes}
@@ -440,17 +474,37 @@ export default function CartDrawer({
         {/* Drawer Footer with WhatsApp Action */}
         {cart.length > 0 && (
           <div className="cart-footer">
-            <button
-              type="button"
-              className="btn-checkout"
-              onClick={() => { closeCart(); setShowCheckout(true); }}
-            >
-              <span>{t.checkout || (locale === 'ar' ? 'إتمام الطلب' : 'Checkout')}</span>
-              <span className="btn-checkout-total">
-                <b>{total}</b> {currency}
-              </span>
-            </button>
-            <p className="whatsapp-notice">{t.whatsappNotice}</p>
+            {menuModeData?.mode === 'VIEW_ONLY' || menuModeData?.mode === 'TEMPORARILY_CLOSED' ? (
+              <div
+                style={{
+                  background: '#fef3c7',
+                  border: '1px solid #fde68a',
+                  borderRadius: '10px',
+                  padding: '12px 14px',
+                  color: '#92400e',
+                  fontSize: '13px',
+                  textAlign: 'center',
+                  fontWeight: 600,
+                  lineHeight: '1.4',
+                }}
+              >
+                ⚠️ {locale === 'en' ? (menuModeData?.closureMessageEn || 'Menu is currently in view-only mode.') : (menuModeData?.closureMessageAr || 'المنيو حالياً للعرض فقط ولا يستقبل طلبات جديدة.')}
+              </div>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className="btn-checkout"
+                  onClick={() => { closeCart(); setShowCheckout(true); }}
+                >
+                  <span>{t.checkout || (locale === 'ar' ? 'إتمام الطلب' : 'Checkout')}</span>
+                  <span className="btn-checkout-total">
+                    <b>{total}</b> {currency}
+                  </span>
+                </button>
+                <p className="whatsapp-notice">{t.whatsappNotice}</p>
+              </>
+            )}
           </div>
         )}
       </div>

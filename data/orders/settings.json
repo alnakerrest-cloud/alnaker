@@ -1,0 +1,28 @@
+{
+  "mode": "VIEW_AND_ORDER",
+  "closureMessageAr": "نستقبل طلباتكم يومياً بكل سرور.",
+  "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+  "allowDelivery": true,
+  "allowTakeaway": true,
+  "orderTtlMinutes": 30,
+  "branchOverrides": {
+    "7fa2be20-67bd-4060-a83a-81ded2550018": {
+      "isOrderable": true,
+      "isOpen": true
+    },
+    "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+      "isOrderable": true,
+      "isOpen": true
+    }
+  },
+  "updatedAt": "2026-11-18T20:27:29.196Z",
+  "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+  "enableNotice": true,
+  "reasonCode": "HIGH_ORDER_VOLUME",
+  "noticeTitleAr": "الطلبات متوقفة مؤقتًا",
+  "noticeTitleEn": "Ordering is temporarily unavailable",
+  "noticeMessageAr": "يمكنك تصفح المنيو والأسعار، لكن استقبال الطلبات غير متاح حاليًا بسبب الضغط الكبير على الطلبات لضمان جودة الخدمة.",
+  "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+  "expectedResumeAt": "الساعة 7:00 مساءً",
+  "displayPosition": "TOP_BANNER"
+}

@@ -131,6 +131,7 @@ export default function OfferDetailModal({
       selectedVariant,
       quantity,
       selectedOptions.length > 0 ? selectedOptions : undefined,
+      undefined,
       notes.trim() || undefined,
       categoryIcon
     );

@@ -252,3 +252,54 @@ export async function deleteProductImage(fd: FormData): Promise<void> {
   await logAction({ adminId: admin.id, action: "update", entityType: "Product", entityId: productId, summaryAr: "حذف صورة منتج" });
   revalidate([`/admin/products/${productId}`]);
 }
+
+/** ربط مجموعة خيارات بالمنتج */
+export async function attachProductOptionGroup(productId: string, groupId: string): Promise<{ ok: boolean; error?: string }> {
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
+  if (!productId || !groupId) return { ok: false, error: "معرف المنتج والمجموعة مطلوبان" };
+
+  const existing = await prisma.productOptionGroup.findFirst({
+    where: { productId, groupId },
+  });
+  if (existing) return { ok: true };
+
+  await prisma.productOptionGroup.create({
+    data: {
+      productId,
+      groupId,
+      sortOrder: 0,
+    },
+  });
+
+  await logAction({
+    adminId: admin.id,
+    action: "update",
+    entityType: "Product",
+    entityId: productId,
+    summaryAr: `ربط مجموعة خيارات بالمنتج: ${groupId}`,
+  });
+
+  revalidate([`/admin/products/${productId}`]);
+  return { ok: true };
+}
+
+/** فصل مجموعة خيارات عن المنتج */
+export async function detachProductOptionGroup(productId: string, groupId: string): Promise<{ ok: boolean; error?: string }> {
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
+  if (!productId || !groupId) return { ok: false, error: "معرف المنتج والمجموعة مطلوبان" };
+
+  await prisma.productOptionGroup.deleteMany({
+    where: { productId, groupId },
+  });
+
+  await logAction({
+    adminId: admin.id,
+    action: "update",
+    entityType: "Product",
+    entityId: productId,
+    summaryAr: `فصل مجموعة خيارات عن المنتج: ${groupId}`,
+  });
+
+  revalidate([`/admin/products/${productId}`]);
+  return { ok: true };
+}

@@ -14,6 +14,7 @@ import { menu, type Category as MenuCategory } from "@/data/menu";
 import { normalize } from "./search";
 import type { Locale } from "./i18n";
 import { localizeMenu, categoryKind, type VCategory, type VItem, type VPrice, type VSection, type VOptionGroup } from "./menu-view";
+import { getBackupMenuForLocale } from "@/lib/backup-menu-db";
 
 type ItemEn = {
   name?: string;
@@ -62,6 +63,11 @@ function priceValue(price: number, maxPrice: number | null): number | string {
 
 /** Reads the menu from Neon and maps it to the public view model, falling back to menu.ts. */
 export async function getMenuForLocale(locale: Locale): Promise<VCategory[]> {
+  // Primary original preview: read from the verified backup to serve all 151 original products and images
+  if (process.env.USE_BACKUP_DATA !== "false") {
+    return getBackupMenuForLocale(locale);
+  }
+
   try {
     const cats = await prisma.category.findMany({
       where: { isVisible: true },
@@ -205,9 +211,12 @@ export async function getMenuForLocale(locale: Locale): Promise<VCategory[]> {
       });
     }
 
-    // If the DB somehow yields nothing displayable, fall back rather than show an empty menu.
-    return out.length ? out : localizeMenu(locale);
-  } catch {
-    return localizeMenu(locale);
+    // Production database is authoritative: return live categories directly.
+    // If the DB is unreachable, we propagate the error to app/[locale]/error.tsx
+    // so database outages are never silently hidden behind static mock data.
+    return out;
+  } catch (err) {
+    console.error("[getMenuForLocale] Live database query failed:", err);
+    throw err;
   }
 }

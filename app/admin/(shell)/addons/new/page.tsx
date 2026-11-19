@@ -6,7 +6,7 @@ import { createOptionGroup } from "../actions";
 export const dynamic = "force-dynamic";
 
 export default async function NewAddonPage() {
-  await requireAdmin(["OWNER", "EDITOR"]);
+  await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
 
   const products = await prisma.product.findMany({
     select: {

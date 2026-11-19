@@ -1,26 +1,25 @@
 // lib/auth.ts
 // ==============================================================================
-// نواة المصادقة وإدارة دورة حياة الجلسات (Unified & Atomic Session Lifecycle)
-// ==============================================================================
-// المبادئ الأمنية الصارمة:
-// 1. الذرية (Atomicity): عمليات Login وPassword Change ومعاملات الجلسات تتم داخل
-//    معاملة قاعدة بيانات واحدة تضمن عدم تشتت الحالة.
-// 2. التحقق الذري المشروط (Compare-And-Swap): لا تُنشأ أي جلسة إلا بعد تأكيد ثبات
-//    passwordHash وحالة النشاط عبر قفل الصف الحصري.
-// 3. فصل الكوكيز عن المعاملات (Post-Commit Cookies): لا يُكتب الكوكي في المتصفح إلا
-//    بعد نجاح COMMIT للمعاملة تماماً؛ وفي حال حدوث Rollback لا يُصدر أي كوكي.
-// 4. تدوير الجلسات (Session Rotation): تغيير كلمة المرور يُبطل الجلسات السابقة ويصدر
-//    رمز جلسة جديداً لمنع هجمات تثبيت الجلسة (Session Fixation).
-// 5. التخزين الآمن: تخزين HMAC-SHA256 المجزأ فقط لرموز الجلسات في قاعدة البيانات.
+// نواة المصادقة وإدارة دورة حياة الجلسات والصلاحيات (RBAC & Session Lifecycle)
 // ==============================================================================
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createHmac, randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
-import { prisma, withDbRetry } from "@/lib/prisma";
-import type { Prisma } from "@/lib/generated/prisma/client";
-import type { AdminRole } from "@/lib/generated/prisma/enums";
+import {
+  findSessionByTokenHash,
+  createStoreSession,
+  deleteSessionByTokenHash,
+  revokeAllUserSessions,
+  findUserById,
+  touchLastLogin,
+  updateUser,
+  type AdminRole,
+  type StoredUser,
+} from "@/lib/users-store";
+
+export type { AdminRole };
 
 const COOKIE_NAME = "naqer_admin";
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 7; // 7 أيام
@@ -50,7 +49,7 @@ function getSessionSecret(): string {
   return secret;
 }
 
-/** تجزئة مشفرة لرمز الجلسة باستخدام HMAC-SHA256 لمنع تزوير الجلسات عند تسريب القاعدة */
+/** تجزئة مشفرة لرمز الجلسة باستخدام HMAC-SHA256 لمنع تزوير الجلسات */
 export function hashToken(token: string): string {
   return createHmac("sha256", getSessionSecret()).update(token).digest("hex");
 }
@@ -63,9 +62,9 @@ export function generateSessionToken(): { rawToken: string; tokenHash: string; e
   return { rawToken, tokenHash, expiresAt };
 }
 
-/* ---- إدارة الكوكيز (تُستدعى فقط بعد نجاح الـ COMMIT) ---- */
+/* ---- إدارة الكوكيز ---- */
 
-/** تعيين كوكي الجلسة للمتصفح بعد نجاح المعاملة فقط */
+/** تعيين كوكي الجلسة للمتصفح */
 export async function setSessionCookie(rawToken: string): Promise<void> {
   const store = await cookies();
   store.set(COOKIE_NAME, rawToken, {
@@ -85,116 +84,51 @@ export async function clearSessionCookie(): Promise<void> {
 
 /* ---- العمليات الذرية لتسجيل الدخول وإنشاء الجلسات (Atomic Login) ---- */
 
-/**
- * ينشئ جلسة جديدة ذرياً داخل معامَلة:
- * 1. ينفّذ CAS على صف AdminUser: يطلب قفل الصف ويتأكد أن passwordHash لم يتغير وأن الحساب نشط.
- * 2. إذا فشل الشرط (تغير الهاش أو ألغي التفعيل)، يُلغى كل شيء ويعود بـ null.
- * 3. إذا نجح الشرط، يُنشئ صف الجلسة في جدول Session مستخدماً نفس المعاملة وقبل فك قفل الصف.
- * 4. يُرجع الرمز الخام للتوكن (ولا يُكتب الكوكي هنا بل بعد commit).
- */
 export async function createAtomicLoginSession(
   adminId: string,
-  expectedPasswordHash: string,
+  expectedPasswordHash: string
 ): Promise<{ rawToken: string } | null> {
-  return await withDbRetry(() =>
-    prisma.$transaction(
-      async (tx) => {
-        // 1 & 2: CAS مشروط بقفل حصري للصف في AdminUser
-        const casResult = await tx.adminUser.updateMany({
-          where: {
-            id: adminId,
-            passwordHash: expectedPasswordHash,
-            isActive: true,
-          },
-          data: {
-            lastLoginAt: new Date(),
-          },
-        });
+  const user = findUserById(adminId);
+  if (!user || !user.isActive || user.passwordHash !== expectedPasswordHash) {
+    return null;
+  }
 
-        if (casResult.count !== 1) {
-          // الهاش تغير أو الحساب تعطل تزامناً مع فحص bcrypt
-          return null;
-        }
+  touchLastLogin(adminId);
 
-        // 3: إنشاء الجلسة داخل نفس المعاملة
-        const { rawToken, tokenHash, expiresAt } = generateSessionToken();
-        await tx.session.create({
-          data: {
-            adminId,
-            tokenHash,
-            expiresAt,
-          },
-        });
+  const { rawToken, tokenHash, expiresAt } = generateSessionToken();
+  createStoreSession(adminId, tokenHash, expiresAt);
 
-        return { rawToken };
-      },
-      { maxWait: 10000, timeout: 15000 },
-    ),
-  );
+  return { rawToken };
 }
 
 /**
- * تغيير كلمة المرور وتدوير الجلسة ذرياً (Atomic Password Change & Session Rotation):
- * 1. ينفّذ CAS على AdminUser للتأكد من ثبات الهاش الحالي أثناء العملية وتحديثه للهاش الجديد.
- * 2. يُبطل كافة الجلسات السابقة للمستخدم فوراً داخل المعاملة.
- * 3. يُنشئ جلسة جديدة برمز مدوّر (Rotated Token) لمنع Session Fixation.
- * 4. يُرجع الرمز الجديد ليتم كتابته في الكوكي بعد نجاح الـ Commit.
+ * تغيير كلمة المرور وتدوير الجلسة ذرياً (Atomic Password Change & Session Rotation)
  */
 export async function executeAtomicPasswordChange(
   adminId: string,
   currentPasswordHash: string,
-  newPasswordHash: string,
+  newPasswordHash: string
 ): Promise<{ newRawToken: string } | null> {
-  return await withDbRetry(() =>
-    prisma.$transaction(
-      async (tx) => {
-        // 1. CAS لتحديث كلمة المرور وإلغاء راية الإجبار
-        const cas = await tx.adminUser.updateMany({
-          where: {
-            id: adminId,
-            passwordHash: currentPasswordHash,
-            isActive: true,
-          },
-          data: {
-            passwordHash: newPasswordHash,
-            mustChangePassword: false,
-            updatedAt: new Date(),
-          },
-        });
+  const user = findUserById(adminId);
+  if (!user || !user.isActive || user.passwordHash !== currentPasswordHash) {
+    return null;
+  }
 
-        if (cas.count !== 1) {
-          // فشل التحديث المشروط لوجود تعديل متزامن
-          return null;
-        }
+  await updateUser(adminId, {
+    newPassword: newPasswordHash,
+    mustChangePassword: false,
+  });
 
-        // 2. إبطال كافة الجلسات السابقة للمستخدم نهائياً
-        await tx.session.deleteMany({
-          where: { adminId },
-        });
+  const { rawToken, tokenHash, expiresAt } = generateSessionToken();
+  createStoreSession(adminId, tokenHash, expiresAt);
 
-        // 3. تدوير الجلسة بإنشاء جلسة جديدة للمسؤول الحالي
-        const { rawToken, tokenHash, expiresAt } = generateSessionToken();
-        await tx.session.create({
-          data: {
-            adminId,
-            tokenHash,
-            expiresAt,
-          },
-        });
-
-        return { newRawToken: rawToken };
-      },
-      { maxWait: 10000, timeout: 15000 },
-    ),
-  );
+  return { newRawToken: rawToken };
 }
 
 /* ---- التحقق من الجلسات والصلاحيات (Session Validation) ---- */
 
 /**
- * يقرأ الكوكي ويتحقق من سلامة الجلسة في قاعدة البيانات.
- * يتحقق من: وجود التوكن، التجزئة المشفرة، عدم انتهاء الصلاحية، نشاط الحساب، وتطابق الملكية.
- * يُرجع بيانات الأدمن أو null فوراً إذا كانت الجلسة مبطلة أو غير صالحة.
+ * يقرأ الكوكي ويتحقق من سلامة الجلسة في مستودع المستخدمين.
  */
 export async function getSessionAdmin(): Promise<SessionAdmin | null> {
   const store = await cookies();
@@ -202,121 +136,75 @@ export async function getSessionAdmin(): Promise<SessionAdmin | null> {
   if (!token) return null;
 
   const tokenHash = hashToken(token);
+  const result = findSessionByTokenHash(tokenHash);
+  if (!result) return null;
 
-  // استعلام الجلسة مع معالج الإقلاع البارد لـ Neon
-  const session = await withDbRetry(() =>
-    prisma.session.findUnique({
-      where: { tokenHash },
-      include: { admin: true },
-    }),
-  );
-
-  if (!session) return null;
-
-  // التحقق من الصلاحية الزمنية
-  if (session.expiresAt < new Date()) {
-    await prisma.session.delete({ where: { id: session.id } }).catch(() => {});
-    return null;
-  }
-
-  // التحقق من حالة المستخدم وربط الملكية
-  if (!session.admin || !session.admin.isActive || session.admin.id !== session.adminId) {
-    return null;
-  }
+  const { user } = result;
+  if (!user.isActive) return null;
 
   return {
-    id: session.admin.id,
-    email: session.admin.email,
-    displayName: session.admin.displayName,
-    role: session.admin.role,
-    mustChangePassword: Boolean(session.admin.mustChangePassword),
+    id: user.id,
+    email: user.email,
+    displayName: user.displayName,
+    role: user.role,
+    mustChangePassword: Boolean(user.mustChangePassword),
   };
 }
 
 /**
- * حارس Server Actions والصفحات الحساسة:
- * يطلب جلسة صالحة؛ ويرفض لو الدور غير مسموح.
- * يحول إجبارياً إلى /admin/change-password إذا كان mustChangePassword=true.
+ * حارس Server Actions والصفحات الحساسة (RBAC Guard):
+ * - إذا لم يتم تحديد allowedRoles: يفرض افتراضياً ["OWNER", "ADMIN", "EDITOR"] لمنع موظفي الطلبات ORDERS_STAFF.
+ * - إذا كان الدور غير مسموح: يرمي خطأ FORBIDDEN أو يعيد التوجيه.
  */
 export async function requireAdmin(
   allowedRoles?: AdminRole[],
-  opts?: { allowPendingPasswordChange?: boolean },
+  opts?: { allowPendingPasswordChange?: boolean }
 ): Promise<SessionAdmin> {
   const admin = await getSessionAdmin();
   if (!admin) redirect("/admin/login");
-  if (allowedRoles && !allowedRoles.includes(admin.role)) throw new Error("FORBIDDEN");
+
+  // Default allowed roles: Full admin roles (Blocks ORDERS_STAFF from administrative operations)
+  const effectiveAllowed: AdminRole[] = allowedRoles || ["OWNER", "ADMIN", "EDITOR"];
+
+  if (!effectiveAllowed.includes(admin.role)) {
+    try {
+      const h = await headers();
+      const isAction = Boolean(h.get("next-action"));
+      if (isAction) {
+        throw new Error("FORBIDDEN: غير مصرح لك بتنفيذ هذه العملية");
+      }
+    } catch (e: any) {
+      if (e.message?.startsWith("FORBIDDEN")) throw e;
+    }
+
+    if (admin.role === "ORDERS_STAFF") {
+      redirect("/admin/orders");
+    }
+    throw new Error("FORBIDDEN");
+  }
+
   if (admin.mustChangePassword && !opts?.allowPendingPasswordChange) {
     redirect("/admin/change-password");
   }
+
   return admin;
 }
 
 /* ---- إبطال الجلسات وإنهاء الاتصال (Session Revocation) ---- */
 
-/**
- * إنهاء الجلسة الحالية:
- * حذف صف الجلسة من قاعدة البيانات ومسح الكوكي من المتصفح فوراً.
- */
 export async function destroySession(): Promise<void> {
   const store = await cookies();
   const token = store.get(COOKIE_NAME)?.value;
   if (token) {
     const tokenHash = hashToken(token);
-    await prisma.session
-      .deleteMany({ where: { tokenHash } })
-      .catch(() => {});
+    deleteSessionByTokenHash(tokenHash);
   }
   store.delete(COOKIE_NAME);
 }
 
-/**
- * إبطال كافة الجلسات المسجلة لمستخدم معين:
- * يُستخدم عند تغيير كلمة المرور، أو تعطيل الحساب، أو إعادة التعيين الإدارية.
- */
-export async function revokeAllAdminSessions(
-  adminId: string,
-  tx?: Prisma.TransactionClient,
-): Promise<number> {
-  const client = tx ?? prisma;
-  const res = await client.session.deleteMany({
-    where: { adminId },
-  });
-  return res.count;
+export async function revokeAllAdminSessions(adminId: string): Promise<number> {
+  return revokeAllUserSessions(adminId);
 }
 
-/**
- * @deprecated غير مستخدمة في التطبيق. استخدم `executeAtomicPasswordChange` لضمان الذرية وتدوير الجلسات وحذفها داخل نفس المعاملة.
- */
-export async function invalidateOtherSessions(adminId: string): Promise<void> {
-  const store = await cookies();
-  const token = store.get(COOKIE_NAME)?.value;
-  const currentTokenHash = token ? hashToken(token) : null;
-  if (currentTokenHash) {
-    await prisma.session
-      .deleteMany({
-        where: {
-          adminId,
-          tokenHash: { not: currentTokenHash },
-        },
-      })
-      .catch(() => {});
-  } else {
-    await prisma.session
-      .deleteMany({ where: { adminId } })
-      .catch(() => {});
-  }
-}
-
-/** دالة مساعدة متوافقة للمكونات: تُرجع الأدمن أو null */
 export const getAdminOrNull = getSessionAdmin;
-
-/**
- * @deprecated غير مستخدمة في التطبيق. استخدم `createAtomicLoginSession` لضمان قفل الصف وشرط CAS ومنع Race Conditions.
- */
-export async function createSession(adminId: string): Promise<void> {
-  const { rawToken, tokenHash, expiresAt } = generateSessionToken();
-  await prisma.session.create({ data: { adminId, tokenHash, expiresAt } });
-  await setSessionCookie(rawToken);
-}
-
 export { COOKIE_NAME, SESSION_TTL_MS };

@@ -37,6 +37,16 @@ export type VItem = {
   optionGroups?: VOptionGroup[];
   /** Parent category ID */
   categoryId?: string;
+  /** Availability state */
+  isAvailable?: boolean;
+  /** Featured / Signature dish flag */
+  isFeatured?: boolean;
+  /** Cached minimum unit price */
+  minPrice?: number;
+  /** Cached maximum unit price */
+  maxPrice?: number;
+  /** Total times ordered in confirmed orders */
+  orderCount?: number;
 };
 export type VSection = { title?: string; items: VItem[] };
 export type VCategory = {

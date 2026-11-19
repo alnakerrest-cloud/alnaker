@@ -9,10 +9,29 @@
 import { PrismaClient } from "@/lib/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
+import { getLocalDbEngine } from "./local-db-engine";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient; pool?: pg.Pool };
 
 let instance: PrismaClient | null = null;
+
+const MODEL_MAP: Record<string, string> = {
+  category: "Category",
+  section: "Section",
+  product: "Product",
+  productVariant: "ProductVariant",
+  productImage: "ProductImage",
+  branch: "Branch",
+  restaurantSettings: "RestaurantSettings",
+  offer: "Offer",
+  addonGroup: "AddonGroup",
+  addon: "Addon",
+  optionGroup: "OptionGroup",
+  optionItem: "OptionItem",
+  productOptionGroup: "ProductOptionGroup",
+  auditLog: "AuditLog",
+  importJob: "ImportJob",
+};
 
 function getClient(): PrismaClient {
   if (instance) return instance;
@@ -49,6 +68,29 @@ function getClient(): PrismaClient {
 export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
   get(_target, prop) {
     if (prop === "then") return undefined;
+
+    // Unified Local Mode: if USE_BACKUP_DATA is active (default in local development),
+    // delegate all queries and mutations to the LocalDbEngine
+    const useLocal = process.env.USE_BACKUP_DATA !== "false";
+    if (useLocal) {
+      if (prop === "$transaction") {
+        return async (arg: any) => {
+          if (typeof arg === "function") {
+            return await arg(prisma);
+          }
+          if (Array.isArray(arg)) {
+            return await Promise.all(arg);
+          }
+          return arg;
+        };
+      }
+
+      if (typeof prop === "string" && MODEL_MAP[prop]) {
+        const engine = getLocalDbEngine();
+        return engine.getDelegate(MODEL_MAP[prop] as any);
+      }
+    }
+
     const client = getClient();
     const val = (client as unknown as Record<string | symbol, unknown>)[prop];
     return typeof val === "function" ? (val as (...args: unknown[]) => unknown).bind(client) : val;

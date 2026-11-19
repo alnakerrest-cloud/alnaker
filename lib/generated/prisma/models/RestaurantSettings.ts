@@ -28,10 +28,12 @@ export type AggregateRestaurantSettings = {
 
 export type RestaurantSettingsAvgAggregateOutputType = {
   serviceChargePct: runtime.Decimal | null
+  deliveryFee: runtime.Decimal | null
 }
 
 export type RestaurantSettingsSumAggregateOutputType = {
   serviceChargePct: runtime.Decimal | null
+  deliveryFee: runtime.Decimal | null
 }
 
 export type RestaurantSettingsMinAggregateOutputType = {
@@ -45,6 +47,7 @@ export type RestaurantSettingsMinAggregateOutputType = {
   vatNoteAr: string | null
   serviceNoteAr: string | null
   serviceChargePct: runtime.Decimal | null
+  deliveryFee: runtime.Decimal | null
   currencyAr: string | null
   updatedAt: Date | null
 }
@@ -60,6 +63,7 @@ export type RestaurantSettingsMaxAggregateOutputType = {
   vatNoteAr: string | null
   serviceNoteAr: string | null
   serviceChargePct: runtime.Decimal | null
+  deliveryFee: runtime.Decimal | null
   currencyAr: string | null
   updatedAt: Date | null
 }
@@ -75,6 +79,7 @@ export type RestaurantSettingsCountAggregateOutputType = {
   vatNoteAr: number
   serviceNoteAr: number
   serviceChargePct: number
+  deliveryFee: number
   currencyAr: number
   updatedAt: number
   _all: number
@@ -83,10 +88,12 @@ export type RestaurantSettingsCountAggregateOutputType = {
 
 export type RestaurantSettingsAvgAggregateInputType = {
   serviceChargePct?: true
+  deliveryFee?: true
 }
 
 export type RestaurantSettingsSumAggregateInputType = {
   serviceChargePct?: true
+  deliveryFee?: true
 }
 
 export type RestaurantSettingsMinAggregateInputType = {
@@ -100,6 +107,7 @@ export type RestaurantSettingsMinAggregateInputType = {
   vatNoteAr?: true
   serviceNoteAr?: true
   serviceChargePct?: true
+  deliveryFee?: true
   currencyAr?: true
   updatedAt?: true
 }
@@ -115,6 +123,7 @@ export type RestaurantSettingsMaxAggregateInputType = {
   vatNoteAr?: true
   serviceNoteAr?: true
   serviceChargePct?: true
+  deliveryFee?: true
   currencyAr?: true
   updatedAt?: true
 }
@@ -130,6 +139,7 @@ export type RestaurantSettingsCountAggregateInputType = {
   vatNoteAr?: true
   serviceNoteAr?: true
   serviceChargePct?: true
+  deliveryFee?: true
   currencyAr?: true
   updatedAt?: true
   _all?: true
@@ -232,6 +242,7 @@ export type RestaurantSettingsGroupByOutputType = {
   vatNoteAr: string | null
   serviceNoteAr: string | null
   serviceChargePct: runtime.Decimal | null
+  deliveryFee: runtime.Decimal | null
   currencyAr: string
   updatedAt: Date
   _count: RestaurantSettingsCountAggregateOutputType | null
@@ -270,6 +281,7 @@ export type RestaurantSettingsWhereInput = {
   vatNoteAr?: Prisma.StringNullableFilter<"RestaurantSettings"> | string | null
   serviceNoteAr?: Prisma.StringNullableFilter<"RestaurantSettings"> | string | null
   serviceChargePct?: Prisma.DecimalNullableFilter<"RestaurantSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deliveryFee?: Prisma.DecimalNullableFilter<"RestaurantSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyAr?: Prisma.StringFilter<"RestaurantSettings"> | string
   updatedAt?: Prisma.DateTimeFilter<"RestaurantSettings"> | Date | string
 }
@@ -285,6 +297,7 @@ export type RestaurantSettingsOrderByWithRelationInput = {
   vatNoteAr?: Prisma.SortOrderInput | Prisma.SortOrder
   serviceNoteAr?: Prisma.SortOrderInput | Prisma.SortOrder
   serviceChargePct?: Prisma.SortOrderInput | Prisma.SortOrder
+  deliveryFee?: Prisma.SortOrderInput | Prisma.SortOrder
   currencyAr?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -303,6 +316,7 @@ export type RestaurantSettingsWhereUniqueInput = Prisma.AtLeast<{
   vatNoteAr?: Prisma.StringNullableFilter<"RestaurantSettings"> | string | null
   serviceNoteAr?: Prisma.StringNullableFilter<"RestaurantSettings"> | string | null
   serviceChargePct?: Prisma.DecimalNullableFilter<"RestaurantSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deliveryFee?: Prisma.DecimalNullableFilter<"RestaurantSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyAr?: Prisma.StringFilter<"RestaurantSettings"> | string
   updatedAt?: Prisma.DateTimeFilter<"RestaurantSettings"> | Date | string
 }, "id">
@@ -318,6 +332,7 @@ export type RestaurantSettingsOrderByWithAggregationInput = {
   vatNoteAr?: Prisma.SortOrderInput | Prisma.SortOrder
   serviceNoteAr?: Prisma.SortOrderInput | Prisma.SortOrder
   serviceChargePct?: Prisma.SortOrderInput | Prisma.SortOrder
+  deliveryFee?: Prisma.SortOrderInput | Prisma.SortOrder
   currencyAr?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.RestaurantSettingsCountOrderByAggregateInput
@@ -341,6 +356,7 @@ export type RestaurantSettingsScalarWhereWithAggregatesInput = {
   vatNoteAr?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSettings"> | string | null
   serviceNoteAr?: Prisma.StringNullableWithAggregatesFilter<"RestaurantSettings"> | string | null
   serviceChargePct?: Prisma.DecimalNullableWithAggregatesFilter<"RestaurantSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deliveryFee?: Prisma.DecimalNullableWithAggregatesFilter<"RestaurantSettings"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyAr?: Prisma.StringWithAggregatesFilter<"RestaurantSettings"> | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"RestaurantSettings"> | Date | string
 }
@@ -356,6 +372,7 @@ export type RestaurantSettingsCreateInput = {
   vatNoteAr?: string | null
   serviceNoteAr?: string | null
   serviceChargePct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deliveryFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyAr?: string
   updatedAt?: Date | string
 }
@@ -371,6 +388,7 @@ export type RestaurantSettingsUncheckedCreateInput = {
   vatNoteAr?: string | null
   serviceNoteAr?: string | null
   serviceChargePct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deliveryFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyAr?: string
   updatedAt?: Date | string
 }
@@ -386,6 +404,7 @@ export type RestaurantSettingsUpdateInput = {
   vatNoteAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceNoteAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceChargePct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deliveryFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyAr?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -401,6 +420,7 @@ export type RestaurantSettingsUncheckedUpdateInput = {
   vatNoteAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceNoteAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceChargePct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deliveryFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyAr?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -416,6 +436,7 @@ export type RestaurantSettingsCreateManyInput = {
   vatNoteAr?: string | null
   serviceNoteAr?: string | null
   serviceChargePct?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deliveryFee?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyAr?: string
   updatedAt?: Date | string
 }
@@ -431,6 +452,7 @@ export type RestaurantSettingsUpdateManyMutationInput = {
   vatNoteAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceNoteAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceChargePct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deliveryFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyAr?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -446,6 +468,7 @@ export type RestaurantSettingsUncheckedUpdateManyInput = {
   vatNoteAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceNoteAr?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   serviceChargePct?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  deliveryFee?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   currencyAr?: Prisma.StringFieldUpdateOperationsInput | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -461,12 +484,14 @@ export type RestaurantSettingsCountOrderByAggregateInput = {
   vatNoteAr?: Prisma.SortOrder
   serviceNoteAr?: Prisma.SortOrder
   serviceChargePct?: Prisma.SortOrder
+  deliveryFee?: Prisma.SortOrder
   currencyAr?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type RestaurantSettingsAvgOrderByAggregateInput = {
   serviceChargePct?: Prisma.SortOrder
+  deliveryFee?: Prisma.SortOrder
 }
 
 export type RestaurantSettingsMaxOrderByAggregateInput = {
@@ -480,6 +505,7 @@ export type RestaurantSettingsMaxOrderByAggregateInput = {
   vatNoteAr?: Prisma.SortOrder
   serviceNoteAr?: Prisma.SortOrder
   serviceChargePct?: Prisma.SortOrder
+  deliveryFee?: Prisma.SortOrder
   currencyAr?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -495,12 +521,14 @@ export type RestaurantSettingsMinOrderByAggregateInput = {
   vatNoteAr?: Prisma.SortOrder
   serviceNoteAr?: Prisma.SortOrder
   serviceChargePct?: Prisma.SortOrder
+  deliveryFee?: Prisma.SortOrder
   currencyAr?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type RestaurantSettingsSumOrderByAggregateInput = {
   serviceChargePct?: Prisma.SortOrder
+  deliveryFee?: Prisma.SortOrder
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -528,6 +556,7 @@ export type RestaurantSettingsSelect<ExtArgs extends runtime.Types.Extensions.In
   vatNoteAr?: boolean
   serviceNoteAr?: boolean
   serviceChargePct?: boolean
+  deliveryFee?: boolean
   currencyAr?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["restaurantSettings"]>
@@ -543,6 +572,7 @@ export type RestaurantSettingsSelectCreateManyAndReturn<ExtArgs extends runtime.
   vatNoteAr?: boolean
   serviceNoteAr?: boolean
   serviceChargePct?: boolean
+  deliveryFee?: boolean
   currencyAr?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["restaurantSettings"]>
@@ -558,6 +588,7 @@ export type RestaurantSettingsSelectUpdateManyAndReturn<ExtArgs extends runtime.
   vatNoteAr?: boolean
   serviceNoteAr?: boolean
   serviceChargePct?: boolean
+  deliveryFee?: boolean
   currencyAr?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["restaurantSettings"]>
@@ -573,11 +604,12 @@ export type RestaurantSettingsSelectScalar = {
   vatNoteAr?: boolean
   serviceNoteAr?: boolean
   serviceChargePct?: boolean
+  deliveryFee?: boolean
   currencyAr?: boolean
   updatedAt?: boolean
 }
 
-export type RestaurantSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "brandNameAr" | "taglineAr" | "phoneDisplay" | "phoneIntl" | "logoUrl" | "logoPublicId" | "vatNoteAr" | "serviceNoteAr" | "serviceChargePct" | "currencyAr" | "updatedAt", ExtArgs["result"]["restaurantSettings"]>
+export type RestaurantSettingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "brandNameAr" | "taglineAr" | "phoneDisplay" | "phoneIntl" | "logoUrl" | "logoPublicId" | "vatNoteAr" | "serviceNoteAr" | "serviceChargePct" | "deliveryFee" | "currencyAr" | "updatedAt", ExtArgs["result"]["restaurantSettings"]>
 
 export type $RestaurantSettingsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "RestaurantSettings"
@@ -593,6 +625,7 @@ export type $RestaurantSettingsPayload<ExtArgs extends runtime.Types.Extensions.
     vatNoteAr: string | null
     serviceNoteAr: string | null
     serviceChargePct: runtime.Decimal | null
+    deliveryFee: runtime.Decimal | null
     currencyAr: string
     updatedAt: Date
   }, ExtArgs["result"]["restaurantSettings"]>
@@ -1028,6 +1061,7 @@ export interface RestaurantSettingsFieldRefs {
   readonly vatNoteAr: Prisma.FieldRef<"RestaurantSettings", 'String'>
   readonly serviceNoteAr: Prisma.FieldRef<"RestaurantSettings", 'String'>
   readonly serviceChargePct: Prisma.FieldRef<"RestaurantSettings", 'Decimal'>
+  readonly deliveryFee: Prisma.FieldRef<"RestaurantSettings", 'Decimal'>
   readonly currencyAr: Prisma.FieldRef<"RestaurantSettings", 'String'>
   readonly updatedAt: Prisma.FieldRef<"RestaurantSettings", 'DateTime'>
 }

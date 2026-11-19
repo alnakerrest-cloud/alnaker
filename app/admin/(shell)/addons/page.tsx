@@ -11,7 +11,7 @@ export default async function AddonsPage({
 }: {
   searchParams: Promise<{ q?: string; status?: string }>;
 }) {
-  const admin = await requireAdmin(["OWNER", "EDITOR"]);
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const { q, status } = await searchParams;
 
   const groups = await prisma.optionGroup.findMany({

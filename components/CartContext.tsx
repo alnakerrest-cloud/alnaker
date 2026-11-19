@@ -14,6 +14,7 @@ import type { VBranch } from '@/lib/site-db';
 import type { VOffer } from '@/lib/offers';
 import { calculateOfferDiscount } from '@/lib/offers';
 import type { Locale } from '@/lib/i18n';
+import type { MenuModeSettings } from '@/lib/order-settings-types';
 import {
   CART_STORAGE_KEY,
   type CartItem,
@@ -47,6 +48,7 @@ interface CartContextValue {
     variantIndex: number,
     quantity: number,
     selectedOptions?: SelectedOption[],
+    removedIngredients?: string[],
     notes?: string,
     categoryIcon?: string
   ) => void;
@@ -56,6 +58,7 @@ interface CartContextValue {
     variantIndex: number,
     quantity: number,
     selectedOptions?: SelectedOption[],
+    removedIngredients?: string[],
     notes?: string
   ) => void;
   updateQuantity: (cartItemId: string, delta: number) => void;
@@ -73,7 +76,9 @@ interface CartContextValue {
   subtotal: number;
   total: number;
   hasHydrated: boolean;
-    getWhatsAppUrl: (
+  isViewOnly: boolean;
+  menuSettings?: MenuModeSettings;
+  getWhatsAppUrl: (
       fallbackPhone: string,
       restaurantName: string,
       vatNote?: string
@@ -89,6 +94,7 @@ export function CartProvider({
   locale,
   currency,
   offers = [],
+  menuSettings,
 }: {
   children: ReactNode;
   categories: VCategory[];
@@ -96,7 +102,9 @@ export function CartProvider({
   locale: Locale;
   currency: string;
   offers?: VOffer[];
+  menuSettings?: MenuModeSettings;
 }) {
+  const isViewOnly = menuSettings?.mode === 'VIEW_ONLY' || menuSettings?.mode === 'TEMPORARILY_CLOSED';
   const [cart, setCart] = useState<CartItem[]>([]);
   const [customerNotes, setCustomerNotes] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -187,16 +195,18 @@ export function CartProvider({
       variantIndex: number,
       quantity: number,
       selectedOptions?: SelectedOption[],
+      removedIngredients?: string[],
       notes?: string,
       categoryIcon?: string
     ) => {
+      if (isViewOnly) return;
       const safeIndex =
         variantIndex >= 0 && variantIndex < item.prices.length ? variantIndex : 0;
       const priceObj = item.prices[safeIndex] ?? item.prices[0];
       const basePrice = parsePriceNum(priceObj.value);
       const addonsTotal = (selectedOptions ?? []).reduce((acc, o) => acc + o.price, 0);
       const rawUnitPrice = basePrice + addonsTotal;
-      const id = buildCartItemId(item.id, safeIndex, selectedOptions);
+      const id = buildCartItemId(item.id, safeIndex, selectedOptions, removedIngredients);
       const qtyToAdd = Math.max(1, Math.min(quantity, 99));
 
       const pricing = calculateOfferDiscount({
@@ -242,6 +252,7 @@ export function CartProvider({
           variantLabel: priceObj.label,
           baseUnitPrice: rawUnitPrice,
           selectedOptions: selectedOptions && selectedOptions.length > 0 ? selectedOptions : undefined,
+          removedIngredients: removedIngredients && removedIngredients.length > 0 ? removedIngredients : undefined,
           appliedOffer: pricing.appliedOffer,
           unitPrice: pricing.discountedUnitPrice + addonsTotal,
           quantity: qtyToAdd,
@@ -252,7 +263,7 @@ export function CartProvider({
         return [...prev, newItem];
       });
     },
-    [selectedBranchId, offers, locale]
+    [selectedBranchId, offers, locale, isViewOnly]
   );
 
   const updateCartItem = useCallback(
@@ -262,15 +273,17 @@ export function CartProvider({
       variantIndex: number,
       quantity: number,
       selectedOptions?: SelectedOption[],
+      removedIngredients?: string[],
       notes?: string
     ) => {
+      if (isViewOnly) return;
       const safeIndex =
         variantIndex >= 0 && variantIndex < item.prices.length ? variantIndex : 0;
       const priceObj = item.prices[safeIndex] ?? item.prices[0];
       const basePrice = parsePriceNum(priceObj.value);
       const addonsTotal = (selectedOptions ?? []).reduce((acc, o) => acc + o.price, 0);
       const rawUnitPrice = basePrice + addonsTotal;
-      const newId = buildCartItemId(item.id, safeIndex, selectedOptions);
+      const newId = buildCartItemId(item.id, safeIndex, selectedOptions, removedIngredients);
       const safeQty = Math.max(1, Math.min(quantity, 99));
 
       const pricing = calculateOfferDiscount({
@@ -294,6 +307,7 @@ export function CartProvider({
           variantLabel: priceObj.label,
           baseUnitPrice: rawUnitPrice,
           selectedOptions: selectedOptions && selectedOptions.length > 0 ? selectedOptions : undefined,
+          removedIngredients: removedIngredients && removedIngredients.length > 0 ? removedIngredients : undefined,
           appliedOffer: pricing.appliedOffer,
           unitPrice: pricing.discountedUnitPrice + addonsTotal,
           quantity: safeQty,
@@ -324,7 +338,7 @@ export function CartProvider({
         return next;
       });
     },
-    [selectedBranchId, offers, locale]
+    [selectedBranchId, offers, locale, isViewOnly]
   );
 
   const updateQuantity = useCallback(
@@ -356,7 +370,7 @@ export function CartProvider({
           .filter((it): it is CartItem => it !== null);
       });
     },
-    [selectedBranchId, offers, locale]
+    [selectedBranchId, offers, locale, isViewOnly]
   );
 
   const removeItem = useCallback((cartItemId: string) => {
@@ -466,6 +480,8 @@ export function CartProvider({
       subtotal: totals.subtotal,
       total: totals.total,
       hasHydrated,
+      isViewOnly,
+      menuSettings,
       getWhatsAppUrl,
     }),
     [
@@ -489,6 +505,8 @@ export function CartProvider({
       closeProductModal,
       totals,
       hasHydrated,
+      isViewOnly,
+      menuSettings,
       getWhatsAppUrl,
     ]
   );

@@ -9,7 +9,13 @@ export const dynamic = "force-dynamic";
 export default async function AdminLoginPage() {
   const admin = await getSessionAdmin();
   if (admin) {
-    redirect(admin.mustChangePassword ? "/admin/change-password" : "/admin/dashboard");
+    redirect(
+      admin.mustChangePassword
+        ? "/admin/change-password"
+        : admin.role === "ORDERS_STAFF"
+        ? "/admin/orders"
+        : "/admin/dashboard"
+    );
   }
   const isDev = process.env.NODE_ENV !== "production";
   const settings = await prisma.restaurantSettings.findUnique({ where: { id: "default" }, select: { logoUrl: true, brandNameAr: true } }).catch(() => null);
@@ -21,7 +27,7 @@ export default async function AdminLoginPage() {
       <section className="admin-login-card">
         <div className="admin-login-accent" aria-hidden />
         <div className="admin-login-medallion">
-          <Logo size={80} src={settings?.logoUrl} />
+          <Logo size={80} variant="gold" emblemOnly src={settings?.logoUrl} />
         </div>
         <h1 className="admin-login-title">لوحة تحكم {brand}</h1>
         <p className="admin-login-sub">تسجيل دخول الإدارة</p>

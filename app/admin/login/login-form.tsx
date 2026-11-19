@@ -21,11 +21,13 @@ export default function LoginForm() {
     if (state.success) {
       if (state.mustChangePassword) {
         router.replace("/admin/change-password");
+      } else if (state.role === "ORDERS_STAFF") {
+        router.replace("/admin/orders");
       } else {
         router.replace("/admin/dashboard");
       }
     }
-  }, [state.success, state.mustChangePassword, router]);
+  }, [state.success, state.mustChangePassword, state.role, router]);
 
   return (
     <form action={formAction} className="admin-login-form">

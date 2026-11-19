@@ -9,7 +9,7 @@ import { parsePriceNum, type SelectedOption } from '@/lib/cart';
 import { calculateOfferDiscount } from '@/lib/offers';
 import type { VOptionGroup, VOptionItem } from '@/lib/menu-view';
 
-function OptionGroupCombobox({
+function OptionGroupSelector({
   group,
   selectedOptions,
   onChange,
@@ -25,12 +25,8 @@ function OptionGroupCombobox({
   error?: string;
 }) {
   const t = ui[locale];
+  const isAr = locale === 'ar';
   const [searchTerm, setSearchTerm] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
-  const [focusedIndex, setFocusedIndex] = useState(0);
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Group-specific selection
   const groupSelections = useMemo(
@@ -43,27 +39,6 @@ function OptionGroupCombobox({
     const term = searchTerm.toLowerCase();
     return group.options.filter((o) => o.name.toLowerCase().includes(term));
   }, [group.options, searchTerm]);
-
-  // Click outside to close
-  useEffect(() => {
-    if (!isOpen) return;
-    const onClickOutside = (e: MouseEvent) => {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', onClickOutside);
-    return () => document.removeEventListener('mousedown', onClickOutside);
-  }, [isOpen]);
-
-  // Focus search input on open
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        searchInputRef.current?.focus();
-      }, 50);
-    }
-  }, [isOpen]);
 
   const toggleOption = (opt: VOptionItem) => {
     if (!group.isMulti) {
@@ -79,8 +54,6 @@ function OptionGroupCombobox({
           price: opt.price,
         },
       ]);
-      setIsOpen(false);
-      setSearchTerm('');
     } else {
       // Multi select
       const isSelected = groupSelections.some((o) => o.id === opt.id);
@@ -109,50 +82,28 @@ function OptionGroupCombobox({
     onChange(selectedOptions.filter((o) => o.groupId !== group.id));
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!isOpen) {
-      if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
-        e.preventDefault();
-        setIsOpen(true);
-      }
-      return;
-    }
-
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setFocusedIndex((prev) => Math.min(filteredOptions.length - 1, prev + 1));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setFocusedIndex((prev) => Math.max(0, prev - 1));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      if (filteredOptions[focusedIndex]) {
-        toggleOption(filteredOptions[focusedIndex]);
-      }
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      setIsOpen(false);
-    }
-  };
+  const hasMetRequirement = !group.isRequired || groupSelections.length >= (group.minSelect || 1);
 
   return (
     <div
-      ref={containerRef}
-      className={`addon-group-box${error ? ' has-error' : ''}${isOpen ? ' is-open' : ''}`}
-      onKeyDown={handleKeyDown}
+      id={`opt-group-${group.id}`}
+      className={`addon-group-box${error ? ' has-error' : ''}${hasMetRequirement && groupSelections.length > 0 ? ' is-fulfilled' : ''}`}
     >
       <div className="addon-group-header">
         <div className="addon-group-meta">
           <span className="addon-group-name">{group.name}</span>
           <div className="addon-group-badges">
             <span className={`addon-rule-badge ${group.isRequired ? 'required' : 'optional'}`}>
-              {group.isRequired ? t.required : t.optional}
+              {group.isRequired ? (isAr ? 'إجباري' : 'Required') : (isAr ? 'اختياري' : 'Optional')}
             </span>
             {group.isMulti && (
               <span className="addon-rule-badge multi">
-                {group.minSelect > 0
-                  ? `${t.minRequiredAlert} ${group.minSelect} (${group.maxSelect} max)`
-                  : `(max ${group.maxSelect})`}
+                {isAr ? `(حد أقصى ${group.maxSelect})` : `(max ${group.maxSelect})`}
+              </span>
+            )}
+            {hasMetRequirement && groupSelections.length > 0 && (
+              <span className="addon-rule-badge fulfilled">
+                {isAr ? '✓ تم الاختيار' : '✓ Selected'}
               </span>
             )}
           </div>
@@ -170,123 +121,76 @@ function OptionGroupCombobox({
         )}
       </div>
 
-      {/* Selected chips display */}
-      {groupSelections.length > 0 && (
-        <div className="addon-selected-chips">
-          {groupSelections.map((sel) => (
-            <span key={sel.id} className="addon-chip">
-              <span className="addon-chip-name">{sel.name}</span>
-              {sel.price > 0 ? (
-                <span className="addon-chip-price">+{sel.price} {currency}</span>
-              ) : (
-                <span className="addon-chip-free">{t.free}</span>
-              )}
-              <button
-                type="button"
-                className="addon-chip-remove"
-                onClick={() => onChange(selectedOptions.filter((o) => o.id !== sel.id))}
-                aria-label={t.removeItem}
-              >
-                ✕
-              </button>
-            </span>
-          ))}
+      {group.options.length > 6 && (
+        <div className="addon-search-box" style={{ marginBottom: '10px' }}>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder={isAr ? 'ابحث في الخيارات...' : 'Search choices...'}
+            className="addon-search-input"
+          />
         </div>
       )}
 
-      {/* Combobox Trigger */}
-      <button
-        type="button"
-        className="combobox-trigger"
-        onClick={() => setIsOpen((prev) => !prev)}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
-      >
-        <span className="combobox-placeholder">
-          {groupSelections.length === 0
-            ? t.selectOptionPlaceholder
-            : group.isMulti
-            ? `${groupSelections.length} / ${group.maxSelect} مختار`
-            : groupSelections[0].name}
-        </span>
-        <span className="combobox-chevron" aria-hidden="true">
-          {isOpen ? '▲' : '▼'}
-        </span>
-      </button>
+      {/* Direct Interactive Tiles Grid */}
+      <div className="option-tiles-grid" role={group.isMulti ? 'group' : 'radiogroup'} aria-label={group.name}>
+        {filteredOptions.map((opt) => {
+          const isSelected = groupSelections.some((o) => o.id === opt.id);
+          const isMaxReached = group.isMulti && !isSelected && groupSelections.length >= group.maxSelect;
 
-      {/* Dropdown Menu */}
-      {isOpen && (
-        <div className="combobox-dropdown" role="listbox">
-          <div className="combobox-search-bar">
-            <SearchIcon width={16} height={16} />
-            <input
-              ref={searchInputRef}
-              type="text"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setFocusedIndex(0);
+          return (
+            <div
+              key={opt.id}
+              role={group.isMulti ? 'checkbox' : 'radio'}
+              aria-checked={isSelected}
+              aria-disabled={isMaxReached}
+              tabIndex={isMaxReached ? -1 : 0}
+              className={`option-tile${isSelected ? ' selected' : ''}${isMaxReached ? ' disabled' : ''}`}
+              onClick={() => {
+                if (!isMaxReached) toggleOption(opt);
               }}
-              placeholder={t.searchOptions}
-              className="combobox-search-input"
-            />
-            {searchTerm && (
-              <button
-                type="button"
-                className="combobox-search-clear"
-                onClick={() => setSearchTerm('')}
-              >
-                ✕
-              </button>
-            )}
-          </div>
-
-          <div className="combobox-options-list">
-            {filteredOptions.length === 0 ? (
-              <div className="combobox-no-options">{t.noOptionsFound}</div>
-            ) : (
-              filteredOptions.map((opt, idx) => {
-                const isSelected = groupSelections.some((o) => o.id === opt.id);
-                const isFocused = idx === focusedIndex;
-                const isMaxReached =
-                  group.isMulti && !isSelected && groupSelections.length >= group.maxSelect;
-
-                return (
-                  <div
-                    key={opt.id}
-                    role="option"
-                    aria-selected={isSelected}
-                    className={`combobox-option-item${isSelected ? ' selected' : ''}${
-                      isFocused ? ' focused' : ''
-                    }${isMaxReached ? ' disabled' : ''}`}
-                    onClick={() => {
-                      if (!isMaxReached) toggleOption(opt);
-                    }}
-                    onMouseEnter={() => setFocusedIndex(idx)}
-                  >
-                    <div className="option-item-main">
-                      <span className="option-item-indicator" aria-hidden="true">
-                        {group.isMulti ? (isSelected ? '☑' : '☐') : isSelected ? '●' : '○'}
-                      </span>
-                      <span className="option-item-name">{opt.name}</span>
-                    </div>
-
-                    <span className="option-item-price">
-                      {opt.price > 0 ? (
-                        <>+{opt.price} <small>{currency}</small></>
-                      ) : (
-                        <span className="price-free">{t.free}</span>
-                      )}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  if (!isMaxReached) toggleOption(opt);
+                }
+              }}
+            >
+              <div className="option-tile-content">
+                <span className="option-tile-indicator" aria-hidden="true">
+                  {group.isMulti ? (
+                    <span className={`tile-check-box${isSelected ? ' checked' : ''}`}>
+                      {isSelected ? '✓' : ''}
                     </span>
-                  </div>
-                );
-              })
-            )}
-          </div>
+                  ) : (
+                    <span className={`tile-radio-circle${isSelected ? ' checked' : ''}`} />
+                  )}
+                </span>
+                <span className="option-tile-name">{opt.name}</span>
+              </div>
+
+              <div className="option-tile-price-wrap">
+                {opt.price > 0 ? (
+                  <span className="option-tile-price">
+                    +{opt.price} <small>{currency}</small>
+                  </span>
+                ) : (
+                  <span className="option-tile-free">
+                    {isAr ? 'مجاني' : 'Free'}
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {error && (
+        <div className="addon-error-msg" role="alert" style={{ marginTop: '10px' }}>
+          ⚠️ {error}
         </div>
       )}
-
-      {error && <p className="addon-error-msg">{error}</p>}
     </div>
   );
 }
@@ -298,7 +202,7 @@ export default function ProductDetailModal({
   locale: Locale;
   currency: string;
 }) {
-  const { productModal, closeProductModal, addItem, updateCartItem, selectedBranchId, offers } = useCart();
+  const { productModal, closeProductModal, addItem, updateCartItem, selectedBranchId, offers, isViewOnly, menuSettings } = useCart();
   const t = ui[locale];
 
   const editingItem = productModal?.editingCartItem;
@@ -308,6 +212,7 @@ export default function ProductDetailModal({
   const [selectedOptions, setSelectedOptions] = useState<SelectedOption[]>([]);
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState('');
+  const [removedIngredients, setRemovedIngredients] = useState<string[]>([]);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [actionDone, setActionDone] = useState(false);
   const [imgFailed, setImgFailed] = useState(false);
@@ -322,11 +227,13 @@ export default function ProductDetailModal({
         const item = productModal.editingCartItem;
         setSelectedVariant(item.variantIndex);
         setSelectedOptions(item.selectedOptions ? [...item.selectedOptions] : []);
+        setRemovedIngredients(item.removedIngredients ? [...item.removedIngredients] : []);
         setQuantity(item.quantity);
         setNotes(item.notes || '');
       } else {
         setSelectedVariant(0);
         setSelectedOptions([]);
+        setRemovedIngredients([]);
         setQuantity(1);
         setNotes('');
       }
@@ -387,23 +294,35 @@ export default function ProductDetailModal({
       for (const group of item.optionGroups) {
         const groupCount = selectedOptions.filter((o) => o.groupId === group.id).length;
         if (group.isRequired && groupCount === 0) {
-          errors[group.id] = `${t.required} — ${group.name}`;
+          errors[group.id] = locale === 'ar'
+            ? `يرجى تحديد اختيار في: ${group.name}`
+            : `Please select an option for: ${group.name}`;
         } else if (group.isMulti && group.minSelect > 0 && groupCount < group.minSelect) {
-          errors[group.id] = `${t.minRequiredAlert} ${group.minSelect}`;
+          errors[group.id] = locale === 'ar'
+            ? `الحد الأدنى لخيارات ${group.name} هو ${group.minSelect}`
+            : `Minimum selection for ${group.name} is ${group.minSelect}`;
         }
       }
     }
     setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    if (Object.keys(errors).length > 0) {
+      const firstErrorId = Object.keys(errors)[0];
+      const el = document.getElementById(`opt-group-${firstErrorId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return false;
+    }
+    return true;
   };
 
   const handleAction = () => {
     if (!validate()) return;
 
     if (isEditing && editingItem) {
-      updateCartItem(editingItem.id, item, selectedVariant, quantity, selectedOptions, notes);
+      updateCartItem(editingItem.id, item, selectedVariant, quantity, selectedOptions, removedIngredients, notes);
     } else {
-      addItem(item, selectedVariant, quantity, selectedOptions, notes, categoryIcon);
+      addItem(item, selectedVariant, quantity, selectedOptions, removedIngredients, notes, categoryIcon);
     }
 
     setActionDone(true);
@@ -414,14 +333,14 @@ export default function ProductDetailModal({
 
   return (
     <div
-      className="modal-backdrop"
+      className="modal-backdrop product-modal-backdrop"
       onClick={(e) => {
         if (e.target === e.currentTarget) closeProductModal();
       }}
       role="presentation"
     >
       <div
-        className="modal-panel"
+        className="modal-panel product-modal"
         ref={modalRef}
         role="dialog"
         aria-modal="true"
@@ -469,15 +388,55 @@ export default function ProductDetailModal({
 
             {item.desc && <p className="modal-desc">{item.desc}</p>}
 
-            {/* Ingredients / parts */}
+            {/* Ingredients / parts with interactive exclusion */}
             {item.parts && item.parts.length > 0 && (
-              <div className="modal-section">
-                <h3 className="modal-section-title">{t.ingredientsTitle}</h3>
-                <ul className="modal-tags">
-                  {item.parts.map((part, idx) => (
-                    <li key={idx}>{part}</li>
-                  ))}
-                </ul>
+              <div className="modal-section modal-ingredients-section">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <h3 className="modal-section-title" style={{ margin: 0 }}>{t.ingredientsTitle}</h3>
+                  <small style={{ fontSize: '11px', color: '#64748b' }}>
+                    {locale === 'ar' ? 'انقر على أي مكوّن لاستبعاده' : 'Click any ingredient to exclude'}
+                  </small>
+                </div>
+                <div className="modal-tags-interactive" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                  {item.parts.map((part, idx) => {
+                    const isExcluded = removedIngredients.includes(part);
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => {
+                          setRemovedIngredients((prev) =>
+                            prev.includes(part) ? prev.filter((p) => p !== part) : [...prev, part]
+                          );
+                        }}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '6px 12px',
+                          borderRadius: '20px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          transition: 'all 0.2s ease',
+                          background: isExcluded ? '#fef2f2' : '#f1f5f9',
+                          color: isExcluded ? '#b91c1c' : '#334155',
+                          border: `1.5px solid ${isExcluded ? '#f87171' : '#e2e8f0'}`,
+                          textDecoration: isExcluded ? 'line-through' : 'none',
+                        }}
+                      >
+                        <span>{isExcluded ? '✕ بدون' : '✓'}</span>
+                        <span>{part}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {removedIngredients.length > 0 && (
+                  <div style={{ marginTop: '8px', fontSize: '12px', color: '#dc2626', fontWeight: 600 }}>
+                    ⚠️ {locale === 'ar' ? 'سيتم تحضير الطلب بدون:' : 'Will be prepared without:'}{' '}
+                    {removedIngredients.join('، ')}
+                  </div>
+                )}
               </div>
             )}
 
@@ -537,7 +496,7 @@ export default function ProductDetailModal({
                 <h3 className="modal-section-title">{t.customizationTitle}</h3>
                 <div className="modal-addons-list">
                   {item.optionGroups.map((group) => (
-                    <OptionGroupCombobox
+                    <OptionGroupSelector
                       key={group.id}
                       group={group}
                       selectedOptions={selectedOptions}
@@ -598,25 +557,101 @@ export default function ProductDetailModal({
 
         {/* Modal Action Foot */}
         <div className="modal-foot">
-          <button
-            type="button"
-            className={`btn-add-cart${actionDone ? ' added' : ''}`}
-            onClick={handleAction}
-          >
-            {actionDone ? (
-              <>
-                <CheckIcon width={18} height={18} />
-                <span>{isEditing ? t.itemUpdated : t.itemAdded}</span>
-              </>
-            ) : (
-              <>
-                <span>{isEditing ? t.updateOrder : t.addToCart}</span>
-                <span className="btn-add-price">
-                  <b>{totalPrice}</b> {currency}
+          {item.isAvailable === false ? (
+            <div
+              className="modal-unavailable-lock"
+              style={{
+                width: '100%',
+                padding: '14px 18px',
+                borderRadius: '12px',
+                background: '#fef2f2',
+                border: '1px solid #fecaca',
+                textAlign: 'center',
+                boxShadow: '0 2px 8px rgba(239, 68, 68, 0.08)',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  fontWeight: 800,
+                  color: '#991b1b',
+                  fontSize: '15px',
+                }}
+              >
+                <span>🚫</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'هذا الصنف غير متوفر حالياً'
+                    : 'This item is currently unavailable'}
                 </span>
-              </>
-            )}
-          </button>
+              </div>
+              <p style={{ margin: '6px 0 0', fontSize: '13px', color: '#b91c1c', lineHeight: 1.4 }}>
+                {locale === 'ar'
+                  ? 'يمكنك تصفح باقي أطباق المنيو المتوفرة وسيسعدنا خدمتكم.'
+                  : 'Please check other available delicious dishes on our menu.'}
+              </p>
+            </div>
+          ) : isViewOnly ? (
+            <div
+              className="modal-view-only-lock"
+              style={{
+                width: '100%',
+                padding: '14px 18px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #fffdf5 0%, #fffbeb 100%)',
+                border: '1px solid #fde68a',
+                textAlign: 'center',
+                boxShadow: '0 2px 8px rgba(217, 119, 6, 0.08)',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  fontWeight: 800,
+                  color: '#92400e',
+                  fontSize: '15px',
+                }}
+              >
+                <span>🔒</span>
+                <span>
+                  {locale === 'ar'
+                    ? 'وضع العرض فقط — استقبال الطلبات غير متاح حالياً'
+                    : 'View-Only Mode — Ordering is currently unavailable'}
+                </span>
+              </div>
+              <p style={{ margin: '6px 0 0', fontSize: '13px', color: '#b45309', lineHeight: 1.4 }}>
+                {locale === 'ar'
+                  ? (menuSettings?.noticeTitleAr || 'المنيو والأسعار متاحة للتصفح، وسيتم استئناف الطلب قريباً.')
+                  : (menuSettings?.noticeTitleEn || 'You can browse items & prices. Ordering will resume shortly.')}
+              </p>
+            </div>
+          ) : (
+            <button
+              type="button"
+              className={`btn-add-cart${actionDone ? ' added' : ''}`}
+              onClick={handleAction}
+            >
+              {actionDone ? (
+                <>
+                  <CheckIcon width={18} height={18} />
+                  <span>{isEditing ? t.itemUpdated : t.itemAdded}</span>
+                </>
+              ) : (
+                <>
+                  <span>{isEditing ? t.updateOrder : t.addToCart}</span>
+                  <span className="btn-add-price">
+                    <b>{totalPrice}</b> {currency}
+                  </span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>

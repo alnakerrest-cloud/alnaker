@@ -27,7 +27,7 @@ export default async function AdminChangePasswordPage() {
       <section className="admin-login-card" style={{ width: "min(500px, 100%)" }}>
         <div className="admin-login-accent" aria-hidden />
         <div className="admin-login-medallion">
-          <Logo size={80} src={settings?.logoUrl} />
+          <Logo size={80} variant="gold" emblemOnly src={settings?.logoUrl} />
         </div>
         <h1 className="admin-login-title">تعيين كلمة مرور جديدة</h1>
         <p className="admin-login-sub">

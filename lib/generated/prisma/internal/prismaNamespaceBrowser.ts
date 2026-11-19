@@ -69,7 +69,9 @@ export const ModelName = {
   Offer: 'Offer',
   OfferProductTarget: 'OfferProductTarget',
   OfferCategoryTarget: 'OfferCategoryTarget',
-  OfferLocationTarget: 'OfferLocationTarget'
+  OfferLocationTarget: 'OfferLocationTarget',
+  Order: 'Order',
+  OrderItem: 'OrderItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -126,6 +128,7 @@ export const RestaurantSettingsScalarFieldEnum = {
   vatNoteAr: 'vatNoteAr',
   serviceNoteAr: 'serviceNoteAr',
   serviceChargePct: 'serviceChargePct',
+  deliveryFee: 'deliveryFee',
   currencyAr: 'currencyAr',
   updatedAt: 'updatedAt'
 } as const
@@ -372,6 +375,48 @@ export const OfferLocationTargetScalarFieldEnum = {
 } as const
 
 export type OfferLocationTargetScalarFieldEnum = (typeof OfferLocationTargetScalarFieldEnum)[keyof typeof OfferLocationTargetScalarFieldEnum]
+
+
+export const OrderScalarFieldEnum = {
+  id: 'id',
+  orderNumber: 'orderNumber',
+  type: 'type',
+  status: 'status',
+  paymentMethod: 'paymentMethod',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
+  customerNotes: 'customerNotes',
+  deliveryAddress: 'deliveryAddress',
+  deliveryFee: 'deliveryFee',
+  branchId: 'branchId',
+  subtotal: 'subtotal',
+  totalDiscount: 'totalDiscount',
+  total: 'total',
+  whatsappSent: 'whatsappSent',
+  whatsappError: 'whatsappError',
+  idempotencyKey: 'idempotencyKey',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+
+
+export const OrderItemScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  productId: 'productId',
+  productName: 'productName',
+  variantLabel: 'variantLabel',
+  baseUnitPrice: 'baseUnitPrice',
+  selectedOptions: 'selectedOptions',
+  appliedOffer: 'appliedOffer',
+  unitPrice: 'unitPrice',
+  quantity: 'quantity',
+  notes: 'notes'
+} as const
+
+export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
 
 
 export const SortOrder = {

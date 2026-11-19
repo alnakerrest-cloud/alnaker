@@ -3,8 +3,13 @@
 // تحميل المنيو كاملًا. لا تُكشف أي بيانات حسّاسة — فقط بصمة لا تحمل معنى بحد ذاتها.
 import { createHash } from "node:crypto";
 import { prisma } from "@/lib/prisma";
+import { getBackupContentVersion } from "@/lib/backup-menu-db";
 
 export async function getContentVersion(): Promise<string> {
+  if (process.env.USE_BACKUP_DATA !== "false") {
+    return getBackupContentVersion();
+  }
+
   try {
     const [products, variants, categories, settings, branches, images, offers] = await Promise.all([
       prisma.product.findMany({

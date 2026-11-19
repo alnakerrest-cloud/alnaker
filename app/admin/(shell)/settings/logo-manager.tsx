@@ -2,6 +2,7 @@
 import { useActionState, useState, useTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Logo from "@/components/Logo";
 import { uploadLogo, removeLogo, type LogoActionState } from "./actions";
 import { validateClientImage } from "@/lib/admin/upload-client";
 
@@ -21,6 +22,33 @@ export default function LogoManager({ logoUrl, readOnly = false }: { logoUrl: st
         {localErr ? <p className="admin-flash err">{localErr}</p> : null}
         {state.error ? <p className="admin-flash err">{state.error}</p> : null}
         {state.ok ? <p className="admin-flash ok">تم حفظ الشعار.</p> : null}
+
+        {/* Live Brand Theme Preview */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 14, marginBottom: 20 }}>
+          <div style={{ background: "#1e1412", border: "1px solid rgba(227, 178, 90, 0.3)", borderRadius: 12, padding: "16px 14px", textAlign: "center" }}>
+            <span style={{ fontSize: 12, color: "var(--gold-soft)", display: "block", marginBottom: 10, fontWeight: 700 }}>
+              النسخة الذهبية (Dark Theme)
+            </span>
+            <div style={{ height: 84, display: "grid", placeItems: "center" }}>
+              <Logo size={76} variant="gold" />
+            </div>
+            <span style={{ fontSize: 11, color: "rgba(246, 230, 195, 0.7)", display: "block", marginTop: 8 }}>
+              تُستخدم في Hero، القائمة الجانبية، والفوتر
+            </span>
+          </div>
+
+          <div style={{ background: "#ffffff", border: "1px solid var(--line)", borderRadius: 12, padding: "16px 14px", textAlign: "center" }}>
+            <span style={{ fontSize: 12, color: "var(--brand)", display: "block", marginBottom: 10, fontWeight: 700 }}>
+              النسخة البنية (Light Theme)
+            </span>
+            <div style={{ height: 84, display: "grid", placeItems: "center" }}>
+              <Logo size={76} variant="roast" />
+            </div>
+            <span style={{ fontSize: 11, color: "var(--muted)", display: "block", marginTop: 8 }}>
+              تُستخدم في الإيصالات، الطباعة، والبطاقات الفاتحة
+            </span>
+          </div>
+        </div>
 
         <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
           <div style={{ position: "relative", width: 120, height: 120, borderRadius: 10, overflow: "hidden", border: "1px solid var(--line)", background: "var(--bg-2)" }}>

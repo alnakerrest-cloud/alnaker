@@ -3,9 +3,12 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Logo from "@/components/Logo";
 
 const LINKS = [
   { href: "/admin/dashboard", label: "الرئيسية", icon: "📊" },
+  { href: "/admin/orders", label: "الطلبات", icon: "🧾" },
+  { href: "/admin/order-settings", label: "إعدادات الطلبات", icon: "🛠️" },
   { href: "/admin/categories", label: "الأقسام", icon: "📂" },
   { href: "/admin/products", label: "المنتجات", icon: "🍲" },
   { href: "/admin/offers", label: "العروض والخصومات", icon: "🏷️" },
@@ -13,6 +16,7 @@ const LINKS = [
   { href: "/admin/branches", label: "الفروع", icon: "📍" },
   { href: "/admin/images", label: "إدارة الصور", icon: "🖼️" },
   { href: "/admin/import", label: "استيراد المنيو", icon: "📥" },
+  { href: "/admin/users", label: "المستخدمون والصلاحيات", icon: "👥" },
   { href: "/admin/settings", label: "إعدادات المطعم", icon: "⚙️" },
   { href: "/admin/audit", label: "سجل التعديلات", icon: "📋" },
 ];
@@ -64,6 +68,7 @@ export default function AdminSidebar({
       {/* Mobile Top Header Bar (< 860px) */}
       <header className="admin-mobile-header" aria-label="شريط لوحة التحكم">
         <div className="admin-mobile-brand">
+          <Logo size={26} variant="gold" emblemOnly />
           <span className="admin-mobile-brand-name">قرية الناقر</span>
           <span className="admin-mobile-brand-badge">لوحة التحكم</span>
         </div>
@@ -98,7 +103,10 @@ export default function AdminSidebar({
         aria-label="القائمة الجانبية للوحة التحكم"
       >
         <div className="admin-sidebar-header">
-          <div className="admin-brand">قرية الناقر</div>
+          <div className="admin-brand" style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <Logo size={32} variant="gold" emblemOnly />
+            <span>قرية الناقر</span>
+          </div>
           <button
             type="button"
             className="admin-drawer-close"
@@ -116,13 +124,20 @@ export default function AdminSidebar({
           <div className="admin-sidebar-user-details">
             <span className="admin-sidebar-name">{adminName}</span>
             <span className="admin-sidebar-role">
-              {adminRole === "OWNER" ? "المالك (Owner)" : "مشرف (Admin)"}
+              {adminRole === "ORDERS_STAFF"
+                ? "موظف طلبات (Staff)"
+                : adminRole === "OWNER"
+                ? "المالك (Owner)"
+                : "مشرف النظام (Admin)"}
             </span>
           </div>
         </div>
 
         <nav className="admin-nav" aria-label="روابط لوحة التحكم">
-          {LINKS.map((l) => {
+          {(adminRole === "ORDERS_STAFF"
+            ? [{ href: "/admin/orders", label: "الطلبات", icon: "🧾" }]
+            : LINKS
+          ).map((l) => {
             const isActive =
               pathname === l.href || pathname.startsWith(l.href + "/");
             return (
