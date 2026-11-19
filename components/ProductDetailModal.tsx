@@ -293,14 +293,17 @@ export default function ProductDetailModal({
     if (item.optionGroups && item.optionGroups.length > 0) {
       for (const group of item.optionGroups) {
         const groupCount = selectedOptions.filter((o) => o.groupId === group.id).length;
-        if (group.isRequired && groupCount === 0) {
+        const isRequired = Boolean(group.isRequired || (group.minSelect && group.minSelect > 0));
+        const minRequired = group.minSelect && group.minSelect > 0 ? group.minSelect : (group.isRequired ? 1 : 0);
+
+        if (isRequired && groupCount < minRequired) {
+          errors[group.id] = minRequired > 1
+            ? (locale === 'ar' ? `الحد الأدنى لخيارات ${group.name} هو ${minRequired}` : `Minimum selection for ${group.name} is ${minRequired}`)
+            : (locale === 'ar' ? `يرجى تحديد اختيار في: ${group.name}` : `Please select an option for: ${group.name}`);
+        } else if (group.maxSelect && group.maxSelect > 0 && groupCount > group.maxSelect) {
           errors[group.id] = locale === 'ar'
-            ? `يرجى تحديد اختيار في: ${group.name}`
-            : `Please select an option for: ${group.name}`;
-        } else if (group.isMulti && group.minSelect > 0 && groupCount < group.minSelect) {
-          errors[group.id] = locale === 'ar'
-            ? `الحد الأدنى لخيارات ${group.name} هو ${group.minSelect}`
-            : `Minimum selection for ${group.name} is ${group.minSelect}`;
+            ? `الحد الأقصى لخيارات ${group.name} هو ${group.maxSelect}`
+            : `Maximum selection for ${group.name} is ${group.maxSelect}`;
         }
       }
     }

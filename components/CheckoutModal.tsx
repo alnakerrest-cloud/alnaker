@@ -52,6 +52,8 @@ export default function CheckoutModal({
     subtotal,
     total,
     clearCart,
+    hasIncompleteItems,
+    incompleteItems,
     getWhatsAppUrl,
   } = useCart();
   
@@ -76,6 +78,7 @@ export default function CheckoutModal({
   const [hasClickedWhatsApp, setHasClickedWhatsApp] = useState(false);
   const [confirmingSent, setConfirmingSent] = useState(false);
   const firstInputRef = useRef<HTMLInputElement | null>(null);
+  const idempotencyKeyRef = useRef<string | null>(null);
 
   // Available orderable branches
   const orderableBranches = branches.filter(b => b.isOrderable && b.isActive);
@@ -95,6 +98,7 @@ export default function CheckoutModal({
       setIsSubmitting(false);
       setSubmittedOrderNumber(null);
       setWhatsappUrl(null);
+      idempotencyKeyRef.current = null;
       
       setTimeout(() => {
         firstInputRef.current?.focus();
@@ -193,10 +197,24 @@ export default function CheckoutModal({
 
   const handleSubmit = async () => {
     if (!validateStep()) return;
+
+    if (hasIncompleteItems) {
+      const names = incompleteItems.map((i) => i.item.name).join('، ');
+      setErrors({
+        submit: isAr
+          ? `يوجد منتجات تحتاج إلى استكمال بعض الاختيارات قبل إتمام الطلب: ${names}`
+          : `Some items require choices before checkout: ${names}`,
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
-      const idempotencyKey = 'checkout-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+      if (!idempotencyKeyRef.current) {
+        idempotencyKeyRef.current = 'checkout-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+      }
+      const idempotencyKey = idempotencyKeyRef.current;
       
       const response = await fetch('/api/checkout', {
         method: 'POST',
@@ -225,6 +243,7 @@ export default function CheckoutModal({
       setWhatsappUrl(data.whatsappUrl);
       setVerificationToken(data.verificationToken);
       
+      idempotencyKeyRef.current = null;
       // Clear cart after successful order creation
       clearCart();
       

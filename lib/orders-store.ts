@@ -124,44 +124,112 @@ export {
 
 import { DEFAULT_SETTINGS, type MenuModeSettings } from "./order-settings-types";
 
-const ORDERS_DIR = path.join(process.cwd(), "data", "orders");
-const ORDERS_FILE = path.join(ORDERS_DIR, "orders-store.json");
-const SETTINGS_FILE = path.join(ORDERS_DIR, "settings.json");
+const DEFAULT_ORDERS_DIR = path.join(process.cwd(), "data", "orders");
+const FALLBACK_TMP_DIR = path.join("/tmp", "naqer-orders");
 
-function ensureStorageDir() {
-  if (!fs.existsSync(ORDERS_DIR)) {
-    fs.mkdirSync(ORDERS_DIR, { recursive: true });
-  }
+function isServerless(): boolean {
+  return Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.LAMBDA_TASK_ROOT);
 }
 
-function readJsonFile<T>(filePath: string, defaultValue: T): T {
+function getOrdersDir(): string {
+  if (isServerless()) {
+    return FALLBACK_TMP_DIR;
+  }
+  return DEFAULT_ORDERS_DIR;
+}
+
+// In-memory cache for lambdas across invocations
+const globalForOrders = globalThis as unknown as {
+  __cachedOrders?: OrderRecord[];
+  __cachedSettings?: MenuModeSettings;
+};
+
+function ensureStorageDir(dir: string): boolean {
   try {
-    ensureStorageDir();
-    if (!fs.existsSync(filePath)) {
-      writeJsonFile(filePath, defaultValue);
-      return defaultValue;
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
     }
-    const content = fs.readFileSync(filePath, "utf8");
-    return JSON.parse(content) as T;
-  } catch (err) {
-    console.error(`[orders-store] Error reading ${filePath}:`, err);
-    return defaultValue;
+    return true;
+  } catch {
+    return false;
   }
 }
 
-function writeJsonFile<T>(filePath: string, data: T): void {
-  ensureStorageDir();
-  const tmpFile = `${filePath}.${Date.now()}.${Math.random().toString(36).slice(2, 6)}.tmp`;
-  fs.writeFileSync(tmpFile, JSON.stringify(data, null, 2), "utf8");
-  fs.renameSync(tmpFile, filePath);
+function readJsonFile<T>(fileName: string, defaultValue: T): T {
+  // 1. If in-memory cache has it (for orders/settings in active lambda)
+  if (fileName === "orders-store.json" && Array.isArray(globalForOrders.__cachedOrders)) {
+    return globalForOrders.__cachedOrders as unknown as T;
+  }
+  if (fileName === "settings.json" && globalForOrders.__cachedSettings) {
+    return globalForOrders.__cachedSettings as unknown as T;
+  }
+
+  // 2. Check /tmp on serverless or custom orders dir
+  const currentDir = getOrdersDir();
+  const filePath = path.join(currentDir, fileName);
+  const seedPath = path.join(DEFAULT_ORDERS_DIR, fileName);
+
+  try {
+    if (fs.existsSync(filePath)) {
+      const content = fs.readFileSync(filePath, "utf8");
+      const parsed = JSON.parse(content) as T;
+      if (fileName === "orders-store.json") globalForOrders.__cachedOrders = parsed as unknown as OrderRecord[];
+      if (fileName === "settings.json") globalForOrders.__cachedSettings = parsed as unknown as MenuModeSettings;
+      return parsed;
+    }
+  } catch {}
+
+  // 3. Fallback to bundled seed file in data/orders/
+  try {
+    if (fs.existsSync(seedPath)) {
+      const content = fs.readFileSync(seedPath, "utf8");
+      const parsed = JSON.parse(content) as T;
+      if (fileName === "orders-store.json") globalForOrders.__cachedOrders = parsed as unknown as OrderRecord[];
+      if (fileName === "settings.json") globalForOrders.__cachedSettings = parsed as unknown as MenuModeSettings;
+      try {
+        ensureStorageDir(currentDir);
+        fs.writeFileSync(filePath, content, "utf8");
+      } catch {}
+      return parsed;
+    }
+  } catch {}
+
+  return defaultValue;
+}
+
+function writeJsonFile<T>(fileName: string, data: T): void {
+  // Update in-memory cache immediately
+  if (fileName === "orders-store.json") globalForOrders.__cachedOrders = data as unknown as OrderRecord[];
+  if (fileName === "settings.json") globalForOrders.__cachedSettings = data as unknown as MenuModeSettings;
+
+  const currentDir = getOrdersDir();
+  const filePath = path.join(currentDir, fileName);
+
+  try {
+    ensureStorageDir(currentDir);
+    const tmpFile = `${filePath}.${Date.now()}.${Math.random().toString(36).slice(2, 6)}.tmp`;
+    fs.writeFileSync(tmpFile, JSON.stringify(data, null, 2), "utf8");
+    fs.renameSync(tmpFile, filePath);
+  } catch (err: any) {
+    // If writing to default directory failed (EROFS on Vercel), write to /tmp
+    try {
+      ensureStorageDir(FALLBACK_TMP_DIR);
+      const fallbackFile = path.join(FALLBACK_TMP_DIR, fileName);
+      const tmpFile = `${fallbackFile}.${Date.now()}.${Math.random().toString(36).slice(2, 6)}.tmp`;
+      fs.writeFileSync(tmpFile, JSON.stringify(data, null, 2), "utf8");
+      fs.renameSync(tmpFile, fallbackFile);
+    } catch (fallbackErr: any) {
+      console.warn(`[orders-store] Storage write warning (memory cache active):`, fallbackErr?.message || fallbackErr);
+    }
+  }
 }
 
 function loadOrders(): OrderRecord[] {
-  return readJsonFile<OrderRecord[]>(ORDERS_FILE, []);
+  return readJsonFile<OrderRecord[]>("orders-store.json", []);
 }
 
 function saveOrders(orders: OrderRecord[]): void {
-  writeJsonFile(ORDERS_FILE, orders);
+  writeJsonFile("orders-store.json", orders);
 }
 
 /** Check and expire orders that remained in PENDING_WHATSAPP past expiresAt */
@@ -190,7 +258,7 @@ function checkOrderExpirations(orders: OrderRecord[]): boolean {
 }
 
 export function getMenuSettings(): MenuModeSettings {
-  return readJsonFile<MenuModeSettings>(SETTINGS_FILE, DEFAULT_SETTINGS);
+  return readJsonFile<MenuModeSettings>("settings.json", DEFAULT_SETTINGS);
 }
 
 export function updateMenuSettings(partial: Partial<MenuModeSettings>): MenuModeSettings {
@@ -203,7 +271,7 @@ export function updateMenuSettings(partial: Partial<MenuModeSettings>): MenuMode
       ...(partial.branchOverrides || {}),
     },
   };
-  writeJsonFile(SETTINGS_FILE, updated);
+  writeJsonFile("settings.json", updated);
   return updated;
 }
 

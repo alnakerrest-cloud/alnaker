@@ -19,12 +19,14 @@ import {
   CART_STORAGE_KEY,
   type CartItem,
   type SelectedOption,
+  type CartItemValidationResult,
   buildCartItemId,
   calculateCartTotals,
   reconcileCart,
   parsePriceNum,
   formatWhatsAppMessage,
   buildWhatsAppUrl,
+  validateCartItem,
 } from '@/lib/cart';
 
 export type ProductModalState = {
@@ -78,6 +80,9 @@ interface CartContextValue {
   hasHydrated: boolean;
   isViewOnly: boolean;
   menuSettings?: MenuModeSettings;
+  getItemValidation: (item: CartItem) => CartItemValidationResult;
+  incompleteItems: { item: CartItem; validation: CartItemValidationResult; product?: VItem; categoryIcon?: string }[];
+  hasIncompleteItems: boolean;
   getWhatsAppUrl: (
       fallbackPhone: string,
       restaurantName: string,
@@ -396,30 +401,60 @@ export function CartProvider({
     setProductModal(null);
   }, []);
 
+  const productMap = useMemo(() => {
+    const map = new Map<string, { item: VItem; categoryIcon: string; kind: VKind }>();
+    for (const cat of categories) {
+      for (const sec of cat.sections) {
+        for (const it of sec.items) {
+          map.set(it.id, { item: it, categoryIcon: cat.icon, kind: cat.kind });
+        }
+      }
+    }
+    return map;
+  }, [categories]);
+
   const editCartItem = useCallback(
     (cartItemId: string) => {
       const existing = cart.find((c) => c.id === cartItemId);
       if (!existing) return;
 
-      // Find the VItem in categories
-      for (const cat of categories) {
-        for (const sec of cat.sections) {
-          for (const it of sec.items) {
-            if (it.id === existing.productId) {
-              setProductModal({
-                item: it,
-                categoryIcon: cat.icon,
-                kind: cat.kind,
-                editingCartItem: existing,
-              });
-              return;
-            }
-          }
-        }
+      const entry = productMap.get(existing.productId);
+      if (entry) {
+        setProductModal({
+          item: entry.item,
+          categoryIcon: entry.categoryIcon,
+          kind: entry.kind,
+          editingCartItem: existing,
+        });
       }
     },
-    [cart, categories]
+    [cart, productMap]
   );
+
+  const getItemValidation = useCallback(
+    (cartItem: CartItem): CartItemValidationResult => {
+      const entry = productMap.get(cartItem.productId);
+      return validateCartItem(cartItem, entry?.item);
+    },
+    [productMap]
+  );
+
+  const incompleteItems = useMemo(() => {
+    return cart
+      .map((item) => {
+        const entry = productMap.get(item.productId);
+        const validation = validateCartItem(item, entry?.item);
+        return {
+          item,
+          validation,
+          product: entry?.item,
+          categoryIcon: entry?.categoryIcon,
+        };
+      })
+      .filter((entry) => entry.validation.status === 'INCOMPLETE');
+  }, [cart, productMap]);
+
+  const hasIncompleteItems = incompleteItems.length > 0;
 
   const totals = useMemo(() => calculateCartTotals(cart), [cart]);
 
@@ -482,6 +517,9 @@ export function CartProvider({
       hasHydrated,
       isViewOnly,
       menuSettings,
+      getItemValidation,
+      incompleteItems,
+      hasIncompleteItems,
       getWhatsAppUrl,
     }),
     [
@@ -507,6 +545,9 @@ export function CartProvider({
       hasHydrated,
       isViewOnly,
       menuSettings,
+      getItemValidation,
+      incompleteItems,
+      hasIncompleteItems,
       getWhatsAppUrl,
     ]
   );

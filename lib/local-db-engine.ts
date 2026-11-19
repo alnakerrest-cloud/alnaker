@@ -11,6 +11,27 @@ export interface LocalOverlayData {
 const OVERLAY_FILE = path.join(process.cwd(), "data", "local-db-overlay.json");
 const BACKUP_FILE = path.join(process.cwd(), "backups", "backup-naqer-verified.json");
 
+// Prisma returns real Date objects; the JSON backup/overlay only stores ISO strings.
+// Normalising the known DateTime fields on read keeps page code (`createdAt.toISOString()`)
+// working identically in local mode and on Neon.
+const DATE_FIELDS = new Set([
+  "createdAt", "updatedAt", "lastLoginAt", "expiresAt",
+  "startedAt", "finishedAt", "startDate", "endDate",
+]);
+
+// Relations that the engine can resolve. Used to translate nested Prisma `select`
+// clauses into relation resolution (the dashboard uses both `include` and `select`).
+const RELATION_KEYS: Partial<Record<keyof TableState, string[]>> = {
+  Category: ["sections"],
+  Section: ["category", "products"],
+  Product: ["variants", "images", "section", "optionGroups"],
+  ProductImage: ["product"],
+  OptionGroup: ["options", "productAssignments"],
+  OptionItem: ["group"],
+  ProductOptionGroup: ["group", "product"],
+  Offer: ["productTargets", "categoryTargets", "locationTargets"],
+};
+
 interface TableState {
   Category: any[];
   Section: any[];
@@ -216,9 +237,20 @@ class LocalDbEngine {
         take?: number;
         include?: any;
         select?: any;
+        distinct?: string[];
       }): Promise<any[]> {
         let rows = engine.filterRows(modelName, args?.where);
         rows = engine.sortRows(rows, args?.orderBy);
+
+        if (args?.distinct?.length) {
+          const seen = new Set<string>();
+          rows = rows.filter((row) => {
+            const key = args.distinct!.map((field) => JSON.stringify(row[field])).join("|");
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+          });
+        }
 
         if (args?.skip != null && args.skip > 0) {
           rows = rows.slice(args.skip);
@@ -661,6 +693,83 @@ class LocalDbEngine {
     });
   }
 
+  /** JSON storage keeps dates as strings; Prisma callers expect Date instances. */
+  private normalizeDates(row: any): any {
+    if (!row || typeof row !== "object") return row;
+    const out: any = { ...row };
+    for (const field of DATE_FIELDS) {
+      const value = out[field];
+      if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}T/.test(value)) continue;
+      const parsed = new Date(value);
+      if (!Number.isNaN(parsed.getTime())) out[field] = parsed;
+    }
+    return out;
+  }
+
+  /** Turn relation keys requested via `select` into the same shape used by `include`. */
+  private relationsFromSelect(modelName: keyof TableState, select?: any): any {
+    const out: any = {};
+    const allowed = RELATION_KEYS[modelName] ?? [];
+    if (!select || typeof select !== "object" || Array.isArray(select)) return out;
+
+    for (const [key, spec] of Object.entries(select)) {
+      if (!allowed.includes(key)) continue;
+      if (spec === true) {
+        out[key] = true;
+      } else if (spec && typeof spec === "object" && !Array.isArray(spec)) {
+        out[key] =
+          "select" in spec || "include" in spec || "where" in spec || "orderBy" in spec
+            ? spec
+            : { select: spec };
+      }
+    }
+    return out;
+  }
+
+  /** Merge explicit `include` with relations implied by a nested `select`. */
+  private effectiveInclude(modelName: keyof TableState, include?: any, select?: any): any {
+    const fromSelect = this.relationsFromSelect(modelName, select);
+    if (!include) return Object.keys(fromSelect).length ? fromSelect : include;
+    if (!Object.keys(fromSelect).length) return include;
+
+    const merged: any = { ...fromSelect };
+    for (const [key, value] of Object.entries(include)) {
+      const existing = merged[key];
+      if (
+        existing && value &&
+        typeof existing === "object" && typeof value === "object" &&
+        !Array.isArray(existing) && !Array.isArray(value)
+      ) {
+        merged[key] = { ...existing, ...value };
+      } else {
+        merged[key] = value;
+      }
+    }
+    return merged;
+  }
+
+  /** Prisma-style `_count` for the relations the admin UI actually counts. */
+  private countRelation(modelName: keyof TableState, row: any, relation: string): number | undefined {
+    switch (modelName) {
+      case "Category":
+        if (relation === "sections") return this.getRawTable("Section").filter((s) => s.categoryId === row.id).length;
+        break;
+      case "Section":
+        if (relation === "products") return this.getRawTable("Product").filter((p) => p.sectionId === row.id).length;
+        break;
+      case "Product":
+        if (relation === "variants") return this.getRawTable("ProductVariant").filter((v) => v.productId === row.id).length;
+        if (relation === "images") return this.getRawTable("ProductImage").filter((m) => m.productId === row.id).length;
+        if (relation === "optionGroups") return this.getRawTable("ProductOptionGroup").filter((p) => p.productId === row.id).length;
+        break;
+      case "OptionGroup":
+        if (relation === "options") return this.getRawTable("OptionItem").filter((o) => o.groupId === row.id).length;
+        if (relation === "productAssignments") return this.getRawTable("ProductOptionGroup").filter((p) => p.groupId === row.id).length;
+        break;
+    }
+    return undefined;
+  }
+
   private resolveRelations(
     modelName: keyof TableState,
     row: any,
@@ -668,10 +777,22 @@ class LocalDbEngine {
     select?: any
   ): any {
     if (!row) return row;
-    const result: any = { ...row };
+    const result: any = this.normalizeDates(row);
+    include = this.effectiveInclude(modelName, include, select);
 
     // Resolve inclusions
     if (include) {
+      if (include._count) {
+        const requested = include._count.select ?? include._count;
+        const counts: Record<string, number> = {};
+        for (const [relation, wanted] of Object.entries(requested)) {
+          if (wanted !== true) continue;
+          const count = this.countRelation(modelName, row, relation);
+          if (count !== undefined) counts[relation] = count;
+        }
+        result._count = counts;
+      }
+
       if (modelName === "Product") {
         if (include.variants) {
           let vars = this.getRawTable("ProductVariant").filter((v) => v.productId === row.id);
@@ -810,6 +931,11 @@ class LocalDbEngine {
           result.product = prod ? this.resolveRelations("Product", prod, include.product.include, include.product.select) : null;
         }
       }
+
+      if (modelName === "ProductImage" && include.product) {
+        const prod = this.getRawTable("Product").find((p) => p.id === row.productId);
+        result.product = prod ? this.resolveRelations("Product", prod, include.product.include, include.product.select) : null;
+      }
     }
 
     if (select) {
@@ -822,15 +948,20 @@ class LocalDbEngine {
   private pickSelect(record: any, select: Record<string, any>): any {
     const out: any = {};
     for (const [key, val] of Object.entries(select)) {
+      if (val === false) continue;
       if (val === true) {
-        out[key] = record[key];
+        out[key] = record?.[key];
       } else if (typeof val === "object" && val !== null) {
-        if (Array.isArray(record[key])) {
-          out[key] = record[key].map((item: any) => this.pickSelect(item, val));
-        } else if (record[key] && typeof record[key] === "object") {
-          out[key] = this.pickSelect(record[key], val);
+        // Prisma nested selections are wrapped as `{ select: {...} }` (or
+        // `{ include: {...} }`); unwrap them before copying the chosen fields.
+        const nested = val.select && typeof val.select === "object" ? val.select : val;
+        const value = record?.[key];
+        if (Array.isArray(value)) {
+          out[key] = value.map((item: any) => this.pickSelect(item, nested));
+        } else if (value && typeof value === "object") {
+          out[key] = this.pickSelect(value, nested);
         } else {
-          out[key] = record[key];
+          out[key] = value;
         }
       }
     }

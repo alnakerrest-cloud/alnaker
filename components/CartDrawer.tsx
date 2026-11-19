@@ -47,6 +47,9 @@ export default function CartDrawer({
     subtotal,
     total,
     totalQuantity,
+    getItemValidation,
+    incompleteItems,
+    hasIncompleteItems,
     getWhatsAppUrl,
   } = useCart();
 
@@ -219,8 +222,10 @@ export default function CartDrawer({
               <ul className="cart-items" aria-label={t.cartTitle}>
                 {cart.map((item) => {
                   const lineTotal = item.unitPrice * item.quantity;
+                  const validation = getItemValidation(item);
+                  const isIncomplete = validation.status === 'INCOMPLETE';
                   return (
-                    <li key={item.id} className="cart-item">
+                    <li key={item.id} className={`cart-item${isIncomplete ? ' cart-item--incomplete' : ''}`}>
                       <div className="cart-item-media">
                         {item.img ? (
                           <Image
@@ -266,6 +271,31 @@ export default function CartDrawer({
                           <span className="cart-item-variant">
                             {item.variantLabel}
                           </span>
+                        )}
+
+                        {/* Incomplete Choices Warning Banner */}
+                        {isIncomplete && (
+                          <div className="cart-item-incomplete-box">
+                            <div className="cart-item-incomplete-head">
+                              <span className="incomplete-alert-badge">
+                                ⚠️ {locale === 'ar' ? 'يحتاج إلى استكمال الاختيارات' : 'Incomplete Choices'}
+                              </span>
+                              <button
+                                type="button"
+                                className="btn-fix-item-choices"
+                                onClick={() => handleEditItem(item.id)}
+                              >
+                                {locale === 'ar' ? 'إكمال الاختيارات' : 'Complete Choices'} ➔
+                              </button>
+                            </div>
+                            <ul className="incomplete-missing-groups-list">
+                              {validation.missingGroups.map((g) => (
+                                <li key={g.groupId}>
+                                  • {locale === 'ar' ? `اختر: ${g.groupName}` : `Select: ${g.groupName}`}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
                         )}
 
                         {item.appliedOffer && (
@@ -490,6 +520,50 @@ export default function CartDrawer({
               >
                 ⚠️ {locale === 'en' ? (menuModeData?.closureMessageEn || 'Menu is currently in view-only mode.') : (menuModeData?.closureMessageAr || 'المنيو حالياً للعرض فقط ولا يستقبل طلبات جديدة.')}
               </div>
+            ) : hasIncompleteItems ? (
+              <>
+                <div className="cart-incomplete-summary-banner">
+                  <div className="cart-incomplete-banner-title">
+                    ⚠️ {locale === 'ar' ? 'يوجد منتجات تحتاج إلى اختيار بعض الخيارات قبل إتمام الطلب:' : 'Some items require choices before checkout:'}
+                  </div>
+                  <ul className="cart-incomplete-banner-list">
+                    {incompleteItems.map(({ item, validation }) => (
+                      <li
+                        key={item.id}
+                        onClick={() => handleEditItem(item.id)}
+                        className="cart-incomplete-banner-item"
+                        title={locale === 'ar' ? 'انقر لإكمال الاختيارات' : 'Click to complete choices'}
+                      >
+                        <div className="incomplete-item-row">
+                          <span className="incomplete-item-name">{item.name}</span>
+                          <span className="fix-choices-pill">{locale === 'ar' ? 'إكمال الاختيارات' : 'Edit Choices'} ➔</span>
+                        </div>
+                        <span className="incomplete-item-needed">
+                          {locale === 'ar' ? validation.errorSummaryAr : validation.errorSummaryEn}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <button
+                  type="button"
+                  className="btn-checkout btn-checkout--blocked"
+                  onClick={() => {
+                    if (incompleteItems.length > 0) {
+                      handleEditItem(incompleteItems[0].item.id);
+                    }
+                  }}
+                  title={locale === 'ar' ? 'انقر لإكمال اختيارات المنتجات الناقصة' : 'Click to complete missing item choices'}
+                >
+                  <span>⚠️ {locale === 'ar' ? 'أكمل اختيارات المنتجات أولاً' : 'Complete Choices First'}</span>
+                  <span className="btn-checkout-total">
+                    <b>{total}</b> {currency}
+                  </span>
+                </button>
+                <p className="whatsapp-notice whatsapp-notice--warning">
+                  {locale === 'ar' ? 'يرجى استكمال الخيارات الإلزامية للمنتجات أعلاه لتفعيل زر إتمام الطلب' : 'Please complete all required item options above to proceed to checkout'}
+                </p>
+              </>
             ) : (
               <>
                 <button

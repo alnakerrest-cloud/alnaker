@@ -38,6 +38,69 @@ export type CartItem = {
   categoryIcon?: string;
 };
 
+export type MissingOptionGroup = {
+  groupId: string;
+  groupName: string;
+  minSelect: number;
+};
+
+export type CartItemValidationStatus = 'VALID' | 'INCOMPLETE';
+
+export type CartItemValidationResult = {
+  status: CartItemValidationStatus;
+  missingGroups: MissingOptionGroup[];
+  errorSummaryAr?: string;
+  errorSummaryEn?: string;
+};
+
+/**
+ * Validates a cart item against the authoritative product configuration.
+ * A product item is INCOMPLETE if any option group is required (isRequired === true or minSelect > 0)
+ * and the user has not selected the minimum required options for that group.
+ */
+export function validateCartItem(
+  cartItem: CartItem,
+  product?: VItem
+): CartItemValidationResult {
+  if (!product || !product.optionGroups || product.optionGroups.length === 0) {
+    return { status: 'VALID', missingGroups: [] };
+  }
+
+  const missingGroups: MissingOptionGroup[] = [];
+
+  for (const group of product.optionGroups) {
+    const isRequired = Boolean(group.isRequired || (group.minSelect && group.minSelect > 0));
+    if (!isRequired) continue;
+
+    const minRequired = group.minSelect && group.minSelect > 0 ? group.minSelect : 1;
+
+    const selectedInGroup = (cartItem.selectedOptions || []).filter(
+      (o) => o.groupId === group.id || group.options.some((opt) => opt.id === o.id)
+    );
+
+    if (selectedInGroup.length < minRequired) {
+      missingGroups.push({
+        groupId: group.id,
+        groupName: group.name,
+        minSelect: minRequired,
+      });
+    }
+  }
+
+  if (missingGroups.length > 0) {
+    const missingNamesAr = missingGroups.map((g) => g.groupName).join('، ');
+    const missingNamesEn = missingGroups.map((g) => g.groupName).join(', ');
+    return {
+      status: 'INCOMPLETE',
+      missingGroups,
+      errorSummaryAr: `يرجى اختيار: ${missingNamesAr}`,
+      errorSummaryEn: `Please select: ${missingNamesEn}`,
+    };
+  }
+
+  return { status: 'VALID', missingGroups: [] };
+}
+
 /** Helper to generate stable unique composite key for a cart item */
 export function buildCartItemId(
   productId: string,

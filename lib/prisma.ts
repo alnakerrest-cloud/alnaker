@@ -31,6 +31,8 @@ const MODEL_MAP: Record<string, string> = {
   productOptionGroup: "ProductOptionGroup",
   auditLog: "AuditLog",
   importJob: "ImportJob",
+  order: "Order",
+  orderItem: "OrderItem",
 };
 
 function getClient(): PrismaClient {

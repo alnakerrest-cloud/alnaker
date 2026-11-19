@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 import { getMenuForLocale } from "@/lib/menu-db";
 import { getSiteData } from "@/lib/site-db";
 import { getActiveOffers } from "@/lib/offers-db";
@@ -527,6 +528,45 @@ export async function POST(request: NextRequest) {
     order.whatsappMessage = finalWhatsAppMsg;
     order.whatsappUrl = finalWhatsAppUrl;
 
+    // 7. Optional PostgreSQL Database Sync
+    try {
+      await prisma.order.create({
+        data: {
+          id: order.id,
+          orderNumber: order.orderNumber,
+          type: order.type as any,
+          status: "PENDING" as any,
+          paymentMethod: order.paymentMethod as any,
+          customerName: order.customerName,
+          customerPhone: order.customerPhoneNormalized,
+          customerNotes: order.customerNotes,
+          deliveryAddress: order.deliveryAddress,
+          deliveryFee: order.deliveryFee,
+          branchId: branch.id,
+          subtotal: order.subtotal,
+          totalDiscount: order.totalDiscount,
+          total: order.total,
+          idempotencyKey: order.idempotencyKey,
+          items: {
+            create: verifiedItems.map((vi) => ({
+              id: vi.id,
+              productId: vi.productId,
+              productName: vi.productName,
+              variantLabel: vi.variantLabel,
+              baseUnitPrice: vi.baseUnitPrice,
+              selectedOptions: (vi.selectedOptions as any) ?? undefined,
+              appliedOffer: (vi.appliedOffer as any) ?? undefined,
+              unitPrice: vi.unitPrice,
+              quantity: vi.quantity,
+              notes: vi.notes,
+            })),
+          },
+        },
+      });
+    } catch (dbErr: any) {
+      console.warn("[checkout] DB sync note (order processed successfully via memory/file store):", dbErr?.message || dbErr);
+    }
+
     return NextResponse.json({
       success: true,
       orderId: order.id,
@@ -538,7 +578,11 @@ export async function POST(request: NextRequest) {
       order,
     });
   } catch (error: any) {
-    console.error("[checkout] Error creating order:", error);
+    console.error("[checkout] Error creating order:", {
+      message: error?.message || String(error),
+      name: error?.name,
+      stack: error?.stack?.split("\n").slice(0, 3).join("\n"),
+    });
     return NextResponse.json(
       { error: "حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى." },
       { status: 500 }
