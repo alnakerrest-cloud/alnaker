@@ -146,8 +146,22 @@ const globalForOrders = globalThis as unknown as {
   __pgPool?: pg.Pool;
 };
 
+function getSanitizedDbUrl(): string | null {
+  let url = process.env.DATABASE_URL || process.env["DATABASE_URL "];
+  if (!url) return null;
+  // If Vercel production environment variables still hold the suspended Neon cluster,
+  // route to the active healthy cluster with 0 downtime.
+  if (url.includes("ep-withered-bread")) {
+    url = url.replace(
+      "ep-withered-bread-bemwq8ns-pooler.c-9.us-east-2.aws.neon.tech",
+      "ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech"
+    );
+  }
+  return url;
+}
+
 function getPgPool(): pg.Pool | null {
-  const connectionString = process.env.DATABASE_URL || process.env["DATABASE_URL "];
+  const connectionString = getSanitizedDbUrl();
   if (!connectionString) return null;
   if (!globalForOrders.__pgPool) {
     globalForOrders.__pgPool = new pg.Pool({
@@ -156,6 +170,7 @@ function getPgPool(): pg.Pool | null {
       connectionTimeoutMillis: 15000,
       idleTimeoutMillis: 30000,
       keepAlive: true,
+      ssl: connectionString.includes("sslmode=require") ? { rejectUnauthorized: false } : undefined,
     });
     globalForOrders.__pgPool.on("error", (err) => {
       console.warn("[orders-store] PG pool idle note:", err.message);

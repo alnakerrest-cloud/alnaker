@@ -42,8 +42,14 @@ function getClient(): PrismaClient {
     return instance;
   }
 
-  const connectionString = process.env.DATABASE_URL || process.env["DATABASE_URL "];
+  let connectionString = process.env.DATABASE_URL || process.env["DATABASE_URL "];
   if (!connectionString) throw new Error("DATABASE_URL is not set");
+  if (connectionString.includes("ep-withered-bread")) {
+    connectionString = connectionString.replace(
+      "ep-withered-bread-bemwq8ns-pooler.c-9.us-east-2.aws.neon.tech",
+      "ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech"
+    );
+  }
 
   // بركة pg واحدة تُعاد استخدامها داخل نفس العملية. القيم مناسبة لـ Neon pooler على serverless.
   const pool =
@@ -54,6 +60,7 @@ function getClient(): PrismaClient {
       connectionTimeoutMillis: 15_000, // مهلة أطول تمنح compute وقتًا للاستيقاظ بدل الفشل السريع
       idleTimeoutMillis: 30_000,
       keepAlive: true, // إبقاء الوصلة حيّة يقلّل إعادة الـ DNS/connect المتكررة
+      ssl: connectionString.includes("sslmode=require") ? { rejectUnauthorized: false } : undefined,
     });
   // أخطاء الوصلات الخاملة (قطع من طرف Neon) يجب ألا تُسقط العملية.
   pool.on("error", (err) => {
