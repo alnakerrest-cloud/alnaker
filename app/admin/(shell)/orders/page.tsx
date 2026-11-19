@@ -2,7 +2,9 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
 import {
   listOrders,
+  listOrdersAsync,
   getOrdersStats,
+  getOrdersStatsAsync,
   getMenuSettings,
   type OrderStatus,
 } from "@/lib/orders-store";
@@ -93,7 +95,7 @@ export default async function AdminOrdersPage({
   const dateFrom = params.dateFrom ? new Date(params.dateFrom).toISOString() : dateFilterRange.from;
   const dateTo = params.dateTo ? new Date(params.dateTo + "T23:59:59.999Z").toISOString() : dateFilterRange.to;
 
-  const listResult = listOrders({
+  const listResult = await listOrdersAsync({
     q: params.q,
     status: params.status,
     type: params.type,
@@ -106,7 +108,7 @@ export default async function AdminOrdersPage({
     pageSize: 15,
   });
 
-  const stats = getOrdersStats();
+  const stats = await getOrdersStatsAsync();
   const menuSettings = getMenuSettings();
   const siteData = await getSiteData("ar");
 

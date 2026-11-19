@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getOrderByVerification } from "@/lib/orders-store";
+import { getOrderByVerification, getOrderByVerificationAsync } from "@/lib/orders-store";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +20,7 @@ export async function GET(
     }
 
     const cleanNumber = decodeURIComponent(orderNumber || "").trim();
-    const order = getOrderByVerification(cleanNumber, token);
+    const order = await getOrderByVerificationAsync(cleanNumber, token);
 
     if (!order) {
       return NextResponse.json(

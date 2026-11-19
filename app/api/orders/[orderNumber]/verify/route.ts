@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getOrderByNumber, getOrderByVerification } from "@/lib/orders-store";
+import { getOrderByNumber, getOrderByNumberAsync, getOrderByVerification } from "@/lib/orders-store";
 
 function maskPhone(phone: string): string {
   if (!phone || phone.length < 7) return "***";
@@ -28,7 +28,7 @@ export async function GET(
       return NextResponse.json({ error: "رقم الطلب مطلوب" }, { status: 400 });
     }
 
-    const order = getOrderByNumber(orderNumber);
+    const order = await getOrderByNumberAsync(orderNumber);
     if (!order) {
       return NextResponse.json({ error: "لم يتم العثور على طلب بهذا الرقم", verified: false }, { status: 404 });
     }

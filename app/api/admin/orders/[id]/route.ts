@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionAdmin } from "@/lib/auth";
-import { getOrderById } from "@/lib/orders-store";
+import { getOrderById, getOrderByIdAsync } from "@/lib/orders-store";
 
 export async function GET(
   request: NextRequest,
@@ -12,7 +12,7 @@ export async function GET(
   }
 
   const { id } = await params;
-  const order = getOrderById(id);
+  const order = await getOrderByIdAsync(id);
   if (!order) {
     return NextResponse.json({ error: "الطلب غير موجود" }, { status: 404 });
   }

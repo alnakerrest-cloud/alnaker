@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { confirmCustomerSent, getOrderByNumber } from "@/lib/orders-store";
+import { confirmCustomerSent, confirmCustomerSentAsync, getOrderByNumber } from "@/lib/orders-store";
 
 export async function POST(
   request: NextRequest,
@@ -11,7 +11,7 @@ export async function POST(
       return NextResponse.json({ error: "رقم الطلب مطلوب" }, { status: 400 });
     }
 
-    const order = confirmCustomerSent(orderNumber);
+    const order = await confirmCustomerSentAsync(orderNumber);
     if (!order) {
       return NextResponse.json({ error: "الطلب غير موجود" }, { status: 404 });
     }

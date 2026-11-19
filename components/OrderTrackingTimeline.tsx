@@ -36,9 +36,14 @@ export default function OrderTrackingTimeline({
   const [status, setStatus] = useState<OrderStatus>(initialStatus);
   const [data, setData] = useState<OrderStatusResponse | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+  const [isMounted, setIsMounted] = useState(false);
   const [isPolling, setIsPolling] = useState(!TERMINAL_STATUSES.includes(initialStatus));
   const [error, setError] = useState<string | null>(null);
   const [fetchCount, setFetchCount] = useState(0);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -236,12 +241,14 @@ export default function OrderTrackingTimeline({
               <span>{isAr ? 'حالة نهائية' : 'Completed'}</span>
             </>
           )}
-          <span style={{ opacity: 0.7, fontSize: '11px' }}>
-            {lastUpdated.toLocaleTimeString(isAr ? 'ar-EG' : 'en-US', {
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-            })}
+          <span style={{ opacity: 0.7, fontSize: '11px' }} suppressHydrationWarning>
+            {isMounted
+              ? lastUpdated.toLocaleTimeString(isAr ? 'ar-EG' : 'en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                })
+              : null}
           </span>
         </div>
       </div>

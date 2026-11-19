@@ -23,7 +23,7 @@
         "taglineAr": "أصالة المندي والمشويات والمأكولات البدوية",
         "phoneDisplay": "01094965222",
         "phoneIntl": "+201094965222",
-        "vatNoteAr": "الأسعار الموضحة تشمل ضريبة القيمة المضافة",
+        "vatNoteAr": "الأسعار الموضحة تشمل ضريبة القيمة المضافة 12%",
         "serviceNoteAr": null,
         "serviceChargePct": null,
         "currencyAr": "ج.م",
@@ -852,6 +852,110 @@
         "id": "4e8648f6-4640-4d6c-a71d-bc0803f883a9",
         "createdAt": "2026-11-19T00:28:00.108Z",
         "updatedAt": "2026-11-19T00:28:00.108Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "fdcdca95-11b0-4454-a23f-8576591e1843",
+        "summary": "تغيير حالة الطلب ORD-20261119-371371 من RECEIVED إلى RECEIVED",
+        "changes": {
+          "before": {
+            "status": "RECEIVED"
+          },
+          "after": {
+            "status": "RECEIVED"
+          }
+        },
+        "id": "2e290e2a-7a36-40c4-ab1f-31e6b197f09c",
+        "createdAt": "2026-11-19T17:23:28.251Z",
+        "updatedAt": "2026-11-19T17:23:28.251Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "fdcdca95-11b0-4454-a23f-8576591e1843",
+        "summary": "تغيير حالة الطلب ORD-20261119-371371 من CONFIRMED إلى CONFIRMED",
+        "changes": {
+          "before": {
+            "status": "CONFIRMED"
+          },
+          "after": {
+            "status": "CONFIRMED"
+          }
+        },
+        "id": "24d30f02-5305-410d-a52e-4c7b3bf30356",
+        "createdAt": "2026-11-19T17:23:33.546Z",
+        "updatedAt": "2026-11-19T17:23:33.546Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Settings",
+        "entityId": "default",
+        "summary": "تحديث إعدادات المطعم: قرية الناقر",
+        "changes": {
+          "before": {
+            "brandNameAr": "قرية الناقر",
+            "taglineAr": "أصالة المندي والمشويات والمأكولات البدوية",
+            "phoneDisplay": "01094965222",
+            "phoneIntl": "+201094965222",
+            "vatNoteAr": "الأسعار الموضحة تشمل ضريبة القيمة المضافة",
+            "serviceNoteAr": null,
+            "serviceChargePct": null,
+            "currencyAr": "ج.م",
+            "deliveryFee": 30
+          },
+          "after": {
+            "brandNameAr": "قرية الناقر",
+            "taglineAr": "أصالة المندي والمشويات والمأكولات البدوية",
+            "phoneDisplay": "01094965222",
+            "phoneIntl": "+201094965222",
+            "vatNoteAr": "الأسعار الموضحة تشمل ضريبة القيمة المضافة 12%",
+            "serviceNoteAr": null,
+            "serviceChargePct": null,
+            "currencyAr": "ج.م",
+            "deliveryFee": 30
+          }
+        },
+        "id": "9f1f82a8-250e-4ed0-8503-b56988d79012",
+        "createdAt": "2026-11-19T17:52:50.927Z",
+        "updatedAt": "2026-11-19T17:52:50.927Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Settings",
+        "entityId": "default",
+        "summary": "تحديث إعدادات المطعم: قرية الناقر",
+        "changes": {
+          "before": {
+            "brandNameAr": "قرية الناقر",
+            "taglineAr": "أصالة المندي والمشويات والمأكولات البدوية",
+            "phoneDisplay": "01094965222",
+            "phoneIntl": "+201094965222",
+            "vatNoteAr": "الأسعار الموضحة تشمل ضريبة القيمة المضافة 12%",
+            "serviceNoteAr": null,
+            "serviceChargePct": null,
+            "currencyAr": "ج.م",
+            "deliveryFee": 30
+          },
+          "after": {
+            "brandNameAr": "قرية الناقر",
+            "taglineAr": "أصالة المندي والمشويات والمأكولات البدوية",
+            "phoneDisplay": "01094965222",
+            "phoneIntl": "+201094965222",
+            "vatNoteAr": "الأسعار الموضحة تشمل ضريبة القيمة المضافة 12%",
+            "serviceNoteAr": null,
+            "serviceChargePct": null,
+            "currencyAr": "ج.م",
+            "deliveryFee": 30
+          }
+        },
+        "id": "e7c286b7-8b86-46d5-8a79-1359c89bf52e",
+        "createdAt": "2026-11-19T17:52:53.004Z",
+        "updatedAt": "2026-11-19T17:52:53.004Z"
       }
     ],
     "OptionGroup": [
@@ -1758,6 +1862,71 @@
         },
         "createdAt": "2026-11-19T17:15:03.773Z",
         "updatedAt": "2026-11-19T17:15:03.773Z"
+      },
+      {
+        "id": "test-order-1",
+        "orderNumber": "ORD-TEST-001",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "فحص تجريبي",
+        "customerPhone": "01012345678",
+        "subtotal": 100,
+        "totalDiscount": 0,
+        "total": 100,
+        "items": {
+          "create": [
+            {
+              "id": "test-item-1",
+              "productId": "prod-1",
+              "productName": "وجبة تجريبية",
+              "baseUnitPrice": 100,
+              "unitPrice": 100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-19T17:34:57.230Z",
+        "updatedAt": "2026-11-19T17:34:57.230Z"
+      },
+      {
+        "id": "f1cf479c-9770-4396-bccd-48835ea11965",
+        "orderNumber": "ORD-20261119-076B8F",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "ابراهيم شعيب",
+        "customerPhone": "201010814966",
+        "deliveryAddress": "عقغع 57ىلا578",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1850,
+        "idempotencyKey": "checkout-1795110048836-umtdh2ek",
+        "items": {
+          "create": [
+            {
+              "id": "item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-potatoes",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "صينية بطاطس",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-19T17:40:49.514Z",
+        "updatedAt": "2026-11-19T17:40:49.514Z"
       }
     ]
   },

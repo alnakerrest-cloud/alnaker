@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionAdmin } from "@/lib/auth";
-import { updateOrderStatus, getOrderById, type OrderStatus } from "@/lib/orders-store";
+import { updateOrderStatus, getOrderById, getOrderByIdAsync, type OrderStatus } from "@/lib/orders-store";
 import { logAction } from "@/lib/audit";
 
 export async function PATCH(
@@ -21,7 +21,7 @@ export async function PATCH(
       return NextResponse.json({ error: "الحالة مطلوبة" }, { status: 400 });
     }
 
-    const currentOrder = getOrderById(id);
+    const currentOrder = await getOrderByIdAsync(id);
     if (!currentOrder) {
       return NextResponse.json({ error: "الطلب غير موجود" }, { status: 404 });
     }

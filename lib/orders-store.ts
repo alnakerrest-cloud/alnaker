@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import pg from "pg";
 
 export type OrderStatus =
   | "DRAFT"
@@ -142,7 +143,51 @@ function getOrdersDir(): string {
 const globalForOrders = globalThis as unknown as {
   __cachedOrders?: OrderRecord[];
   __cachedSettings?: MenuModeSettings;
+  __pgPool?: pg.Pool;
 };
+
+function getPgPool(): pg.Pool | null {
+  const connectionString = process.env.DATABASE_URL || process.env["DATABASE_URL "];
+  if (!connectionString) return null;
+  if (!globalForOrders.__pgPool) {
+    globalForOrders.__pgPool = new pg.Pool({
+      connectionString,
+      max: 3,
+      connectionTimeoutMillis: 5000,
+      idleTimeoutMillis: 15000,
+    });
+    globalForOrders.__pgPool.on("error", (err) => {
+      console.warn("[orders-store] PG pool idle note:", err.message);
+    });
+  }
+  return globalForOrders.__pgPool;
+}
+
+export async function persistOrderToDb(order: OrderRecord): Promise<void> {
+  const pool = getPgPool();
+  if (!pool) return;
+  try {
+    await pool.query(
+      `INSERT INTO "OrderStore" ("id", "orderNumber", "verificationToken", "data", "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, $5, $6)
+       ON CONFLICT ("id") DO UPDATE SET 
+         "orderNumber" = EXCLUDED."orderNumber",
+         "verificationToken" = EXCLUDED."verificationToken",
+         "data" = EXCLUDED."data", 
+         "updatedAt" = EXCLUDED."updatedAt"`,
+      [
+        order.id,
+        order.orderNumber,
+        order.verificationToken,
+        JSON.stringify(order),
+        order.createdAt,
+        order.updatedAt,
+      ]
+    );
+  } catch (err: any) {
+    console.warn("[orders-store] DB persist note:", err.message);
+  }
+}
 
 function ensureStorageDir(dir: string): boolean {
   try {
@@ -392,6 +437,7 @@ export function createOrder(params: CreateOrderParams): OrderRecord {
 
   orders.unshift(newOrder);
   saveOrders(orders);
+  persistOrderToDb(newOrder).catch(() => {});
   return newOrder;
 }
 
@@ -441,8 +487,114 @@ export function confirmCustomerSent(orderNumber: string): OrderRecord | null {
       note: "Customer confirmed sending the order details via WhatsApp",
     });
     saveOrders(orders);
+    persistOrderToDb(order).catch(() => {});
   }
 
+  return order;
+}
+
+export async function getOrderByNumberAsync(orderNumber: string): Promise<OrderRecord | null> {
+  const local = getOrderByNumber(orderNumber);
+  if (local) return local;
+
+  const pool = getPgPool();
+  if (!pool) return null;
+  try {
+    const res = await pool.query(
+      'SELECT "data" FROM "OrderStore" WHERE "orderNumber" = $1 LIMIT 1',
+      [orderNumber]
+    );
+    if (res.rows[0]?.data) {
+      const order = res.rows[0].data as OrderRecord;
+      const orders = loadOrders();
+      if (!orders.some((o) => o.orderNumber === order.orderNumber)) {
+        orders.unshift(order);
+        saveOrders(orders);
+      }
+      return order;
+    }
+  } catch (err: any) {
+    console.warn("[orders-store] DB fetch note:", err.message);
+  }
+  return null;
+}
+
+export async function getOrderByVerificationAsync(orderNumber: string, token: string): Promise<OrderRecord | null> {
+  const local = getOrderByVerification(orderNumber, token);
+  if (local) return local;
+
+  const pool = getPgPool();
+  if (!pool) return null;
+  try {
+    const res = await pool.query(
+      'SELECT "data" FROM "OrderStore" WHERE "orderNumber" = $1 AND "verificationToken" = $2 LIMIT 1',
+      [orderNumber, token]
+    );
+    if (res.rows[0]?.data) {
+      const order = res.rows[0].data as OrderRecord;
+      const orders = loadOrders();
+      if (!orders.some((o) => o.orderNumber === order.orderNumber)) {
+        orders.unshift(order);
+        saveOrders(orders);
+      }
+      return order;
+    }
+  } catch (err: any) {
+    console.warn("[orders-store] DB fetch by verification note:", err.message);
+  }
+  return null;
+}
+
+export async function getOrderByIdAsync(id: string): Promise<OrderRecord | null> {
+  const local = getOrderById(id);
+  if (local) return local;
+
+  const pool = getPgPool();
+  if (!pool) return null;
+  try {
+    const res = await pool.query(
+      'SELECT "data" FROM "OrderStore" WHERE "id" = $1 LIMIT 1',
+      [id]
+    );
+    if (res.rows[0]?.data) {
+      const order = res.rows[0].data as OrderRecord;
+      const orders = loadOrders();
+      if (!orders.some((o) => o.id === order.id)) {
+        orders.unshift(order);
+        saveOrders(orders);
+      }
+      return order;
+    }
+  } catch (err: any) {
+    console.warn("[orders-store] DB fetch by id note:", err.message);
+  }
+  return null;
+}
+
+export async function confirmCustomerSentAsync(orderNumber: string): Promise<OrderRecord | null> {
+  let order = await getOrderByNumberAsync(orderNumber);
+  if (!order) return null;
+
+  if (order.status === "PENDING_WHATSAPP") {
+    const now = new Date().toISOString();
+    order.status = "CUSTOMER_CONFIRMED_SENT";
+    order.updatedAt = now;
+    order.timeline.push({
+      timestamp: now,
+      actor: "customer",
+      action: "customer_confirmed_sent",
+      fromStatus: "PENDING_WHATSAPP",
+      toStatus: "CUSTOMER_CONFIRMED_SENT",
+      note: "Customer confirmed sending the order details via WhatsApp",
+    });
+    const orders = loadOrders();
+    const idx = orders.findIndex((o) => o.orderNumber === orderNumber);
+    if (idx !== -1) {
+      orders[idx] = order;
+      saveOrders(orders);
+    }
+    await persistOrderToDb(order);
+  }
   return order;
 }
 
@@ -516,6 +668,7 @@ export function updateOrderStatus(
   });
 
   saveOrders(orders);
+  persistOrderToDb(order).catch(() => {});
   return { success: true, order };
 }
 
@@ -612,6 +765,33 @@ export function listOrders(query: ListOrdersQuery = {}): ListOrdersResult {
     pageSize,
     totalPages,
   };
+}
+
+export async function listOrdersAsync(query: ListOrdersQuery = {}): Promise<ListOrdersResult> {
+  const pool = getPgPool();
+  if (pool) {
+    try {
+      const res = await pool.query('SELECT "data" FROM "OrderStore" ORDER BY "createdAt" DESC LIMIT 500');
+      if (res.rows.length > 0) {
+        const dbOrders: OrderRecord[] = res.rows.map((r) => r.data);
+        const orders = loadOrders();
+        const map = new Map<string, OrderRecord>();
+        for (const o of orders) map.set(o.id, o);
+        for (const o of dbOrders) map.set(o.id, o);
+        globalForOrders.__cachedOrders = Array.from(map.values()).sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      }
+    } catch (err: any) {
+      console.warn("[orders-store] DB listOrders note:", err.message);
+    }
+  }
+  return listOrders(query);
+}
+
+export async function getOrdersStatsAsync(): Promise<OrdersStats> {
+  await listOrdersAsync({ pageSize: 1 });
+  return getOrdersStats();
 }
 
 export interface OrdersStats {

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireAdmin } from "@/lib/auth";
-import { getOrderById } from "@/lib/orders-store";
+import { getOrderById, getOrderByIdAsync } from "@/lib/orders-store";
 import OrderStatusControl from "@/components/admin/OrderStatusControl";
 
 interface OrderDetailPageProps {
@@ -13,7 +13,7 @@ const fmt = (n: number) => new Intl.NumberFormat("ar-EG").format(n);
 export default async function AdminOrderDetailPage({ params }: OrderDetailPageProps) {
   const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR", "ORDERS_STAFF"]);
   const { id } = await params;
-  const order = getOrderById(id);
+  const order = await getOrderByIdAsync(id);
 
   if (!order) {
     return (
