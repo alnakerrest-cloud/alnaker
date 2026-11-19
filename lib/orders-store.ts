@@ -152,9 +152,10 @@ function getPgPool(): pg.Pool | null {
   if (!globalForOrders.__pgPool) {
     globalForOrders.__pgPool = new pg.Pool({
       connectionString,
-      max: 3,
-      connectionTimeoutMillis: 5000,
-      idleTimeoutMillis: 15000,
+      max: 5,
+      connectionTimeoutMillis: 15000,
+      idleTimeoutMillis: 30000,
+      keepAlive: true,
     });
     globalForOrders.__pgPool.on("error", (err) => {
       console.warn("[orders-store] PG pool idle note:", err.message);
@@ -165,28 +166,46 @@ function getPgPool(): pg.Pool | null {
 
 export async function persistOrderToDb(order: OrderRecord): Promise<void> {
   const pool = getPgPool();
-  if (!pool) return;
-  try {
-    await pool.query(
-      `INSERT INTO "OrderStore" ("id", "orderNumber", "verificationToken", "data", "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, $5, $6)
-       ON CONFLICT ("id") DO UPDATE SET 
-         "orderNumber" = EXCLUDED."orderNumber",
-         "verificationToken" = EXCLUDED."verificationToken",
-         "data" = EXCLUDED."data", 
-         "updatedAt" = EXCLUDED."updatedAt"`,
-      [
-        order.id,
-        order.orderNumber,
-        order.verificationToken,
-        JSON.stringify(order),
-        order.createdAt,
-        order.updatedAt,
-      ]
-    );
-  } catch (err: any) {
-    console.warn("[orders-store] DB persist note:", err.message);
+  if (!pool) {
+    if (process.env.NODE_ENV === "production" || process.env.VERCEL) {
+      throw new Error("DATABASE_URL is not configured - unable to persist order to database");
+    }
+    return;
   }
+
+  const query = `
+    INSERT INTO "OrderStore" ("id", "orderNumber", "verificationToken", "data", "createdAt", "updatedAt")
+    VALUES ($1, $2, $3, $4, $5, $6)
+    ON CONFLICT ("id") DO UPDATE SET 
+      "orderNumber" = EXCLUDED."orderNumber",
+      "verificationToken" = EXCLUDED."verificationToken",
+      "data" = EXCLUDED."data", 
+      "updatedAt" = EXCLUDED."updatedAt"
+  `;
+  const values = [
+    order.id,
+    order.orderNumber,
+    order.verificationToken,
+    JSON.stringify(order),
+    order.createdAt,
+    order.updatedAt,
+  ];
+
+  let lastError: any = null;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      await pool.query(query, values);
+      return;
+    } catch (err: any) {
+      lastError = err;
+      console.warn(`[orders-store] DB persist attempt ${attempt} warning:`, err.message);
+      if (attempt < 3) {
+        await new Promise((r) => setTimeout(r, attempt * 500));
+      }
+    }
+  }
+
+  throw new Error(`Failed to commit order ${order.orderNumber} to database after 3 attempts: ${lastError?.message || lastError}`);
 }
 
 function ensureStorageDir(dir: string): boolean {
@@ -340,7 +359,10 @@ export function generateVerificationCode(): string {
 }
 
 export interface CreateOrderParams {
+  id?: string;
   orderNumber?: string;
+  verificationToken?: string;
+  verificationCode?: string;
   type: OrderType;
   paymentMethod: PaymentMethod;
   customerName?: string;
@@ -369,16 +391,34 @@ export interface CreateOrderParams {
   whatsappUrl: string;
 }
 
-export function createOrder(params: CreateOrderParams): OrderRecord {
-  const orders = loadOrders();
-  const now = new Date();
+export async function createOrder(params: CreateOrderParams): Promise<OrderRecord> {
   const settings = getMenuSettings();
+  const now = new Date();
 
-  // Idempotency check
+  // 1. Idempotency check: memory + Neon DB
   if (params.idempotencyKey) {
-    const existing = orders.find((o) => o.idempotencyKey === params.idempotencyKey);
-    if (existing) {
-      return existing;
+    const orders = loadOrders();
+    const existingMem = orders.find((o) => o.idempotencyKey === params.idempotencyKey);
+    if (existingMem) {
+      return existingMem;
+    }
+
+    const pool = getPgPool();
+    if (pool) {
+      try {
+        const idempRes = await pool.query(
+          `SELECT "data" FROM "OrderStore" WHERE "data"->>'idempotencyKey' = $1 LIMIT 1`,
+          [params.idempotencyKey]
+        );
+        if (idempRes.rows[0]?.data) {
+          const existingDb = idempRes.rows[0].data as OrderRecord;
+          orders.unshift(existingDb);
+          saveOrders(orders);
+          return existingDb;
+        }
+      } catch (err: any) {
+        console.warn("[orders-store] Idempotency DB check note:", err.message);
+      }
     }
   }
 
@@ -386,11 +426,11 @@ export function createOrder(params: CreateOrderParams): OrderRecord {
   const expiresAt = new Date(now.getTime() + ttlMinutes * 60 * 1000);
 
   const orderNumber = params.orderNumber || generateOrderNumber();
-  const verificationToken = generateVerificationToken();
-  const verificationCode = generateVerificationCode();
+  const verificationToken = params.verificationToken || generateVerificationToken();
+  const verificationCode = params.verificationCode || generateVerificationCode();
 
   const newOrder: OrderRecord = {
-    id: crypto.randomUUID(),
+    id: params.id || crypto.randomUUID(),
     orderNumber,
     verificationToken,
     verificationCode,
@@ -435,9 +475,14 @@ export function createOrder(params: CreateOrderParams): OrderRecord {
     ],
   };
 
+  // 2. Await durable commit to authoritative PostgreSQL database BEFORE returning
+  await persistOrderToDb(newOrder);
+
+  // 3. Update memory/filesystem caches
+  const orders = loadOrders();
   orders.unshift(newOrder);
   saveOrders(orders);
-  persistOrderToDb(newOrder).catch(() => {});
+
   return newOrder;
 }
 
@@ -494,15 +539,20 @@ export function confirmCustomerSent(orderNumber: string): OrderRecord | null {
 }
 
 export async function getOrderByNumberAsync(orderNumber: string): Promise<OrderRecord | null> {
-  const local = getOrderByNumber(orderNumber);
+  const clean = decodeURIComponent(orderNumber || "").trim();
+  if (!clean) return null;
+
+  const local = getOrderByNumber(clean);
   if (local) return local;
 
   const pool = getPgPool();
   if (!pool) return null;
   try {
     const res = await pool.query(
-      'SELECT "data" FROM "OrderStore" WHERE "orderNumber" = $1 LIMIT 1',
-      [orderNumber]
+      `SELECT "data" FROM "OrderStore" 
+       WHERE "orderNumber" = $1 OR UPPER("orderNumber") = UPPER($1) 
+       LIMIT 1`,
+      [clean]
     );
     if (res.rows[0]?.data) {
       const order = res.rows[0].data as OrderRecord;
@@ -520,15 +570,22 @@ export async function getOrderByNumberAsync(orderNumber: string): Promise<OrderR
 }
 
 export async function getOrderByVerificationAsync(orderNumber: string, token: string): Promise<OrderRecord | null> {
-  const local = getOrderByVerification(orderNumber, token);
+  const cleanNumber = decodeURIComponent(orderNumber || "").trim();
+  const cleanToken = decodeURIComponent(token || "").trim();
+  if (!cleanNumber || !cleanToken) return null;
+
+  const local = getOrderByVerification(cleanNumber, cleanToken);
   if (local) return local;
 
   const pool = getPgPool();
   if (!pool) return null;
   try {
     const res = await pool.query(
-      'SELECT "data" FROM "OrderStore" WHERE "orderNumber" = $1 AND "verificationToken" = $2 LIMIT 1',
-      [orderNumber, token]
+      `SELECT "data" FROM "OrderStore" 
+       WHERE ("orderNumber" = $1 OR UPPER("orderNumber") = UPPER($1))
+         AND ("verificationToken" = $2 OR TRIM("verificationToken") = $2)
+       LIMIT 1`,
+      [cleanNumber, cleanToken]
     );
     if (res.rows[0]?.data) {
       const order = res.rows[0].data as OrderRecord;
@@ -546,15 +603,20 @@ export async function getOrderByVerificationAsync(orderNumber: string, token: st
 }
 
 export async function getOrderByIdAsync(id: string): Promise<OrderRecord | null> {
-  const local = getOrderById(id);
+  const cleanId = decodeURIComponent(id || "").trim();
+  if (!cleanId) return null;
+
+  const local = getOrderById(cleanId);
   if (local) return local;
 
   const pool = getPgPool();
   if (!pool) return null;
   try {
     const res = await pool.query(
-      'SELECT "data" FROM "OrderStore" WHERE "id" = $1 LIMIT 1',
-      [id]
+      `SELECT "data" FROM "OrderStore" 
+       WHERE "id" = $1 OR "orderNumber" = $1 OR UPPER("orderNumber") = UPPER($1) 
+       LIMIT 1`,
+      [cleanId]
     );
     if (res.rows[0]?.data) {
       const order = res.rows[0].data as OrderRecord;

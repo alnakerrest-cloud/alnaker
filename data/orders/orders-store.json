@@ -1,5 +1,53 @@
 [
   {
+    "id": "f05e028b-a653-4fe6-a9c8-139e2cff8b1f",
+    "orderNumber": "ORD-20261119-FD51F6",
+    "verificationToken": "02dd324178fe58e7f15de653ed878ac7",
+    "verificationCode": "NQR-6003",
+    "createdAt": "2026-11-19T18:58:51.968Z",
+    "updatedAt": "2026-11-19T18:58:51.968Z",
+    "expiresAt": "2026-11-19T19:28:51.968Z",
+    "status": "PENDING_WHATSAPP",
+    "type": "TAKEAWAY",
+    "paymentMethod": "CASH",
+    "customerName": "عميل فحص الانحدار",
+    "customerPhone": "01012345678",
+    "customerPhoneNormalized": "201012345678",
+    "customerNotes": "فحص آلي شامل",
+    "deliveryFee": 0,
+    "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+    "branchNameAr": "فرع جمصة",
+    "currency": "ج.م",
+    "items": [
+      {
+        "id": "item-test-1",
+        "productId": "p-test-01",
+        "productName": "مشاوي مشكلة فحص",
+        "variantIndex": 0,
+        "baseUnitPrice": 250,
+        "unitPrice": 250,
+        "quantity": 2,
+        "totalPrice": 500
+      }
+    ],
+    "subtotal": 500,
+    "totalDiscount": 0,
+    "serviceCharge": 0,
+    "total": 500,
+    "idempotencyKey": "reg-test-1795114731966",
+    "whatsappMessage": "رسالة فحص",
+    "whatsappUrl": "https://wa.me/201010814966",
+    "timeline": [
+      {
+        "timestamp": "2026-11-19T18:58:51.968Z",
+        "actor": "customer",
+        "action": "created_order",
+        "toStatus": "PENDING_WHATSAPP",
+        "note": "Order created, waiting for customer to dispatch WhatsApp message"
+      }
+    ]
+  },
+  {
     "id": "f1cf479c-9770-4396-bccd-48835ea11965",
     "orderNumber": "ORD-20261119-076B8F",
     "verificationToken": "7f95129bf4387467d15dd6f10eba9e06",

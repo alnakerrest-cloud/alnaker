@@ -7,6 +7,9 @@ import { calculateOfferDiscount } from "@/lib/offers";
 import { normalizeWhatsAppPhone, type CartItem, type SelectedOption } from "@/lib/cart";
 import { 
   createOrder, 
+  generateOrderNumber,
+  generateVerificationToken,
+  generateVerificationCode,
   getMenuSettings, 
   REASON_PRESETS,
   type OrderType, 
@@ -451,10 +454,14 @@ export async function POST(request: NextRequest) {
     const targetPhone = branch.whatsappNumber || branch.phoneIntl || siteData.phoneIntl;
     const cleanWhatsAppPhone = normalizeWhatsAppPhone(targetPhone);
 
-    // Format WhatsApp Message
-    const orderNumberPlaceholder = `ORD-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-TMP`;
-    const tempMsg = formatWhatsAppOrderMessage({
-      orderNumber: orderNumberPlaceholder,
+    // 5. Pre-generate durable Order Number & Security Tokens
+    const generatedOrderNumber = generateOrderNumber();
+    const generatedToken = generateVerificationToken();
+    const generatedCode = generateVerificationCode();
+
+    // Format definitive WhatsApp Message with exact orderNumber and verificationToken
+    const finalWhatsAppMsg = formatWhatsAppOrderMessage({
+      orderNumber: generatedOrderNumber,
       orderType,
       customerName: customerName ? customerName.slice(0, 100).trim() : undefined,
       customerPhone: normalizedPhone,
@@ -470,12 +477,17 @@ export async function POST(request: NextRequest) {
       total: finalTotal,
       paymentMethod,
       locale,
+      verificationToken: generatedToken,
     });
+    const finalWhatsAppUrl = `https://wa.me/${cleanWhatsAppPhone}?text=${encodeURIComponent(finalWhatsAppMsg)}`;
 
-    // 6. Create Order in Persistent Store
+    // 6. Create and DURABLY AWAIT order commit to database
     const clientIp = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "127.0.0.1";
 
-    const order = createOrder({
+    const order = await createOrder({
+      orderNumber: generatedOrderNumber,
+      verificationToken: generatedToken,
+      verificationCode: generatedCode,
       type: orderType,
       paymentMethod,
       customerName: customerName ? customerName.slice(0, 100).trim() : undefined,
@@ -500,35 +512,15 @@ export async function POST(request: NextRequest) {
       total: finalTotal,
       idempotencyKey,
       clientIp,
-      whatsappMessage: tempMsg.replace(orderNumberPlaceholder, "PENDING"),
-      whatsappUrl: `https://wa.me/${cleanWhatsAppPhone}?text=${encodeURIComponent(tempMsg)}`,
+      whatsappMessage: finalWhatsAppMsg,
+      whatsappUrl: finalWhatsAppUrl,
     });
 
-    // Update real WhatsApp message with actual generated orderNumber
-    const finalWhatsAppMsg = formatWhatsAppOrderMessage({
-      orderNumber: order.orderNumber,
-      orderType,
-      customerName: order.customerName,
-      customerPhone: order.customerPhoneNormalized,
-      customerNotes: order.customerNotes,
-      deliveryAddress: order.deliveryAddress,
-      branchName: branch.nameAr,
-      branchAddress: branch.addressAr,
-      items: verifiedItems,
-      currency: siteData.currency,
-      subtotal,
-      totalDiscount,
-      deliveryFee,
-      total: finalTotal,
-      paymentMethod,
-      locale,
-      verificationToken: order.verificationToken,
-    });
-    const finalWhatsAppUrl = `https://wa.me/${cleanWhatsAppPhone}?text=${encodeURIComponent(finalWhatsAppMsg)}`;
-    order.whatsappMessage = finalWhatsAppMsg;
-    order.whatsappUrl = finalWhatsAppUrl;
+    if (!order || !order.orderNumber) {
+      throw new Error("تعذّر حفظ وتأكيد الطلب في قاعدة البيانات");
+    }
 
-    // 7. Optional PostgreSQL Database Sync
+    // 7. Optional PostgreSQL Database Sync into relational Order and OrderItem tables
     try {
       await prisma.order.create({
         data: {
@@ -564,7 +556,7 @@ export async function POST(request: NextRequest) {
         },
       });
     } catch (dbErr: any) {
-      console.warn("[checkout] DB sync note (order processed successfully via memory/file store):", dbErr?.message || dbErr);
+      console.warn("[checkout] DB sync note (relational Order table):", dbErr?.message || dbErr);
     }
 
     return NextResponse.json({

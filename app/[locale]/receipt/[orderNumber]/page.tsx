@@ -41,7 +41,7 @@ async function generateQrSvg(text: string): Promise<string> {
 export default async function ReceiptPage({ params, searchParams }: ReceiptPageProps) {
   const { locale, orderNumber } = await params;
   const sParams = searchParams ? await searchParams : {};
-  const token = sParams.token;
+  const cleanToken = sParams.token ? decodeURIComponent(sParams.token).trim() : undefined;
 
   const cleanOrderNumber = decodeURIComponent(orderNumber || "").trim();
   const order = await getOrderByNumberAsync(cleanOrderNumber);
@@ -52,7 +52,7 @@ export default async function ReceiptPage({ params, searchParams }: ReceiptPageP
       <div style={{ maxWidth: "600px", margin: "60px auto", padding: "30px", textAlign: "center", background: "#fff", borderRadius: "12px", border: "1px solid #e5e7eb" }}>
         <h1 style={{ color: "#dc2626", fontSize: "24px" }}>الطلب غير موجود</h1>
         <p style={{ color: "#6b7280", margin: "16px 0 24px" }}>
-          لم يتم العثور على أي طلب مسجل بالرقم: <strong style={{ color: "#111827" }}>{orderNumber}</strong>
+          لم يتم العثور على أي طلب مسجل بالرقم: <strong style={{ color: "#111827" }}>{cleanOrderNumber || orderNumber}</strong>
         </p>
         <Link
           href={`/${locale || "ar"}`}
@@ -73,7 +73,8 @@ export default async function ReceiptPage({ params, searchParams }: ReceiptPageP
   }
 
   // Security guard: verify token to prevent enumeration and leaking customer data
-  if (!token || token !== order.verificationToken) {
+  const orderToken = (order.verificationToken || "").trim();
+  if (!cleanToken || cleanToken !== orderToken) {
     return (
       <div
         style={{
