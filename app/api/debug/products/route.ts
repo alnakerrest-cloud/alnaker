@@ -37,11 +37,16 @@ export async function GET() {
     }
   });
   
+  const envKeys = Object.keys(process.env).filter(
+    k => !k.toLowerCase().includes('secret') && !k.toLowerCase().includes('key') && !k.toLowerCase().includes('token') && !k.toLowerCase().includes('pass')
+  );
+
   return NextResponse.json({
     dbStatus,
     dbHost,
     adminUsersCount,
     dbError,
+    envKeys,
     products,
     optionGroups,
     productOptionGroups,
