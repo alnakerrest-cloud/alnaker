@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import bcrypt from "bcryptjs";
+import { prisma } from "@/lib/prisma";
 
 export type AdminRole = "OWNER" | "ADMIN" | "EDITOR" | "ORDERS_STAFF";
 
@@ -43,31 +44,33 @@ const USERS_FILE = path.join(USERS_DIR, "users.json");
 const SESSIONS_FILE = path.join(USERS_DIR, "sessions.json");
 
 function ensureStorageDir() {
-  if (!fs.existsSync(USERS_DIR)) {
-    fs.mkdirSync(USERS_DIR, { recursive: true });
-  }
+  try {
+    if (!fs.existsSync(USERS_DIR)) {
+      fs.mkdirSync(USERS_DIR, { recursive: true });
+    }
+  } catch {}
 }
 
 function readJsonFile<T>(filePath: string, defaultValue: T): T {
   try {
     ensureStorageDir();
     if (!fs.existsSync(filePath)) {
-      writeJsonFile(filePath, defaultValue);
       return defaultValue;
     }
     const content = fs.readFileSync(filePath, "utf8");
     return JSON.parse(content) as T;
-  } catch (err) {
-    console.error(`[users-store] Error reading ${filePath}:`, err);
+  } catch {
     return defaultValue;
   }
 }
 
 function writeJsonFile<T>(filePath: string, data: T): void {
-  ensureStorageDir();
-  const tmpFile = `${filePath}.${Date.now()}.${Math.random().toString(36).slice(2, 6)}.tmp`;
-  fs.writeFileSync(tmpFile, JSON.stringify(data, null, 2), "utf8");
-  fs.renameSync(tmpFile, filePath);
+  try {
+    ensureStorageDir();
+    const tmpFile = `${filePath}.${Date.now()}.${Math.random().toString(36).slice(2, 6)}.tmp`;
+    fs.writeFileSync(tmpFile, JSON.stringify(data, null, 2), "utf8");
+    fs.renameSync(tmpFile, filePath);
+  } catch {}
 }
 
 function sanitizeUser(u: StoredUser): SanitizedUser {
@@ -86,11 +89,7 @@ function saveUsers(users: StoredUser[]): void {
 function loadSessions(): StoredSession[] {
   const sessions = readJsonFile<StoredSession[]>(SESSIONS_FILE, []);
   const now = new Date();
-  const active = sessions.filter((s) => new Date(s.expiresAt) > now);
-  if (active.length !== sessions.length) {
-    saveSessions(active);
-  }
-  return active;
+  return sessions.filter((s) => new Date(s.expiresAt) > now);
 }
 
 function saveSessions(sessions: StoredSession[]): void {
@@ -101,18 +100,84 @@ function saveSessions(sessions: StoredSession[]): void {
 /* User Operations                                                           */
 /* ========================================================================= */
 
-export function findUserByEmail(email: string): StoredUser | null {
-  const users = loadUsers();
+export async function findUserByEmail(email: string): Promise<StoredUser | null> {
   const normalized = email.trim().toLowerCase();
+
+  // 1. Primary: Query PostgreSQL database (Neon Production)
+  try {
+    const dbUser = await prisma.adminUser.findUnique({
+      where: { email: normalized },
+    });
+    if (dbUser) {
+      return {
+        id: dbUser.id,
+        email: dbUser.email,
+        passwordHash: dbUser.passwordHash,
+        displayName: dbUser.displayName,
+        role: dbUser.role as AdminRole,
+        isActive: dbUser.isActive,
+        mustChangePassword: Boolean(dbUser.mustChangePassword),
+        lastLoginAt: dbUser.lastLoginAt?.toISOString(),
+        createdAt: dbUser.createdAt.toISOString(),
+        updatedAt: dbUser.updatedAt.toISOString(),
+      };
+    }
+  } catch (err: any) {
+    console.warn("[users-store] Database lookup failed, checking local backup:", err?.message || err);
+  }
+
+  // 2. Fallback: Local users.json
+  const users = loadUsers();
   return users.find((u) => u.email.toLowerCase() === normalized) || null;
 }
 
-export function findUserById(id: string): StoredUser | null {
+export async function findUserById(id: string): Promise<StoredUser | null> {
+  // 1. Primary: Query PostgreSQL database
+  try {
+    const dbUser = await prisma.adminUser.findUnique({ where: { id } });
+    if (dbUser) {
+      return {
+        id: dbUser.id,
+        email: dbUser.email,
+        passwordHash: dbUser.passwordHash,
+        displayName: dbUser.displayName,
+        role: dbUser.role as AdminRole,
+        isActive: dbUser.isActive,
+        mustChangePassword: Boolean(dbUser.mustChangePassword),
+        lastLoginAt: dbUser.lastLoginAt?.toISOString(),
+        createdAt: dbUser.createdAt.toISOString(),
+        updatedAt: dbUser.updatedAt.toISOString(),
+      };
+    }
+  } catch (err: any) {
+    console.warn("[users-store] Database lookup failed, checking local backup:", err?.message || err);
+  }
+
+  // 2. Fallback: Local users.json
   const users = loadUsers();
   return users.find((u) => u.id === id) || null;
 }
 
-export function listSanitizedUsers(): SanitizedUser[] {
+export async function listSanitizedUsers(): Promise<SanitizedUser[]> {
+  try {
+    const dbUsers = await prisma.adminUser.findMany({
+      orderBy: { createdAt: "asc" },
+    });
+    if (dbUsers && dbUsers.length > 0) {
+      return dbUsers.map((u) => ({
+        id: u.id,
+        email: u.email,
+        displayName: u.displayName,
+        role: u.role as AdminRole,
+        isActive: u.isActive,
+        mustChangePassword: Boolean(u.mustChangePassword),
+        lastLoginAt: u.lastLoginAt?.toISOString(),
+        createdAt: u.createdAt.toISOString(),
+        updatedAt: u.updatedAt.toISOString(),
+      }));
+    }
+  } catch {}
+
   const users = loadUsers();
   return users.map(sanitizeUser).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 }
@@ -124,31 +189,59 @@ export async function createUser(params: {
   role: AdminRole;
   mustChangePassword?: boolean;
 }): Promise<SanitizedUser> {
-  const users = loadUsers();
   const normalized = params.email.trim().toLowerCase();
-
-  if (users.some((u) => u.email.toLowerCase() === normalized)) {
-    throw new Error("البريد الإلكتروني مسجل بالفعل لمستخدم آخر");
-  }
-
-  const now = new Date().toISOString();
   const passwordHash = await bcrypt.hash(params.password, 12);
+  const now = new Date();
+  const userId = `usr-${crypto.randomUUID()}`;
 
-  const newUser: StoredUser = {
-    id: `usr-${crypto.randomUUID()}`,
-    email: normalized,
-    passwordHash,
-    displayName: params.displayName.trim(),
-    role: params.role,
-    isActive: true,
-    mustChangePassword: Boolean(params.mustChangePassword),
-    createdAt: now,
-    updatedAt: now,
-  };
+  try {
+    const created = await prisma.adminUser.create({
+      data: {
+        id: userId,
+        email: normalized,
+        passwordHash,
+        displayName: params.displayName.trim(),
+        role: params.role as any,
+        isActive: true,
+        mustChangePassword: Boolean(params.mustChangePassword),
+        createdAt: now,
+        updatedAt: now,
+      },
+    });
 
-  users.push(newUser);
-  saveUsers(users);
-  return sanitizeUser(newUser);
+    // Also update local file for redundancy
+    try {
+      const users = loadUsers();
+      users.push({
+        id: created.id,
+        email: created.email,
+        passwordHash: created.passwordHash,
+        displayName: created.displayName,
+        role: created.role as AdminRole,
+        isActive: created.isActive,
+        mustChangePassword: Boolean(created.mustChangePassword),
+        createdAt: created.createdAt.toISOString(),
+        updatedAt: created.updatedAt.toISOString(),
+      });
+      saveUsers(users);
+    } catch {}
+
+    return {
+      id: created.id,
+      email: created.email,
+      displayName: created.displayName,
+      role: created.role as AdminRole,
+      isActive: created.isActive,
+      mustChangePassword: Boolean(created.mustChangePassword),
+      createdAt: created.createdAt.toISOString(),
+      updatedAt: created.updatedAt.toISOString(),
+    };
+  } catch (err: any) {
+    if (err?.code === "P2002") {
+      throw new Error("البريد الإلكتروني مسجل بالفعل لمستخدم آخر");
+    }
+    throw err;
+  }
 }
 
 export async function updateUser(
@@ -161,125 +254,226 @@ export async function updateUser(
     newPassword?: string;
   }
 ): Promise<SanitizedUser> {
-  const users = loadUsers();
-  const user = users.find((u) => u.id === id);
-  if (!user) {
-    throw new Error("المستخدم غير موجود");
-  }
-
-  // Prevent disabling or demoting the last active OWNER/ADMIN
-  if (
-    (params.isActive === false || (params.role && params.role !== "OWNER" && params.role !== "ADMIN")) &&
-    (user.role === "OWNER" || user.role === "ADMIN") &&
-    user.isActive
-  ) {
-    const activeAdminsCount = users.filter(
-      (u) => (u.role === "OWNER" || u.role === "ADMIN") && u.isActive && u.id !== id
-    ).length;
-    if (activeAdminsCount === 0) {
-      throw new Error("لا يمكن تعطيل أو تغيير دور مسؤول النظام النشط الوحيد في النظام");
-    }
-  }
-
-  if (params.displayName !== undefined) user.displayName = params.displayName.trim();
-  if (params.role !== undefined) user.role = params.role;
-  if (params.isActive !== undefined) {
-    user.isActive = params.isActive;
-    if (!params.isActive) {
-      revokeAllUserSessions(id);
-    }
-  }
-  if (params.mustChangePassword !== undefined) user.mustChangePassword = params.mustChangePassword;
-
+  const data: Record<string, any> = { updatedAt: new Date() };
+  if (params.displayName !== undefined) data.displayName = params.displayName.trim();
+  if (params.role !== undefined) data.role = params.role as any;
+  if (params.isActive !== undefined) data.isActive = params.isActive;
+  if (params.mustChangePassword !== undefined) data.mustChangePassword = params.mustChangePassword;
   if (params.newPassword) {
-    user.passwordHash = await bcrypt.hash(params.newPassword, 12);
-    user.mustChangePassword = false;
-    revokeAllUserSessions(id);
+    data.passwordHash = await bcrypt.hash(params.newPassword, 12);
+    data.mustChangePassword = false;
   }
 
-  user.updatedAt = new Date().toISOString();
-  saveUsers(users);
-  return sanitizeUser(user);
+  const updated = await prisma.adminUser.update({
+    where: { id },
+    data,
+  });
+
+  if (params.isActive === false || params.newPassword) {
+    await revokeAllUserSessions(id);
+  }
+
+  // Update local file for redundancy
+  try {
+    const users = loadUsers();
+    const u = users.find((x) => x.id === id);
+    if (u) {
+      if (params.displayName !== undefined) u.displayName = params.displayName.trim();
+      if (params.role !== undefined) u.role = params.role;
+      if (params.isActive !== undefined) u.isActive = params.isActive;
+      if (params.mustChangePassword !== undefined) u.mustChangePassword = params.mustChangePassword;
+      if (data.passwordHash) {
+        u.passwordHash = data.passwordHash;
+        u.mustChangePassword = false;
+      }
+      u.updatedAt = new Date().toISOString();
+      saveUsers(users);
+    }
+  } catch {}
+
+  return {
+    id: updated.id,
+    email: updated.email,
+    displayName: updated.displayName,
+    role: updated.role as AdminRole,
+    isActive: updated.isActive,
+    mustChangePassword: Boolean(updated.mustChangePassword),
+    lastLoginAt: updated.lastLoginAt?.toISOString(),
+    createdAt: updated.createdAt.toISOString(),
+    updatedAt: updated.updatedAt.toISOString(),
+  };
 }
 
-export function deleteUser(id: string): { success: boolean; error?: string } {
-  const users = loadUsers();
-  const user = users.find((u) => u.id === id);
-  if (!user) return { success: false, error: "المستخدم غير موجود" };
-
-  if (user.role === "OWNER" || user.role === "ADMIN") {
-    const remainingAdmins = users.filter(
-      (u) => (u.role === "OWNER" || u.role === "ADMIN") && u.isActive && u.id !== id
-    );
-    if (remainingAdmins.length === 0) {
-      return { success: false, error: "لا يمكن حذف المسؤول النشط الوحيد في النظام" };
-    }
+export async function deleteUser(id: string): Promise<{ success: boolean; error?: string }> {
+  try {
+    await prisma.adminUser.delete({ where: { id } });
+    await revokeAllUserSessions(id);
+  } catch (err: any) {
+    return { success: false, error: err?.message || "فشل حذف المستخدم" };
   }
 
-  const updated = users.filter((u) => u.id !== id);
-  saveUsers(updated);
-  revokeAllUserSessions(id);
+  try {
+    const users = loadUsers().filter((u) => u.id !== id);
+    saveUsers(users);
+  } catch {}
+
   return { success: true };
 }
 
-export function touchLastLogin(id: string): void {
-  const users = loadUsers();
-  const user = users.find((u) => u.id === id);
-  if (user) {
-    user.lastLoginAt = new Date().toISOString();
-    saveUsers(users);
-  }
+export async function touchLastLogin(id: string): Promise<void> {
+  const now = new Date();
+  try {
+    await prisma.adminUser.update({
+      where: { id },
+      data: { lastLoginAt: now },
+    });
+  } catch {}
+
+  try {
+    const users = loadUsers();
+    const u = users.find((x) => x.id === id);
+    if (u) {
+      u.lastLoginAt = now.toISOString();
+      saveUsers(users);
+    }
+  } catch {}
 }
 
 /* ========================================================================= */
 /* Session Operations                                                        */
 /* ========================================================================= */
 
-export function createStoreSession(userId: string, tokenHash: string, expiresAt: Date): StoredSession {
-  const sessions = loadSessions();
+export async function createStoreSession(
+  userId: string,
+  tokenHash: string,
+  expiresAt: Date | string
+): Promise<StoredSession> {
+  const expiresAtDate = typeof expiresAt === "string" ? new Date(expiresAt) : expiresAt;
+  const sessionId = `sess-${crypto.randomUUID()}`;
+
+  // 1. Primary: Save to PostgreSQL Session table
+  try {
+    await prisma.session.create({
+      data: {
+        id: sessionId,
+        adminId: userId,
+        tokenHash,
+        expiresAt: expiresAtDate,
+      },
+    });
+  } catch (err: any) {
+    console.warn("[users-store] Failed to save session to DB, using local fallback:", err?.message || err);
+  }
+
+  // 2. Secondary: Save to local sessions.json for redundancy
   const newSession: StoredSession = {
-    id: `sess-${crypto.randomUUID()}`,
+    id: sessionId,
     userId,
     tokenHash,
-    expiresAt: expiresAt.toISOString(),
+    expiresAt: expiresAtDate.toISOString(),
     createdAt: new Date().toISOString(),
   };
-  sessions.push(newSession);
-  saveSessions(sessions);
+
+  try {
+    const sessions = loadSessions();
+    sessions.push(newSession);
+    saveSessions(sessions);
+  } catch {}
+
   return newSession;
 }
 
-export function findSessionByTokenHash(tokenHash: string): { session: StoredSession; user: StoredUser } | null {
+export async function findSessionByTokenHash(
+  tokenHash: string
+): Promise<{ session: StoredSession; user: StoredUser } | null> {
+  // 1. Primary: Query PostgreSQL Session table
+  try {
+    const dbSession = await prisma.session.findUnique({
+      where: { tokenHash },
+      include: { admin: true },
+    });
+
+    if (dbSession) {
+      if (new Date(dbSession.expiresAt) <= new Date()) {
+        await prisma.session.delete({ where: { id: dbSession.id } }).catch(() => {});
+        return null;
+      }
+      if (!dbSession.admin || !dbSession.admin.isActive) {
+        return null;
+      }
+
+      return {
+        session: {
+          id: dbSession.id,
+          userId: dbSession.adminId,
+          tokenHash: dbSession.tokenHash,
+          expiresAt: dbSession.expiresAt.toISOString(),
+          createdAt: dbSession.createdAt.toISOString(),
+        },
+        user: {
+          id: dbSession.admin.id,
+          email: dbSession.admin.email,
+          passwordHash: dbSession.admin.passwordHash,
+          displayName: dbSession.admin.displayName,
+          role: dbSession.admin.role as AdminRole,
+          isActive: dbSession.admin.isActive,
+          mustChangePassword: Boolean(dbSession.admin.mustChangePassword),
+          lastLoginAt: dbSession.admin.lastLoginAt?.toISOString(),
+          createdAt: dbSession.admin.createdAt.toISOString(),
+          updatedAt: dbSession.admin.updatedAt.toISOString(),
+        },
+      };
+    }
+  } catch (err: any) {
+    console.warn("[users-store] Database session lookup failed, checking local backup:", err?.message || err);
+  }
+
+  // 2. Fallback: Local sessions.json
   const sessions = loadSessions();
   const session = sessions.find((s) => s.tokenHash === tokenHash);
   if (!session) return null;
 
-  if (new Date(session.expiresAt) < new Date()) {
-    saveSessions(sessions.filter((s) => s.id !== session.id));
+  if (new Date(session.expiresAt) <= new Date()) {
+    deleteSessionByTokenHash(tokenHash);
     return null;
   }
 
-  const user = findUserById(session.userId);
+  const user = (await findUserById(session.userId)) || loadUsers().find((u) => u.id === session.userId);
   if (!user || !user.isActive) {
-    saveSessions(sessions.filter((s) => s.id !== session.id));
+    deleteSessionByTokenHash(tokenHash);
     return null;
   }
 
   return { session, user };
 }
 
-export function deleteSessionByTokenHash(tokenHash: string): boolean {
-  const sessions = loadSessions();
-  const remaining = sessions.filter((s) => s.tokenHash !== tokenHash);
-  const deleted = remaining.length !== sessions.length;
-  if (deleted) saveSessions(remaining);
-  return deleted;
+export async function deleteSessionByTokenHash(tokenHash: string): Promise<boolean> {
+  try {
+    await prisma.session.deleteMany({ where: { tokenHash } });
+  } catch {}
+
+  try {
+    const sessions = loadSessions();
+    const remaining = sessions.filter((s) => s.tokenHash !== tokenHash);
+    saveSessions(remaining);
+  } catch {}
+
+  return true;
 }
 
-export function revokeAllUserSessions(userId: string): number {
-  const sessions = loadSessions();
-  const remaining = sessions.filter((s) => s.userId !== userId);
-  const count = sessions.length - remaining.length;
-  if (count > 0) saveSessions(remaining);
+export async function revokeAllUserSessions(userId: string): Promise<number> {
+  let count = 0;
+  try {
+    const res = await prisma.session.deleteMany({ where: { adminId: userId } });
+    count = res.count;
+  } catch {}
+
+  try {
+    const sessions = loadSessions();
+    const remaining = sessions.filter((s) => s.userId !== userId);
+    count = Math.max(count, sessions.length - remaining.length);
+    saveSessions(remaining);
+  } catch {}
+
   return count;
 }

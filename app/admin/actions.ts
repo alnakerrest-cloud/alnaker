@@ -46,7 +46,7 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
     return { error: `محاولات كثيرة. انتظر ${attempt.retryAfterSec} ثانية ثم أعد المحاولة.` };
   }
 
-  const user = findUserByEmail(email);
+  const user = await findUserByEmail(email);
   if (!user || !user.isActive) {
     return { error: "بيانات الدخول غير صحيحة" };
   }
@@ -128,7 +128,7 @@ export async function changePasswordAction(
     return { error: "كلمة المرور الجديدة يجب أن تحتوي على حرف ورقم على الأقل" };
   }
 
-  const user = findUserById(admin.id);
+  const user = await findUserById(admin.id);
   if (!user || !(await verifyPassword(currentPassword, user.passwordHash))) {
     return { error: "كلمة المرور الحالية غير صحيحة" };
   }

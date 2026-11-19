@@ -88,15 +88,15 @@ export async function createAtomicLoginSession(
   adminId: string,
   expectedPasswordHash: string
 ): Promise<{ rawToken: string } | null> {
-  const user = findUserById(adminId);
+  const user = await findUserById(adminId);
   if (!user || !user.isActive || user.passwordHash !== expectedPasswordHash) {
     return null;
   }
 
-  touchLastLogin(adminId);
+  await touchLastLogin(adminId);
 
   const { rawToken, tokenHash, expiresAt } = generateSessionToken();
-  createStoreSession(adminId, tokenHash, expiresAt);
+  await createStoreSession(adminId, tokenHash, expiresAt);
 
   return { rawToken };
 }
@@ -109,7 +109,7 @@ export async function executeAtomicPasswordChange(
   currentPasswordHash: string,
   newPasswordHash: string
 ): Promise<{ newRawToken: string } | null> {
-  const user = findUserById(adminId);
+  const user = await findUserById(adminId);
   if (!user || !user.isActive || user.passwordHash !== currentPasswordHash) {
     return null;
   }
@@ -120,7 +120,7 @@ export async function executeAtomicPasswordChange(
   });
 
   const { rawToken, tokenHash, expiresAt } = generateSessionToken();
-  createStoreSession(adminId, tokenHash, expiresAt);
+  await createStoreSession(adminId, tokenHash, expiresAt);
 
   return { newRawToken: rawToken };
 }
@@ -136,7 +136,7 @@ export async function getSessionAdmin(): Promise<SessionAdmin | null> {
   if (!token) return null;
 
   const tokenHash = hashToken(token);
-  const result = findSessionByTokenHash(tokenHash);
+  const result = await findSessionByTokenHash(tokenHash);
   if (!result) return null;
 
   const { user } = result;
@@ -197,13 +197,13 @@ export async function destroySession(): Promise<void> {
   const token = store.get(COOKIE_NAME)?.value;
   if (token) {
     const tokenHash = hashToken(token);
-    deleteSessionByTokenHash(tokenHash);
+    await deleteSessionByTokenHash(tokenHash);
   }
   store.delete(COOKIE_NAME);
 }
 
 export async function revokeAllAdminSessions(adminId: string): Promise<number> {
-  return revokeAllUserSessions(adminId);
+  return await revokeAllUserSessions(adminId);
 }
 
 export const getAdminOrNull = getSessionAdmin;

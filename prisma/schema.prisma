@@ -50,8 +50,10 @@ enum ImportItemStatus {
 }
 
 enum AdminRole {
-  OWNER  // كل الصلاحيات: المحتوى + الإعدادات + المستخدمون + النشر
-  EDITOR // المحتوى فقط
+  OWNER        // كل الصلاحيات: المحتوى + الإعدادات + المستخدمون + النشر
+  ADMIN        // إدارة كاملة
+  EDITOR       // المحتوى فقط
+  ORDERS_STAFF // موظف إدارة وتحديث الطلبات فقط
 }
 
 model AdminUser {

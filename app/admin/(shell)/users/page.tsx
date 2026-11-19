@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AdminUsersPage() {
   const admin = await requireAdmin(["OWNER", "ADMIN"]);
-  const users = listSanitizedUsers();
+  const users = await listSanitizedUsers();
 
   return (
     <>

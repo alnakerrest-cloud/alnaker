@@ -802,6 +802,56 @@
         "id": "d901e980-5671-4942-97c4-bbf1676c8047",
         "createdAt": "2026-11-18T23:57:04.727Z",
         "updatedAt": "2026-11-18T23:57:04.727Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "c3e1453b-e37f-42ce-b76f-130f0d8dfef4",
+        "createdAt": "2026-11-19T00:27:07.236Z",
+        "updatedAt": "2026-11-19T00:27:07.236Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "logout",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل خروج: إبراهيم شعيب (مدير عام المطعم)",
+        "id": "444bfd8e-6917-4dd8-a089-975766c824f6",
+        "createdAt": "2026-11-19T00:27:27.265Z",
+        "updatedAt": "2026-11-19T00:27:27.265Z"
+      },
+      {
+        "adminId": "usr-admin-staff-002",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-staff-002",
+        "summary": "تسجيل دخول: موظف استقبال وتجهيز الطلبات (ORDERS_STAFF)",
+        "id": "2e446022-a8e2-4ee1-a337-75d975652d59",
+        "createdAt": "2026-11-19T00:27:43.669Z",
+        "updatedAt": "2026-11-19T00:27:43.669Z"
+      },
+      {
+        "adminId": "usr-admin-staff-002",
+        "action": "logout",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-staff-002",
+        "summary": "تسجيل خروج: موظف استقبال وتجهيز الطلبات",
+        "id": "fd171658-68d0-4336-94a1-50b3e0adab4c",
+        "createdAt": "2026-11-19T00:27:57.490Z",
+        "updatedAt": "2026-11-19T00:27:57.490Z"
+      },
+      {
+        "adminId": "usr-admin-staff-002",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-staff-002",
+        "summary": "تسجيل دخول: موظف استقبال وتجهيز الطلبات (ORDERS_STAFF)",
+        "id": "4e8648f6-4640-4d6c-a71d-bc0803f883a9",
+        "createdAt": "2026-11-19T00:28:00.108Z",
+        "updatedAt": "2026-11-19T00:28:00.108Z"
       }
     ],
     "OptionGroup": [

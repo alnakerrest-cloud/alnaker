@@ -66,7 +66,9 @@ export type ImportItemStatus = (typeof ImportItemStatus)[keyof typeof ImportItem
 
 export const AdminRole = {
   OWNER: 'OWNER',
-  EDITOR: 'EDITOR'
+  ADMIN: 'ADMIN',
+  EDITOR: 'EDITOR',
+  ORDERS_STAFF: 'ORDERS_STAFF'
 } as const
 
 export type AdminRole = (typeof AdminRole)[keyof typeof AdminRole]

@@ -30,7 +30,7 @@ export async function PATCH(
     const body = await request.json();
     const { displayName, role, isActive, mustChangePassword, newPassword } = body;
 
-    const existing = findUserById(id);
+    const existing = await findUserById(id);
     if (!existing) {
       return NextResponse.json({ error: "المستخدم غير موجود" }, { status: 404 });
     }
@@ -101,7 +101,7 @@ export async function DELETE(
       return NextResponse.json({ error: "لا يمكنك حذف حسابك الشخصي الحالي" }, { status: 400 });
     }
 
-    const result = deleteUser(id);
+    const result = await deleteUser(id);
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }

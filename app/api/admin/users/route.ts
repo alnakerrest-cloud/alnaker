@@ -23,7 +23,7 @@ export async function GET() {
     );
   }
 
-  const users = listSanitizedUsers();
+  const users = await listSanitizedUsers();
   return NextResponse.json({ users });
 }
 
