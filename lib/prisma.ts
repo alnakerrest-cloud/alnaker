@@ -43,12 +43,8 @@ function getClient(): PrismaClient {
   }
 
   let connectionString = process.env.DATABASE_URL || process.env["DATABASE_URL "];
-  if (!connectionString) throw new Error("DATABASE_URL is not set");
-  if (connectionString.includes("ep-withered-bread")) {
-    connectionString = connectionString.replace(
-      "ep-withered-bread-bemwq8ns-pooler.c-9.us-east-2.aws.neon.tech",
-      "ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech"
-    );
+  if (!connectionString || connectionString.includes("ep-withered-bread")) {
+    connectionString = "postgresql://neondb_owner:npg_rFT4piIsBIK-zr1bHpu47gyig7-ph9-n@ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
   }
 
   // بركة pg واحدة تُعاد استخدامها داخل نفس العملية. القيم مناسبة لـ Neon pooler على serverless.

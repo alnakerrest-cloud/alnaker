@@ -576,10 +576,7 @@ export async function POST(request: NextRequest) {
       stack: error?.stack?.split("\n").slice(0, 3).join("\n"),
     });
     return NextResponse.json(
-      { 
-        error: "حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى.",
-        details: error?.message || String(error),
-      },
+      { error: "حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى." },
       { status: 500 }
     );
   }

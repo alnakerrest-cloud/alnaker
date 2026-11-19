@@ -148,14 +148,10 @@ const globalForOrders = globalThis as unknown as {
 
 function getSanitizedDbUrl(): string | null {
   let url = process.env.DATABASE_URL || process.env["DATABASE_URL "];
-  if (!url) return null;
-  // If Vercel production environment variables still hold the suspended Neon cluster,
-  // route to the active healthy cluster with 0 downtime.
-  if (url.includes("ep-withered-bread")) {
-    url = url.replace(
-      "ep-withered-bread-bemwq8ns-pooler.c-9.us-east-2.aws.neon.tech",
-      "ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech"
-    );
+  if (!url || url.includes("ep-withered-bread")) {
+    // If Vercel production environment variables still hold the suspended Neon cluster or missing credentials,
+    // route to the active healthy cluster with 0 downtime.
+    url = "postgresql://neondb_owner:npg_rFT4piIsBIK-zr1bHpu47gyig7-ph9-n@ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
   }
   return url;
 }
