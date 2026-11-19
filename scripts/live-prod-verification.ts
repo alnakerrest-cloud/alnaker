@@ -83,7 +83,7 @@ async function verifyLive() {
     const receiptPageRes = await fetch(`${PROD_URL}/ar/receipt/${createdOrderNumber}?token=${encodeURIComponent(token)}`);
     console.log(`Receipt Page HTTP Status: ${receiptPageRes.status}`);
     const receiptHtml = await receiptPageRes.text();
-    const hasOrderNumber = createdOrderNumber ? receiptHtml.includes(createdOrderNumber) : false;
+    const hasOrderNumber = receiptHtml.includes(createdOrderNumber);
     const hasNotFound = receiptHtml.includes("الطلب غير موجود");
     const hasItemName = receiptHtml.includes("صينية الوحوش");
 
