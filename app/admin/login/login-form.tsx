@@ -17,17 +17,35 @@ export default function LoginForm() {
   const router = useRouter();
   const [state, formAction] = useActionState<LoginState, FormData>(loginAction, initialState);
 
+  // Auto-reload on deployment skew (UnrecognizedActionError / 409 Conflict)
+  useEffect(() => {
+    const handleRejection = (event: PromiseRejectionEvent) => {
+      const msg = event?.reason?.message || String(event?.reason || "");
+      if (
+        msg.includes("Server Action") ||
+        msg.includes("was not found") ||
+        msg.includes("409") ||
+        msg.includes("Failed to fetch")
+      ) {
+        console.warn("[login] Deployment skew detected, refreshing to fetch latest build manifest...");
+        window.location.reload();
+      }
+    };
+    window.addEventListener("unhandledrejection", handleRejection);
+    return () => window.removeEventListener("unhandledrejection", handleRejection);
+  }, []);
+
   useEffect(() => {
     if (state.success) {
       if (state.mustChangePassword) {
-        router.replace("/admin/change-password");
+        window.location.href = "/admin/change-password";
       } else if (state.role === "ORDERS_STAFF") {
-        router.replace("/admin/orders");
+        window.location.href = "/admin/orders";
       } else {
-        router.replace("/admin/dashboard");
+        window.location.href = "/admin/dashboard";
       }
     }
-  }, [state.success, state.mustChangePassword, state.role, router]);
+  }, [state.success, state.mustChangePassword, state.role]);
 
   return (
     <form action={formAction} className="admin-login-form">

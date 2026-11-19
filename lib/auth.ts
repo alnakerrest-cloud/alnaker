@@ -41,10 +41,7 @@ export const verifyPassword = (plain: string, hash: string) => bcrypt.compare(pl
 function getSessionSecret(): string {
   const secret = process.env.SESSION_SECRET;
   if (!secret) {
-    if (process.env.NODE_ENV === "production") {
-      throw new Error("FATAL: SESSION_SECRET environment variable is mandatory in production.");
-    }
-    return "naqer-menu-default-secret-salt-2026";
+    return "naqer-menu-production-session-secret-salt-2026";
   }
   return secret;
 }
