@@ -19,9 +19,8 @@ import {
   type AppliedOfferSnapshot
 } from "@/lib/orders-store";
 
-import { cookies } from "next/headers";
-import { signCustomerSession, verifyCustomerSession, CUSTOMER_COOKIE_NAME } from "@/lib/customer-session";
-import { getOrCreateCustomerByPhoneAsync, getCustomerByIdAsync, updateCustomerNameAsync } from "@/lib/customer-store";
+import { signCustomerSession, verifyCustomerSession, CUSTOMER_COOKIE_NAME, generateCustomerId } from "@/lib/customer-session";
+import { getOrCreateCustomerByPhoneAsync, getCustomerByIdAsync, updateCustomerNameAsync, normalizeEgyptianPhone } from "@/lib/customer-store";
 import { getCustomerAddressesAsync, createCustomerAddressAsync, createOrderNotificationAsync } from "@/lib/customer-hub-store";
 
 interface CheckoutRequest {
@@ -50,35 +49,7 @@ interface CheckoutRequest {
 }
 
 function validateEgyptianPhone(phone: string): { valid: boolean; normalized: string; error?: string } {
-  const digits = phone.replace(/\D/g, "");
-
-  if (digits.startsWith("20")) {
-    const national = digits.slice(2);
-    if (national.length !== 10) {
-      return { valid: false, normalized: digits, error: "رقم مصري غير صحيح (يجب أن يكون 10 أرقام بعد +20)" };
-    }
-    if (!/^1[0-25]\d{8}$/.test(national)) {
-      return { valid: false, normalized: digits, error: "كود شبكة مصري غير صحيح (010, 011, 012, 015)" };
-    }
-    return { valid: true, normalized: digits };
-  }
-
-  if (digits.length === 11 && digits.startsWith("01")) {
-    if (!/^01[0-25]\d{8}$/.test(digits)) {
-      return { valid: false, normalized: digits, error: "كود شبكة مصري غير صحيح (010, 011, 012, 015)" };
-    }
-    return { valid: true, normalized: "2" + digits };
-  }
-
-  if (digits.length === 10 && /^1[0-25]\d{8}$/.test(digits)) {
-    return { valid: true, normalized: "20" + digits };
-  }
-
-  return {
-    valid: false,
-    normalized: digits,
-    error: "يجب إدخال رقم هاتف مصري صحيح (مثال: 01024994092 أو +201024994092)",
-  };
+  return normalizeEgyptianPhone(phone);
 }
 
 function formatWhatsAppOrderMessage(params: {
@@ -499,27 +470,33 @@ export async function POST(request: NextRequest) {
     const finalWhatsAppUrl = `https://wa.me/${cleanWhatsAppPhone}?text=${encodeURIComponent(finalWhatsAppMsg)}`;
 
     // 6. Resolve / Create persistent Customer Identity
-    const cookieStore = await cookies();
-    const existingCookie = cookieStore.get(CUSTOMER_COOKIE_NAME)?.value;
+    const cookieToken = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
+    const authHeader = request.headers.get("authorization");
+    const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
+    const existingCookie = cookieToken || bearerToken;
     const existingSession = verifyCustomerSession(existingCookie);
 
     const cleanCustomerName = customerName ? customerName.slice(0, 100).trim() : undefined;
 
-    let customerRecord;
-    if (existingSession && existingSession.phoneNormalized === normalizedPhone) {
-      customerRecord = await getCustomerByIdAsync(existingSession.customerId);
+    let customerRecord: any = null;
+    try {
+      if (existingSession && existingSession.phoneNormalized === normalizedPhone) {
+        customerRecord = await getCustomerByIdAsync(existingSession.customerId);
+      }
+      if (!customerRecord) {
+        customerRecord = await getOrCreateCustomerByPhoneAsync(
+          normalizedPhone,
+          cleanCustomerName,
+          existingSession?.customerId
+        );
+      } else if (cleanCustomerName && (!customerRecord.name || customerRecord.name !== cleanCustomerName)) {
+        await updateCustomerNameAsync(customerRecord.id, cleanCustomerName);
+        customerRecord.name = cleanCustomerName;
+      }
+    } catch (custErr) {
+      console.warn("[checkout] Customer resolve warning:", custErr);
     }
-    if (!customerRecord) {
-      customerRecord = await getOrCreateCustomerByPhoneAsync(
-        normalizedPhone,
-        cleanCustomerName,
-        existingSession?.customerId
-      );
-    } else if (cleanCustomerName && (!customerRecord.name || customerRecord.name !== cleanCustomerName)) {
-      await updateCustomerNameAsync(customerRecord.id, cleanCustomerName);
-      customerRecord.name = cleanCustomerName;
-    }
-    const resolvedCustomerId = customerRecord.id;
+    const resolvedCustomerId = customerRecord?.id || generateCustomerId(normalizedPhone);
 
     // 7. Create and DURABLY AWAIT order commit to database
     const clientIp = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "127.0.0.1";

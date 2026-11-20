@@ -4,7 +4,6 @@
 // ==============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import {
   CUSTOMER_COOKIE_NAME,
   verifyCustomerSession,
@@ -22,8 +21,7 @@ const TERMINAL_STATUSES: OrderStatus[] = ["COMPLETED", "REJECTED", "CANCELLED", 
 
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const cookieToken = cookieStore.get(CUSTOMER_COOKIE_NAME)?.value;
+    const cookieToken = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
     const authHeader = request.headers.get("authorization");
     const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
 

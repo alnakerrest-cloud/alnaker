@@ -117,7 +117,7 @@ export default function CheckoutModal({
       } catch {}
 
       // 2. Fetch authenticated customer profile from Server (Single Source of Truth)
-      fetch('/api/customer/hub')
+      fetch('/api/customer/hub', { credentials: 'include' })
         .then((res) => (res.ok ? res.json() : null))
         .then((hubData) => {
           if (hubData?.authenticated && hubData.customer) {
@@ -135,7 +135,7 @@ export default function CheckoutModal({
         .catch(() => {});
 
       // 3. Fetch saved customer delivery addresses
-      fetch('/api/customer/addresses')
+      fetch('/api/customer/addresses', { credentials: 'include' })
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
           if (data && data.addresses && Array.isArray(data.addresses) && data.addresses.length > 0) {
@@ -199,8 +199,10 @@ export default function CheckoutModal({
       if (!customerPhone.trim()) {
         newErrors.customerPhone = isAr ? 'رقم الهاتف مطلوب' : 'Phone number is required';
       } else {
-        // Egyptian phone validation
-        const digits = customerPhone.replace(/\D/g, '');
+        // Egyptian phone validation with Eastern Arabic digits support
+        const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+        const western = customerPhone.replace(/[٠-٩]/g, (w) => String(arabicDigits.indexOf(w)));
+        const digits = western.replace(/\D/g, '');
         let valid = false;
         if (digits.startsWith('20')) {
           const national = digits.slice(2);
@@ -272,6 +274,7 @@ export default function CheckoutModal({
       
       const response = await fetch('/api/checkout', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           locale,

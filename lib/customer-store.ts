@@ -62,8 +62,18 @@ export async function ensureCustomerTableAsync(): Promise<void> {
   await tableInitPromise;
 }
 
+export function convertArabicIndicDigits(str: string): string {
+  if (!str) return "";
+  const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+  return str.replace(/[٠-٩]/g, (w) => String(arabicDigits.indexOf(w)));
+}
+
 export function normalizeEgyptianPhone(phone: string): { valid: boolean; normalized: string; error?: string } {
-  const digits = phone.replace(/\D/g, "");
+  if (!phone || typeof phone !== "string") {
+    return { valid: false, normalized: "", error: "رقم الهاتف مطلوب" };
+  }
+  const cleanPhone = convertArabicIndicDigits(phone.trim());
+  const digits = cleanPhone.replace(/\D/g, "");
 
   if (digits.startsWith("20")) {
     const national = digits.slice(2);
@@ -188,17 +198,21 @@ export async function getOrCreateCustomerByPhoneAsync(
     return existing;
   }
 
-  // 2. فحص إذا كان موجوداً بالـ preferredId
+  // 2. فحص إذا كان موجوداً بالـ preferredId ومطابق لنفس الهاتف
   if (preferredId) {
     const existingById = await getCustomerByIdAsync(preferredId);
-    if (existingById) {
+    if (existingById && existingById.phone === normalized) {
+      if (name && (!existingById.name || existingById.name !== name)) {
+        await updateCustomerNameAsync(existingById.id, name);
+        existingById.name = name;
+      }
       return existingById;
     }
   }
 
   // 3. إنشاء عميل جديد بهوية دائمة ثابتة
   const now = new Date().toISOString();
-  const newId = preferredId && preferredId.startsWith("cust_") ? preferredId : generatePersistentCustomerId();
+  const newId = generatePersistentCustomerId();
   const newRecord: CustomerRecord = {
     id: newId,
     phone: normalized,

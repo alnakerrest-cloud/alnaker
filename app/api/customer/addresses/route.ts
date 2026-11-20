@@ -5,7 +5,6 @@
 // ==============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import {
   CUSTOMER_COOKIE_NAME,
   verifyCustomerSession,
@@ -23,9 +22,8 @@ import {
 
 export const dynamic = "force-dynamic";
 
-async function getAuthorizedCustomer(request: NextRequest): Promise<{ customerId: string; phoneNormalized: string } | null> {
-  const cookieStore = await cookies();
-  const cookieToken = cookieStore.get(CUSTOMER_COOKIE_NAME)?.value;
+function getAuthorizedCustomer(request: NextRequest): { customerId: string; phoneNormalized: string; customerName?: string } | null {
+  const cookieToken = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
   const authHeader = request.headers.get("authorization");
   const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
@@ -33,21 +31,19 @@ async function getAuthorizedCustomer(request: NextRequest): Promise<{ customerId
   const session = verifyCustomerSession(token);
   if (!session) return null;
 
-  try {
-    const cust = await ensureCustomerSessionRecordAsync(session);
-    return { customerId: cust.id, phoneNormalized: cust.phone };
-  } catch (err) {
-    console.warn("[customer-addresses-api] ensureCustomerSessionRecordAsync error:", err);
-    return { customerId: session.customerId, phoneNormalized: session.phoneNormalized };
-  }
+  return { customerId: session.customerId, phoneNormalized: session.phoneNormalized, customerName: session.customerName };
 }
 
 export async function GET(request: NextRequest) {
   try {
-    const auth = await getAuthorizedCustomer(request);
+    const auth = getAuthorizedCustomer(request);
     if (!auth) {
-      return NextResponse.json({ error: "غير مصرح به." }, { status: 401 });
+      // Guest or anonymous visitor without session: gracefully return empty addresses with 200 OK
+      return NextResponse.json({ success: true, addresses: [] }, { status: 200 });
     }
+
+    // Ensure customer DB record exists in background
+    ensureCustomerSessionRecordAsync(auth).catch(() => {});
 
     const addresses = await getCustomerAddressesAsync(auth.customerId);
     return NextResponse.json({ success: true, addresses });
@@ -59,10 +55,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = await getAuthorizedCustomer(request);
+    const auth = getAuthorizedCustomer(request);
     if (!auth) {
       return NextResponse.json({ error: "غير مصرح به." }, { status: 401 });
     }
+
+    const cust = await ensureCustomerSessionRecordAsync(auth);
 
     const body = await request.json().catch(() => ({}));
     const { label, city, area, street, building, floor, apartment, notes, isDefault } = body;
@@ -74,7 +72,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "تفاصيل الشارع والمنطقة مطلوبة." }, { status: 400 });
     }
 
-    const address = await createCustomerAddressAsync(auth.customerId, {
+    const address = await createCustomerAddressAsync(cust.id, {
       label: label.slice(0, 50),
       city: typeof city === "string" ? city.slice(0, 100) : undefined,
       area: typeof area === "string" ? area.slice(0, 100) : undefined,
@@ -95,7 +93,7 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const auth = await getAuthorizedCustomer(request);
+    const auth = getAuthorizedCustomer(request);
     if (!auth) {
       return NextResponse.json({ error: "غير مصرح به." }, { status: 401 });
     }
@@ -129,7 +127,7 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const auth = await getAuthorizedCustomer(request);
+    const auth = getAuthorizedCustomer(request);
     if (!auth) {
       return NextResponse.json({ error: "غير مصرح به." }, { status: 401 });
     }

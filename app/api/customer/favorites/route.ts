@@ -5,7 +5,6 @@
 // ==============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import {
   CUSTOMER_COOKIE_NAME,
   verifyCustomerSession,
@@ -19,9 +18,8 @@ import {
 
 export const dynamic = "force-dynamic";
 
-async function getAuthorizedCustomerId(request: NextRequest): Promise<string | null> {
-  const cookieStore = await cookies();
-  const cookieToken = cookieStore.get(CUSTOMER_COOKIE_NAME)?.value;
+function getAuthorizedCustomerId(request: NextRequest): string | null {
+  const cookieToken = request.cookies.get(CUSTOMER_COOKIE_NAME)?.value;
   const authHeader = request.headers.get("authorization");
   const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
 

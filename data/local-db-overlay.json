@@ -1927,6 +1927,37 @@
         },
         "createdAt": "2026-11-19T17:40:49.514Z",
         "updatedAt": "2026-11-19T17:40:49.514Z"
+      },
+      {
+        "id": "2c108c4d-db8a-44e5-abc3-6c1ed3927b60",
+        "orderNumber": "ORD-20261120-CE927E",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "فحص الإنتاج",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "ss",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "idempotencyKey": "checkout-1795187396383-66144fjn",
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:10:00.891Z",
+        "updatedAt": "2026-11-20T15:10:00.891Z"
       }
     ]
   },
