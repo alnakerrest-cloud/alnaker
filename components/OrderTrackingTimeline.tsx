@@ -2,6 +2,16 @@
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
 import type { OrderStatus, OrderAuditEntry } from '@/lib/orders-store';
+import {
+  getArabicLabel,
+  getEnglishLabel,
+  getArabicDescription,
+  getEnglishDescription,
+  getEventMapping,
+  isWhatsAppEvent,
+  doesEventImplyOrderAcceptance,
+  ORDER_EVENTS,
+} from '@/lib/order-events';
 
 interface OrderStatusResponse {
   orderNumber: string;
@@ -340,9 +350,9 @@ export default function OrderTrackingTimeline({
                 border: `1.5px solid ${
                   isCurrent
                     ? 'var(--gold, #c98f2b)'
-                    : isDone
-                    ? 'var(--line, #e9d9be)'
-                    : 'var(--line, #e9d9be)'
+                  : isDone
+                  ? 'var(--line, #e9d9be)'
+                  : 'var(--line, #e9d9be)'
                 }`,
                 transition: 'all 0.2s ease',
                 position: 'relative',
@@ -420,34 +430,90 @@ export default function OrderTrackingTimeline({
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {data.timeline.map((entry, idx) => (
-              <div
-                key={idx}
-                style={{
-                  display: 'flex',
-                  alignItems: 'baseline',
-                  justifyContent: 'space-between',
-                  fontSize: '12px',
-                  padding: '6px 10px',
-                  background: 'var(--bg-2, #f3e6cf)',
-                  borderRadius: '6px',
-                  borderRight: isAr ? '3px solid var(--brand, #5c2a26)' : 'none',
-                  borderLeft: !isAr ? '3px solid var(--brand, #5c2a26)' : 'none',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <strong style={{ color: 'var(--brand-deep, #43201d)' }}>{entry.action}</strong>
-                  {entry.note && <span style={{ color: 'var(--muted, #7c6a5f)' }}>({entry.note})</span>}
+            {data.timeline.map((entry, idx) => {
+              const mapping = getEventMapping(entry.action);
+              const isWhatsApp = isWhatsAppEvent(entry.action);
+              const impliesAcceptance = doesEventImplyOrderAcceptance(entry.action);
+
+              // Get customer-facing labels
+              const arabicLabel = getArabicLabel(entry.action);
+              const englishLabel = getEnglishLabel(entry.action);
+              const arabicDesc = getArabicDescription(entry.action);
+              const englishDesc = getEnglishDescription(entry.action);
+
+              // Determine display label: use Arabic label if available, otherwise fall back to raw action
+              const displayLabel =
+                arabicLabel !== 'حدث order' ? arabicLabel : entry.action;
+
+              // Determine description: use mapped description if available, otherwise fall back
+              const displayDesc =
+                arabicDesc || englishDesc
+                  ? isAr
+                    ? arabicDesc || englishDesc
+                    : englishDesc || arabicDesc
+                  : entry.note
+                  ? isAr
+                  ? entry.note
+                  : entry.note
+                  : undefined;
+
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'baseline',
+                    justifyContent: 'space-between',
+                    fontSize: '12px',
+                    padding: '6px 10px',
+                    background: 'var(--bg-2, #f3e6cf)',
+                    borderRadius: '6px',
+                    borderRight: isAr ? '3px solid var(--brand, #5c2a26)' : 'none',
+                    borderLeft: !isAr ? '3px solid var(--brand, #5c2a26)' : 'none',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {/* WhatsApp icon for communication events */}
+                    {isWhatsApp && (
+                      <span
+                        style={{
+                          width: '14px',
+                          height: '14px',
+                          borderRadius: '50%',
+                          background: '#7c3aud',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '11px',
+                          color: '#fff',
+                          flexShrink: 0,
+                        }}
+                      >
+                        ✉︎
+                      </span>
+                    )}
+
+                    <strong style={{ color: 'var(--brand-deep, #43201d)' }}>
+                      {displayLabel}
+                    </strong>
+                    {entry.note && (
+                      <span style={{ color: 'var(--muted, #7c6a5f)' }}>
+                        {isAr
+                          ? `(${entry.note})`
+                          : ` (${entry.note})`}
+                      </span>
+                    )}
+                  </div>
+                  <span style={{ color: 'var(--muted, #7c6a5f)', fontFamily: 'monospace', fontSize: '11px' }}>
+                    {new Date(entry.timestamp).toLocaleTimeString(isAr ? 'ar-EG' : 'en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                    })}
+                  </span>
                 </div>
-                <span style={{ color: 'var(--muted, #7c6a5f)', fontFamily: 'monospace', fontSize: '11px' }}>
-                  {new Date(entry.timestamp).toLocaleTimeString(isAr ? 'ar-EG' : 'en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                  })}
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

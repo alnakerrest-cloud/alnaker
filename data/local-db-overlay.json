@@ -956,6 +956,206 @@
         "id": "e7c286b7-8b86-46d5-8a79-1359c89bf52e",
         "createdAt": "2026-11-19T17:52:53.004Z",
         "updatedAt": "2026-11-19T17:52:53.004Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "beaeb59e-2337-4835-8968-5dd90b619916",
+        "createdAt": "2026-11-20T23:26:19.524Z",
+        "updatedAt": "2026-11-20T23:26:19.524Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "f9764cef-4f65-4a6b-858b-72a5100c486f",
+        "createdAt": "2026-11-20T23:26:26.373Z",
+        "updatedAt": "2026-11-20T23:26:26.373Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cf687e90-ffe7-441a-934f-fc0af0818391",
+        "summary": "تغيير حالة الطلب ORD-20261121-540DBF من RECEIVED إلى RECEIVED",
+        "changes": {
+          "before": {
+            "status": "RECEIVED"
+          },
+          "after": {
+            "status": "RECEIVED"
+          }
+        },
+        "id": "7bf59544-0acb-447b-bdc1-c5d718ca4fff",
+        "createdAt": "2026-11-20T23:27:01.925Z",
+        "updatedAt": "2026-11-20T23:27:01.925Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cf687e90-ffe7-441a-934f-fc0af0818391",
+        "summary": "تغيير حالة الطلب ORD-20261121-540DBF من CONFIRMED إلى CONFIRMED",
+        "changes": {
+          "before": {
+            "status": "CONFIRMED"
+          },
+          "after": {
+            "status": "CONFIRMED"
+          }
+        },
+        "id": "18189ce5-6952-414f-8afa-4bc3d6052e65",
+        "createdAt": "2026-11-20T23:27:13.017Z",
+        "updatedAt": "2026-11-20T23:27:13.017Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cf687e90-ffe7-441a-934f-fc0af0818391",
+        "summary": "تغيير حالة الطلب ORD-20261121-540DBF من PREPARING إلى PREPARING",
+        "changes": {
+          "before": {
+            "status": "PREPARING"
+          },
+          "after": {
+            "status": "PREPARING"
+          }
+        },
+        "id": "0bd07ef5-063c-4e36-acd7-42cf367d7403",
+        "createdAt": "2026-11-20T23:27:35.969Z",
+        "updatedAt": "2026-11-20T23:27:35.969Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cf687e90-ffe7-441a-934f-fc0af0818391",
+        "summary": "تغيير حالة الطلب ORD-20261121-540DBF من READY إلى READY",
+        "changes": {
+          "before": {
+            "status": "READY"
+          },
+          "after": {
+            "status": "READY"
+          }
+        },
+        "id": "9b5c2ff2-7e61-46e8-9272-2709b5077a13",
+        "createdAt": "2026-11-20T23:27:43.856Z",
+        "updatedAt": "2026-11-20T23:27:43.856Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cf687e90-ffe7-441a-934f-fc0af0818391",
+        "summary": "تغيير حالة الطلب ORD-20261121-540DBF من OUT_FOR_DELIVERY إلى OUT_FOR_DELIVERY",
+        "changes": {
+          "before": {
+            "status": "OUT_FOR_DELIVERY"
+          },
+          "after": {
+            "status": "OUT_FOR_DELIVERY"
+          }
+        },
+        "id": "9390378f-664d-4a95-a200-5a4053d57f8a",
+        "createdAt": "2026-11-20T23:27:49.596Z",
+        "updatedAt": "2026-11-20T23:27:49.596Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "cf687e90-ffe7-441a-934f-fc0af0818391",
+        "summary": "تغيير حالة الطلب ORD-20261121-540DBF من COMPLETED إلى COMPLETED",
+        "changes": {
+          "before": {
+            "status": "COMPLETED"
+          },
+          "after": {
+            "status": "COMPLETED"
+          }
+        },
+        "id": "ba1606ca-4e91-4a1d-9c66-76a765c76bff",
+        "createdAt": "2026-11-20T23:27:55.768Z",
+        "updatedAt": "2026-11-20T23:27:55.768Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "e0cb00a7-90ac-4151-a6b4-f8d361d573bc",
+        "summary": "تغيير حالة الطلب ORD-20261121-2B4059 من RECEIVED إلى RECEIVED",
+        "changes": {
+          "before": {
+            "status": "RECEIVED"
+          },
+          "after": {
+            "status": "RECEIVED"
+          }
+        },
+        "id": "79839105-ee9f-4734-9ebb-67ed7941565b",
+        "createdAt": "2026-11-20T23:51:13.134Z",
+        "updatedAt": "2026-11-20T23:51:13.134Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "e0cb00a7-90ac-4151-a6b4-f8d361d573bc",
+        "summary": "تغيير حالة الطلب ORD-20261121-2B4059 من CONFIRMED إلى CONFIRMED",
+        "changes": {
+          "before": {
+            "status": "CONFIRMED"
+          },
+          "after": {
+            "status": "CONFIRMED"
+          }
+        },
+        "id": "9b184f23-dc9a-49cd-a4a1-732902228524",
+        "createdAt": "2026-11-20T23:51:23.257Z",
+        "updatedAt": "2026-11-20T23:51:23.257Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "e0cb00a7-90ac-4151-a6b4-f8d361d573bc",
+        "summary": "تغيير حالة الطلب ORD-20261121-2B4059 من PREPARING إلى PREPARING",
+        "changes": {
+          "before": {
+            "status": "PREPARING"
+          },
+          "after": {
+            "status": "PREPARING"
+          }
+        },
+        "id": "ef691c93-f696-4125-8937-358487216e5b",
+        "createdAt": "2026-11-20T23:51:31.462Z",
+        "updatedAt": "2026-11-20T23:51:31.462Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "e0cb00a7-90ac-4151-a6b4-f8d361d573bc",
+        "summary": "تغيير حالة الطلب ORD-20261121-2B4059 من READY إلى READY",
+        "changes": {
+          "before": {
+            "status": "READY"
+          },
+          "after": {
+            "status": "READY"
+          }
+        },
+        "id": "c7f97ca8-2cec-4634-ad4b-333af1a2c31b",
+        "createdAt": "2026-11-20T23:51:48.346Z",
+        "updatedAt": "2026-11-20T23:51:48.346Z"
       }
     ],
     "OptionGroup": [
@@ -2849,6 +3049,98 @@
         },
         "createdAt": "2026-11-20T19:08:11.832Z",
         "updatedAt": "2026-11-20T19:08:11.832Z"
+      },
+      {
+        "id": "e9673961-609f-4c88-ab84-329a63fa898f",
+        "orderNumber": "ORD-20261121-60A202",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "اسم تجريبي",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "شارع التحلية، الرياض",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "items": {
+          "create": [
+            {
+              "id": "e9673961-609f-4c88-ab84-329a63fa898f:item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T23:05:42.481Z",
+        "updatedAt": "2026-11-20T23:05:42.481Z"
+      },
+      {
+        "id": "cf687e90-ffe7-441a-934f-fc0af0818391",
+        "orderNumber": "ORD-20261121-540DBF",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "اسم تجريبي",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "ss",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "idempotencyKey": "checkout-1795216975990-fb1ss53n",
+        "items": {
+          "create": [
+            {
+              "id": "cf687e90-ffe7-441a-934f-fc0af0818391:item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T23:22:57.125Z",
+        "updatedAt": "2026-11-20T23:22:57.125Z"
+      },
+      {
+        "id": "e0cb00a7-90ac-4151-a6b4-f8d361d573bc",
+        "orderNumber": "ORD-20261121-2B4059",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CARD",
+        "customerName": "اسم تجريبي",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "دمياط الجديده، حي الجامعه، مسجد، عمارة 11، دور 2، شقة 2222",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1950,
+        "totalDiscount": 0,
+        "total": 1980,
+        "idempotencyKey": "checkout-1795218558625-qstduubq",
+        "items": {
+          "create": [
+            {
+              "id": "e0cb00a7-90ac-4151-a6b4-f8d361d573bc:item-c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0-0-0",
+              "productId": "c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0",
+              "productName": "صينية الصحاب",
+              "baseUnitPrice": 1950,
+              "selectedOptions": [],
+              "unitPrice": 1950,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T23:49:21.724Z",
+        "updatedAt": "2026-11-20T23:49:21.724Z"
       }
     ]
   },

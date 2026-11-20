@@ -13,7 +13,7 @@ export type Branch = {
 
 export const branches: Branch[] = [
   {
-    id: 'gamasa',
+    id: '7fa2be20-67bd-4060-a83a-81ded2550018',
     name: { ar: 'فرع جمصة', en: 'Gamasa Branch' },
     address: {
       ar: 'الطريق الدولي الساحلي، أمام جامعة الدلتا',
@@ -23,7 +23,7 @@ export const branches: Branch[] = [
     mapQuery: 'Al Naqer Village International Coastal Road Gamasa Egypt',
   },
   {
-    id: 'damietta',
+    id: '6d6528bd-dbd4-4672-aa5f-953063d3a36e',
     name: { ar: 'فرع دمياط الجديدة', en: 'New Damietta Branch' },
     address: { ar: 'مول هادي الجديدة', en: 'Hady Mall' },
     city: { ar: 'دمياط الجديدة، مصر', en: 'New Damietta, Egypt' },

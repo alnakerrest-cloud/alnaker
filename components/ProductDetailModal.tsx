@@ -639,6 +639,7 @@ export default function ProductDetailModal({
               type="button"
               className={`btn-add-cart${actionDone ? ' added' : ''}`}
               onClick={handleAction}
+              disabled={!actionDone && Object.keys(validationErrors).length > 0}
             >
               {actionDone ? (
                 <>
