@@ -5,11 +5,12 @@ import JsonLd from '@/components/JsonLd';
 import MenuView from '@/components/MenuView';
 import LiveSync from '@/components/LiveSync';
 import ViewOnlyNoticeBanner from '@/components/ViewOnlyNoticeBanner';
+import MenuSuspendedView from '@/components/MenuSuspendedView';
 import { isLocale } from '@/lib/i18n';
 import { getMenuForLocale } from '@/lib/menu-db';
 import { getSiteData } from '@/lib/site-db';
 import { getActiveOffers } from '@/lib/offers-db';
-import { getMenuSettings, getMostOrderedProductStats } from '@/lib/orders-store';
+import { getMenuSettingsAsync, getMostOrderedProductStats } from '@/lib/orders-store';
 
 // The menu and the site chrome (hero/footer/branches/phone/settings) now come from Neon. Admin
 // writes call revalidatePath('/ar'|'/en') for instant updates; this timer is the safety net so the
@@ -24,9 +25,21 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
     getMenuForLocale(locale),
     getSiteData(locale),
     getActiveOffers(locale),
-    Promise.resolve(getMenuSettings()),
+    getMenuSettingsAsync(),
     Promise.resolve(getMostOrderedProductStats()),
   ]);
+
+  if (menuSettings.mode === 'TEMPORARILY_CLOSED') {
+    return (
+      <>
+        <JsonLd locale={locale} site={site} />
+        <Hero locale={locale} site={site} />
+        <MenuSuspendedView locale={locale} site={site} settings={menuSettings} />
+        <Footer locale={locale} site={site} />
+        <LiveSync />
+      </>
+    );
+  }
 
   return (
     <>

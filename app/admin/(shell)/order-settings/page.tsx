@@ -1,5 +1,5 @@
 import { requireAdmin } from "@/lib/auth";
-import { getMenuSettings } from "@/lib/orders-store";
+import { getMenuSettingsAsync } from "@/lib/orders-store";
 import { getSiteData } from "@/lib/site-db";
 import OrderSettingsClient from "@/components/admin/OrderSettingsClient";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminOrderSettingsPage() {
   await requireAdmin(["OWNER", "ADMIN"]);
 
-  const settings = getMenuSettings();
+  const settings = await getMenuSettingsAsync();
   const siteData = await getSiteData("ar");
 
   const branches = siteData.branches.map((b) => ({

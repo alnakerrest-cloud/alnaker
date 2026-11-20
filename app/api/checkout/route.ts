@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import { getMenuForLocale } from "@/lib/menu-db";
 import { getSiteData } from "@/lib/site-db";
@@ -10,7 +11,8 @@ import {
   generateOrderNumber,
   generateVerificationToken,
   generateVerificationCode,
-  getMenuSettings, 
+  getMenuSettings,
+  getMenuSettingsAsync,
   REASON_PRESETS,
   type OrderType, 
   type PaymentMethod,
@@ -166,7 +168,7 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // 1. Check Menu Operating Mode
-    const menuSettings = getMenuSettings();
+    const menuSettings = await getMenuSettingsAsync();
     if (menuSettings.mode === "VIEW_ONLY") {
       const isEn = locale === "en";
       const title = isEn
@@ -189,16 +191,34 @@ export async function POST(request: NextRequest) {
           message: msg,
           reason: reasonLabel,
           expectedResumeAt: menuSettings.expectedResumeAt || undefined,
-          code: "VIEW_ONLY_MODE",
+          code: "VIEW_ONLY",
         },
         { status: 403 }
       );
     }
     if (menuSettings.mode === "TEMPORARILY_CLOSED") {
+      const isEn = locale === "en";
+      const title = isEn
+        ? menuSettings.noticeTitleEn || "Restaurant Temporarily Closed"
+        : menuSettings.noticeTitleAr || "المطعم مغلق مؤقتاً";
+      const msg = isEn
+        ? menuSettings.closureMessageEn || menuSettings.noticeMessageEn || "We are currently not accepting orders."
+        : menuSettings.closureMessageAr || menuSettings.noticeMessageAr || "نعتذر عن استقبال الطلبات في الوقت الحالي.";
+      const reasonLabel =
+        menuSettings.reasonCode && REASON_PRESETS[menuSettings.reasonCode]
+          ? isEn
+            ? REASON_PRESETS[menuSettings.reasonCode].labelEn
+            : REASON_PRESETS[menuSettings.reasonCode].labelAr
+          : "";
+
       return NextResponse.json(
         {
-          error: locale === "en" ? menuSettings.closureMessageEn : menuSettings.closureMessageAr,
-          code: "TEMPORARILY_CLOSED",
+          error: `${title}: ${msg}${reasonLabel ? ` (${isEn ? "Reason" : "السبب"}: ${reasonLabel})` : ""}`,
+          title,
+          message: msg,
+          reason: reasonLabel,
+          expectedResumeAt: menuSettings.expectedResumeAt || undefined,
+          code: "MENU_CLOSED",
         },
         { status: 403 }
       );
@@ -653,13 +673,17 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error: any) {
-    console.error("[checkout] Error creating order:", {
+    const errorId = `err_${crypto.randomUUID().slice(0, 8)}`;
+    console.error(`[checkout][${errorId}] Error creating order:`, {
       message: error?.message || String(error),
       name: error?.name,
       stack: error?.stack?.split("\n").slice(0, 3).join("\n"),
     });
     return NextResponse.json(
-      { error: "حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى." },
+      { 
+        error: "حدث خطأ أثناء معالجة الطلب. يرجى المحاولة مرة أخرى.",
+        errorId,
+      },
       { status: 500 }
     );
   }

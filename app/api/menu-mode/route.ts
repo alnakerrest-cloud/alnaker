@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import { getMenuSettings } from "@/lib/orders-store";
+import { getMenuSettingsAsync } from "@/lib/orders-store";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const settings = getMenuSettings();
+    const settings = await getMenuSettingsAsync();
     return NextResponse.json({
       mode: settings.mode,
       closureMessageAr: settings.closureMessageAr,

@@ -1958,6 +1958,339 @@
         },
         "createdAt": "2026-11-20T15:10:00.891Z",
         "updatedAt": "2026-11-20T15:10:00.891Z"
+      },
+      {
+        "id": "b8896b69-392c-4044-a84e-ef6099aec79e",
+        "orderNumber": "ORD-20261120-AAD92D",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "ضيف تجربة",
+        "customerPhone": "201019998811",
+        "deliveryAddress": "شارع 15 - عمارة 4",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:33:46.415Z",
+        "updatedAt": "2026-11-20T15:33:46.415Z"
+      },
+      {
+        "id": "f011dc3a-8d83-4724-bf01-28f0b139da7a",
+        "orderNumber": "ORD-20261120-9D6DCF",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "ابراهيم شعيب",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "شارع البحر",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:33:47.904Z",
+        "updatedAt": "2026-11-20T15:33:47.904Z"
+      },
+      {
+        "id": "c87572af-ca7c-4564-9d8f-147af64f6d49",
+        "orderNumber": "ORD-20261120-360207",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "فحص التكرار",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "شارع الجمهورية",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "idempotencyKey": "idemp_test_1795188828067",
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:33:48.683Z",
+        "updatedAt": "2026-11-20T15:33:48.683Z"
+      },
+      {
+        "id": "c87572af-ca7c-4564-9d8f-147af64f6d49",
+        "orderNumber": "ORD-20261120-360207",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "فحص التكرار",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "شارع الجمهورية",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "idempotencyKey": "idemp_test_1795188828067",
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:33:48.846Z",
+        "updatedAt": "2026-11-20T15:33:48.846Z"
+      },
+      {
+        "id": "d15f8cd5-fb75-4c7e-a5a4-7d7f6f60bc50",
+        "orderNumber": "ORD-20261120-A08CD4",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "فحص الإنتاج",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "ss",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:33:49.811Z",
+        "updatedAt": "2026-11-20T15:33:49.811Z"
+      },
+      {
+        "id": "c3a71dbd-43c7-4804-a9d3-23932c851b91",
+        "orderNumber": "ORD-20261120-586614",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل نشط",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2100,
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:36:13.558Z",
+        "updatedAt": "2026-11-20T15:36:13.558Z"
+      },
+      {
+        "id": "6d276266-45c3-44e1-866f-eaa1fe06833b",
+        "orderNumber": "ORD-20261120-7AAE9B",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "ضيف تجربة",
+        "customerPhone": "201019998811",
+        "deliveryAddress": "شارع 15 - عمارة 4",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:36:31.027Z",
+        "updatedAt": "2026-11-20T15:36:31.027Z"
+      },
+      {
+        "id": "0cf73c6d-3c79-45ea-b0de-85acccd29d89",
+        "orderNumber": "ORD-20261120-47D74E",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "ابراهيم شعيب",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "شارع البحر",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:36:32.512Z",
+        "updatedAt": "2026-11-20T15:36:32.512Z"
+      },
+      {
+        "id": "a29ed519-73c9-4fbe-bfa2-2c000f4d2f05",
+        "orderNumber": "ORD-20261120-E5DBEC",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "فحص التكرار",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "شارع الجمهورية",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "idempotencyKey": "idemp_test_1795188992675",
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:36:33.265Z",
+        "updatedAt": "2026-11-20T15:36:33.265Z"
+      },
+      {
+        "id": "a29ed519-73c9-4fbe-bfa2-2c000f4d2f05",
+        "orderNumber": "ORD-20261120-E5DBEC",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "فحص التكرار",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "شارع الجمهورية",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "idempotencyKey": "idemp_test_1795188992675",
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:36:33.418Z",
+        "updatedAt": "2026-11-20T15:36:33.418Z"
+      },
+      {
+        "id": "b62c73be-d514-4d13-bf28-b6e072860bbf",
+        "orderNumber": "ORD-20261120-FF58B0",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "فحص الإنتاج",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "ss",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "items": {
+          "create": [
+            {
+              "id": "item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-20T15:36:34.040Z",
+        "updatedAt": "2026-11-20T15:36:34.040Z"
       }
     ]
   },

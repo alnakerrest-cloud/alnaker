@@ -18,7 +18,7 @@ import { getOrdersByCustomerPhoneAsync, type OrderRecord } from '@/lib/orders-st
 import { getMenuForLocale } from '@/lib/menu-db';
 import { getSiteData } from '@/lib/site-db';
 import { getActiveOffers } from '@/lib/offers-db';
-import { getMenuSettings } from '@/lib/orders-store';
+import { getMenuSettingsAsync } from '@/lib/orders-store';
 import { CartProvider } from '@/components/CartContext';
 import CustomerHubClient from '@/components/CustomerHubClient';
 
@@ -53,7 +53,7 @@ export default async function AccountPage({ params, searchParams }: AccountPageP
     getMenuForLocale(locale as Locale),
     getSiteData(locale as Locale),
     getActiveOffers(locale as Locale),
-    Promise.resolve(getMenuSettings()),
+    getMenuSettingsAsync(),
   ]);
 
   let customerData = undefined;

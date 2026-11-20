@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { requireAdmin } from "@/lib/auth";
-import { getMenuSettings, updateMenuSettings, type MenuModeSettings } from "@/lib/orders-store";
+import { getMenuSettingsAsync, updateMenuSettingsAsync, type MenuModeSettings } from "@/lib/orders-store";
 import { getSiteData } from "@/lib/site-db";
 import { logAction } from "@/lib/audit";
 
@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   try {
     const admin = await requireAdmin(["OWNER", "ADMIN"]);
-    const settings = getMenuSettings();
+    const settings = await getMenuSettingsAsync();
     const siteData = await getSiteData("ar");
 
     return NextResponse.json({
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "وضع تشغيل غير صالح." }, { status: 400 });
     }
 
-    const updated = updateMenuSettings({
+    const updated = await updateMenuSettingsAsync({
       ...body,
       updatedAt: new Date().toISOString(),
       updatedBy: admin.displayName || admin.email,

@@ -5,9 +5,9 @@
     "verificationToken": "b0b018d546d2a5ce30f9c7ff50fb0cd9",
     "verificationCode": "NQR-1894",
     "createdAt": "2026-11-20T15:09:59.579Z",
-    "updatedAt": "2026-11-20T15:09:59.579Z",
+    "updatedAt": "2026-11-20T15:42:33.773Z",
     "expiresAt": "2026-11-20T15:39:59.579Z",
-    "status": "PENDING_WHATSAPP",
+    "status": "EXPIRED",
     "type": "DELIVERY",
     "paymentMethod": "CASH",
     "customerId": "cust_be05790bf32da365",
@@ -53,6 +53,14 @@
         "action": "created_order",
         "toStatus": "PENDING_WHATSAPP",
         "note": "Order created, waiting for customer to dispatch WhatsApp message"
+      },
+      {
+        "timestamp": "2026-11-20T15:42:33.773Z",
+        "actor": "system",
+        "action": "expire_unconfirmed_order",
+        "fromStatus": "PENDING_WHATSAPP",
+        "toStatus": "EXPIRED",
+        "note": "Order unconfirmed by customer within TTL period"
       }
     ]
   },

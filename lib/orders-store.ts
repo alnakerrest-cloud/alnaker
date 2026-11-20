@@ -329,6 +329,59 @@ export function getMenuSettings(): MenuModeSettings {
   return readJsonFile<MenuModeSettings>("settings.json", DEFAULT_SETTINGS);
 }
 
+export async function getMenuSettingsAsync(forceFresh = false): Promise<MenuModeSettings> {
+  if (!forceFresh && globalForOrders.__cachedSettings) {
+    return globalForOrders.__cachedSettings;
+  }
+  const pool = getPgPool();
+  if (pool) {
+    try {
+      const res = await pool.query(
+        `SELECT "data" FROM "OrderStore" WHERE "id" = 'settings_menu_mode' LIMIT 1`
+      );
+      if (res.rows[0]?.data) {
+        const rawData = res.rows[0].data;
+        const dbSettings = (typeof rawData === "string" ? JSON.parse(rawData) : rawData) as MenuModeSettings;
+        globalForOrders.__cachedSettings = dbSettings;
+        return dbSettings;
+      }
+    } catch (err: any) {
+      console.warn("[orders-store] DB getMenuSettings error:", err.message);
+    }
+  }
+  return getMenuSettings();
+}
+
+export async function updateMenuSettingsAsync(partial: Partial<MenuModeSettings>): Promise<MenuModeSettings> {
+  const current = await getMenuSettingsAsync();
+  const updated: MenuModeSettings = {
+    ...current,
+    ...partial,
+    branchOverrides: {
+      ...current.branchOverrides,
+      ...(partial.branchOverrides || {}),
+    },
+  };
+  writeJsonFile("settings.json", updated);
+
+  const pool = getPgPool();
+  if (pool) {
+    try {
+      await pool.query(
+        `INSERT INTO "OrderStore" ("id", "orderNumber", "verificationToken", "data", "createdAt", "updatedAt")
+         VALUES ('settings_menu_mode', 'SETTINGS', 'settings_token', $1, NOW(), NOW())
+         ON CONFLICT ("id") DO UPDATE SET "data" = EXCLUDED."data", "updatedAt" = NOW()`,
+        [JSON.stringify(updated)]
+      );
+    } catch (err: any) {
+      console.warn("[orders-store] DB settings save warning:", err.message);
+    }
+  }
+
+  globalForOrders.__cachedSettings = updated;
+  return updated;
+}
+
 export function updateMenuSettings(partial: Partial<MenuModeSettings>): MenuModeSettings {
   const current = getMenuSettings();
   const updated: MenuModeSettings = {
@@ -340,6 +393,20 @@ export function updateMenuSettings(partial: Partial<MenuModeSettings>): MenuMode
     },
   };
   writeJsonFile("settings.json", updated);
+
+  const pool = getPgPool();
+  if (pool) {
+    pool.query(
+      `INSERT INTO "OrderStore" ("id", "orderNumber", "verificationToken", "data", "createdAt", "updatedAt")
+       VALUES ('settings_menu_mode', 'SETTINGS', 'settings_token', $1, NOW(), NOW())
+       ON CONFLICT ("id") DO UPDATE SET "data" = EXCLUDED."data", "updatedAt" = NOW()`,
+      [JSON.stringify(updated)]
+    ).catch((err: any) => {
+      console.warn("[orders-store] DB settings save warning:", err.message);
+    });
+  }
+
+  globalForOrders.__cachedSettings = updated;
   return updated;
 }
 

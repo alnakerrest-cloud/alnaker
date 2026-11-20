@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionAdmin } from "@/lib/auth";
-import { getMenuSettings, updateMenuSettings, type MenuMode } from "@/lib/orders-store";
+import { getMenuSettingsAsync, updateMenuSettingsAsync, type MenuMode } from "@/lib/orders-store";
 import { logAction } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +13,7 @@ export async function GET() {
   if (admin.role !== "OWNER" && admin.role !== "ADMIN") {
     return NextResponse.json({ error: "غير مصرح لك بالوصول إلى إعدادات المنيو" }, { status: 403 });
   }
-  const settings = getMenuSettings();
+  const settings = await getMenuSettingsAsync();
   return NextResponse.json(settings);
 }
 
@@ -30,8 +30,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { mode, closureMessageAr, closureMessageEn, allowDelivery, allowTakeaway, branchOverrides } = body;
 
-    const current = getMenuSettings();
-    const updated = updateMenuSettings({
+    const current = await getMenuSettingsAsync();
+    const updated = await updateMenuSettingsAsync({
       ...(mode && { mode: mode as MenuMode }),
       ...(closureMessageAr !== undefined && { closureMessageAr }),
       ...(closureMessageEn !== undefined && { closureMessageEn }),
