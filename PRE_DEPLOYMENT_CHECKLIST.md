@@ -1,242 +1,91 @@
-# NAQER MENU — Security Remediation & Controlled Deployment Readiness
+# NAQER MENU — Pre-Deployment Checklist (Security Remediation & Controlled Release)
 
-Date: 2026-11-20
-Repository: `EbrahimShoeib1999/naqer-menu` · Branch: `main`
-Local commits created: `6e40bd141c961edb5bd4f048f87263c737562009` (code fix) plus follow-up report commits (see `git log`).
-Reported original HEAD: `de624ef04373722df40dc3a7b9ffa0668aaa8628`
+**Date:** 2026-11-20
+**Repository:** `EbrahimShoeib1999/naqer-menu` · **Branch:** `main`
+**Actual HEAD at start of this audit:** `84217d42d6278b36c26b88b29e1906e49ec220ef`
+**Reported HEAD in request:** `de624ef0` — **superseded** (local `main` is 3 commits ahead, 0 behind `origin/main` = `de624ef0`)
 
-Status vocabulary used below: **VERIFIED**, **NOT VERIFIED**, **BLOCKED**, **NOT APPLICABLE**.
+**Status vocabulary:** `VERIFIED` · `NOT VERIFIED` · `BLOCKED` · `NOT APPLICABLE`. Nothing is marked `VERIFIED` on the basis of an earlier agent report; all executable checks were re-run in this session.
 
-## Overall status: DEPLOYMENT BLOCKED — DO NOT DEPLOY
+## Overall status: **BLOCKED — DO NOT PUSH, DO NOT DEPLOY**
 
-No deployment was performed. No credential was rotated by this work. No production database was contacted or modified. No secret value is printed in this document or in any log produced by this work.
+No push, no deployment, no credential rotation, no production DB connection, and no production test order occurred.
 
 ---
 
-## Status summary
+## 1. Credential rotation status — **BLOCKED**
 
-| Required status item | Status | Detail |
+| Item | Status | Evidence |
 |---|---|---|
-| No credentials hardcoded in new code or build | **VERIFIED** | 0 `npg_` tokens in tracked source, 0 in client bundles/fresh build |
-| All committed credentials treated as compromised | **VERIFIED** | Policy applied; see Phase 1 |
-| Old Neon credential rotated | **BLOCKED** | Not performed — requires Neon console access and owner action |
-| Production database confirmed by owner | **BLOCKED** | Owner has not identified it; repository docs conflict |
-| Vercel configuration (Production/Preview/Development) | **BLOCKED** | No Vercel project access available locally |
-| Working-tree diff reviewed and clean | **VERIFIED** | See Phase 4 |
-| All local checks passed | **VERIFIED** | Resolver, checkout, idempotency, TypeScript, build, migration, secret scan |
-| Git commits created locally | **VERIFIED** | Code fix: `6e40bd141c961edb5bd4f048f87263c737562009`; report commits: see `git log` |
-| Git push | **BLOCKED** | Not pushed — push to `main` may trigger Vercel auto-deploy; requires approval |
-| Deployment approval | **BLOCKED** | No explicit approval given |
-| Deployment result | **NOT APPLICABLE** | No deployment executed |
-| Post-deployment verification | **NOT APPLICABLE** | No deployment to verify |
+| No creds in current HEAD tree | **VERIFIED** | `git grep -l -E 'npg_[A-Za-z0-9_-]{8,}' HEAD` → no matches |
+| No creds in working tracked tree | **VERIFIED** | same grep without `HEAD` → no matches |
+| No creds in 3 new local commits | **VERIFIED** | per-commit grep of `6e40bd14`, `8d72639f`, `84217d42` → no matches |
+| Original `de624ef0` contains a Neon credential | **VERIFIED** | `git grep -l … de624ef0` → `de624ef0:lib/prisma.ts` (1 occurrence) |
+| Credential introduced by | **VERIFIED** | `d3af9ac1ebd7b375a87ede3b0543a679d6fba719` (2026-11-19) |
+| Credential treated as compromised | **VERIFIED** | Policy applied; no attempt to test it |
+| Credential actually rotated | **BLOCKED** | No Neon account/API/CLI access available (no `NEON_*`/token env vars, no `neon`/`psql` CLI, no MCP resource). Exact steps in `SECURITY_REMEDIATION_REPORT.md` |
+| History purge applied | **BLOCKED** | `security/history-purge` ref exists but is not on `main`; applying it requires explicit approval for a history rewrite/force-push |
 
----
+## 2. Production database confirmation — **BLOCKED**
 
-## PHASE 1 — Credential remediation
+Owner has not identified the intended production Neon database. Repository docs are contradictory (`ep-withered-bread-…` called production in most docs; `ep-soft-dawn-…` called "Live Primary Production" in `docs/PRODUCTION_DATABASE_REAL_DATA_VERIFICATION.md`). No target was selected from hostname, availability, or docs. All 8 confirmation sub-checks are **NOT VERIFIED**. See `DATABASE_CONFIGURATION_AUDIT.md`.
 
-### 1.1 Files inspected
-- `lib/database-url.ts` (new)
-- `lib/prisma.ts`
-- All four DB client sites: `lib/prisma.ts`, `lib/orders-store.ts`, `lib/customer-store.ts`, `lib/customer-hub-store.ts`
+## 3. Vercel configuration status — **BLOCKED**
 
-### 1.2 No hardcoded credentials in new code — **VERIFIED**
-`lib/database-url.ts` contains no connection string, host, or password. Every value comes from server-side environment variables. `lib/prisma.ts` now calls `resolveDatabaseUrl()` and contains no literal URL. Static assertion in `scratch/verify-database-url.mjs` checks this directly.
-
-### 1.3 Committed history inspection — **VERIFIED**
-| Finding | Evidence (no values shown) |
+| Check | Evidence / Status |
 |---|---|
-| Credential introduced in commit | `d3af9ac1ebd7b375a87ede3b0543a679d6fba719` (2026-11-19) — commit subject explicitly references providing Neon credentials |
-| Credential still present at original HEAD | `git grep -l -E 'npg_…' HEAD` → `HEAD:lib/prisma.ts` (1 occurrence) |
-| Credential also present in `origin/main` | `origin/main:lib/prisma.ts` |
-| Commit that changed the token occurrences | `7c0ec271bcc7466c2cf5e64a44dfb9eac327ab85` |
-| Working tree after fix | No tracked file contains an `npg_` token |
-| Prepared purge branches exist | `security/history-purge` and `origin/pre-purge-snapshot` contain no token, but are **not** on `main`. Not applied — history rewrite requires explicit owner approval. |
-| Stale audit docs | `docs/FINAL_RELEASE_SECURITY_STATUS.md` and `docs/FINAL_GIT_HISTORY_SECURITY_AUDIT.md` (last modified 2026-11-13) state the Neon password was "not found in history". They predate the 2026-11-19 credential commit and are therefore superseded by direct `git grep` evidence. |
+| `vercel.json` | absent (**VERIFIED** by filesystem check) |
+| `.vercel/` link | absent |
+| `vercel` CLI / local package | absent / absent |
+| `VERCEL_*` env vars | none |
+| MCP integrations | `list_mcp_resources` → empty |
+| Production / Preview / Development env vars | **NOT VERIFIED** (no project access) |
+| Domain, branch, auto-deploy, protection | **NOT VERIFIED** |
 
-### 1.4 Credential treated as compromised — **VERIFIED**
-The committed token is treated as valid and compromised regardless of whether it is still live. No attempt was made to test it.
+## 4. Git commit status — **VERIFIED (commit) / BLOCKED (push)**
 
-### 1.5 Exact rotation steps (prepared, NOT executed) — **VERIFIED (steps only)**
+- Code fix commit: `6e40bd141c961edb5bd4f048f87263c737562009`
+- Report commits: `8d72639f`, `84217d42`
+- `main` is **3 ahead** of `origin/main` (`de624ef0`), **0 behind**.
+- Push is **BLOCKED**: pushing `main` may trigger Vercel auto-deployment to an unconfirmed database with an unrotated credential and unverified env vars.
+- No force-push / history rewrite performed.
 
-1. In the **Neon Console**, select the project/branch that owns the exposed role.
-2. Open **Connection Details** and regenerate/rotate that role's password (or create a new least-privilege role and grant only the required privileges).
-3. Copy the new connection string **directly** from the Neon console into the Vercel environment-variable UI. Do not paste it into chat, source, docs, scratch files, or commit messages.
-4. Update Vercel env vars `DATABASE_URL` and (if used) `NAQER_ACTIVE_DATABASE_URL` for the environments that need them. Do not delete or overwrite unrelated existing values.
-5. Update the gitignored local env files (`.env.local`, `.env.test.local`, `.env.prod.bak`, `.env.staging.local`) locally, outside the commit flow. They are all confirmed gitignored.
-6. Redeploy so serverless instances pick up the new value; then confirm the old password is rejected and the new one works.
-7. Coordinate timing: rotating the password **before** updating Vercel will temporarily break the currently deployed build.
-8. Record rotation evidence (Neon console/audit timestamp) without recording the secret itself.
-9. Do **not** apply `security/history-purge` or force-push to rewrite history without explicit owner approval.
+## 5. Deployment approval / result — **BLOCKED / NOT APPLICABLE**
 
-### 1.6 Rotation actually performed — **BLOCKED**
-**NOT PERFORMED.** No Neon console access was available, and no credential was changed. Do not claim rotation until steps 1–8 above are executed and evidenced by the owner.
+- Explicit deployment approval: **BLOCKED** (the general authorization in the request is explicitly subject to the mandatory gates, which are not met).
+- Deployment result, deployment ID, deployment URL: **NOT APPLICABLE** — no deployment executed.
+- Post-deployment verification: **NOT APPLICABLE**.
 
-### 1.7 Secret handling — **VERIFIED**
-No secret value was printed, logged, copied into source, or included in any report. All scan output is redacted. Error messages from the resolver were explicitly tested to exclude both the URL and the password.
+## 6. Executed gate results (all re-run this session)
 
-### 1.8 / 1.9 Single configuration and fail-safe behaviour — **VERIFIED**
-`node scratch/verify-database-url.mjs` → **12/12 PASS**, covering:
-- All four DB clients import the shared resolver; none creates a pool directly from `process.env`.
-- Missing config → `null` for degradable callers, visible `DatabaseConfigurationError` for required callers.
-- Retired host without explicit fallback → explicit refusal ("Refusing to redirect silently").
-- Retired host + explicit `NAQER_ACTIVE_DATABASE_URL` → uses fallback and logs a visible warning.
-- Retired fallback → rejected. Host detection uses hostname only, so a password containing the marker text is not a false positive.
-- `pgSslConfig()` derives TLS solely from the configured URL.
-
----
-
-## PHASE 2 — Production database confirmation
-
-### Overall status: **BLOCKED**
-
-The owner has **not** explicitly identified the intended active production Neon database. Per the strict stop condition, this phase is stopped and no database target was selected.
-
-### Why confirmation is required — conflicting repository evidence
-| Source | Claim |
-|---|---|
-| `docs/PRODUCTION_DATABASE_LIVE_VERIFICATION.md`, `docs/PRODUCTION_DEPLOYMENT_CHECKLIST.md`, `docs/DATABASE_MIGRATION_AND_ROLLBACK.md`, `docs/STAGING_TEST_INVENTORY.md` | `ep-withered-…` = Production; `ep-soft-…` = Staging |
-| `docs/PRODUCTION_DATABASE_REAL_DATA_VERIFICATION.md` | `ep-soft-…` = "Live Primary Production"; `ep-withered-…` = old quota cluster |
-
-Selecting either based on hostname, availability, or documentation alone is explicitly disallowed. No connection string was printed.
-
-### Owner confirmation checklist — all **NOT VERIFIED**
-| Item | Status |
-|---|---|
-| Correct Neon project | **NOT VERIFIED** |
-| Correct database | **NOT VERIFIED** |
-| Correct schema | **NOT VERIFIED** |
-| Migration status against the confirmed production DB | **NOT VERIFIED** |
-| Required tables present in production | **NOT VERIFIED** |
-| Expected production data present | **NOT VERIFIED** |
-| Connection permissions (least privilege) | **NOT VERIFIED** |
-| No accidental connection to a test or retired DB | **NOT VERIFIED** |
-
-Note: `npx prisma migrate status` returned "4 migrations found / Database schema is up to date!" for the **locally configured** database only. This is not evidence about the owner-confirmed production database and must not be used as such.
-
----
-
-## PHASE 3 — Vercel environment configuration
-
-### Overall status: **BLOCKED**
-
-| Check | Result |
-|---|---|
-| `vercel.json` present | No |
-| `.vercel/` project link present | No |
-| `vercel` CLI on PATH | No |
-| Local `vercel` package | No |
-| `VERCEL_*` env var names present locally | None |
-
-No Vercel project, deployment, or environment settings could be inspected. No value was invented, replaced, or printed.
-
-| Environment | Status |
-|---|---|
-| Production env vars | **NOT VERIFIED** |
-| Preview env vars | **NOT VERIFIED** |
-| Development env vars | **NOT VERIFIED** |
-
-### Required variable names for the current resolver (names only)
-`DATABASE_URL`, `NAQER_ACTIVE_DATABASE_URL` (optional explicit fallback), `SESSION_SECRET`, `NEXT_PUBLIC_SITE_URL`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `CLOUDINARY_SECURE_FOLDER`.
-
-Database variables must remain server-side; never use a `NEXT_PUBLIC_` prefix for them.
-
----
-
-## PHASE 4 — Code and Git verification
-
-### Diff review — **VERIFIED**
-| Check | Result |
-|---|---|
-| No credentials in diff | **VERIFIED** — 0 `npg_` tokens; all review output redacted |
-| No schema/migration changes | **VERIFIED** — no paths under `prisma/schema.prisma` or `prisma/migrations/` changed |
-| No destructive operations | **VERIFIED** — no `DROP`, `TRUNCATE`, `DELETE FROM`, force-push, or history rewrite in the candidate diff |
-| No unrelated code modifications | **VERIFIED** — only the 6 intended code files, `.env.example`, and 2 report files changed. `data/local-db-overlay.json` was pre-existing and explicitly excluded from the commit |
-| No broken checkout behaviour | **VERIFIED** — browser matrix passes |
-| No inconsistent DB client configuration | **VERIFIED** — all four clients use the shared resolver |
-
-### Checks executed
-| Check | Result |
-|---|---|
-| Resolver tests (12 cases) | **VERIFIED** — 12/12 PASS |
-| Checkout tests (guest, new address, saved address, empty cart) | **VERIFIED** — 200 / 200 / 200 / 400 as expected |
-| Idempotency test (duplicate key) | **VERIFIED** — same order number returned, exactly 1 DB row for the key |
-| TypeScript (`npm run typecheck`) | **VERIFIED** — PASS |
-| Production build (`npm run build`) | **VERIFIED** — PASS after the standard Next.js security-advisory retry |
-| Migration check (`npx prisma migrate status`) | **VERIFIED** — 4 migrations, schema up to date (local config only) |
-| Secret scan (tracked source + fresh build) | **VERIFIED** — 0 `npg_` tokens, 0 client-bundle findings |
-| Lint | **NOT APPLICABLE** — Next.js 16 removed `next lint`; repository has no ESLint config/dependency |
-
-Test records created during verification were removed; a final query returned zero orders and zero customers for all verification phone numbers.
-
-### Git status — **VERIFIED (commit) / BLOCKED (push)**
-- Code fix commit: `6e40bd141c961edb5bd4f048f87263c737562009`; additional report commits: see `git log`.
-- Branch `main` is **3 commits ahead** of `origin/main`; **not pushed**.
-- Push is **BLOCKED**: pushing to `main` may trigger a Vercel production deployment, and no deployment approval exists.
-- History rewrite / force-push: **NOT APPLICABLE** — not performed. The prepared `security/history-purge` branch was left untouched.
-
----
-
-## PHASE 5 — Deployment preparation
-
-| Requirement | Status / detail |
-|---|---|
-| Vercel project access | **BLOCKED** — required and unavailable |
-| Environment variables | Names listed in Phase 3; values must be set by the owner in Vercel, never printed |
-| Neon configuration | **BLOCKED** — intended production project must be confirmed; old password must be rotated |
-| Migration steps | None required: schema is current (4 migrations). Run `npx prisma migrate status` against the confirmed production DB before deploying as a read-only check. Do not run destructive migration commands. |
-| Rollback procedure | Revert the Vercel deployment to the previous successful deployment (the pre-fix build at `de624ef0`). Rollback restores the old checkout 500 — it is a safety fallback, not a fix. If the new credential was rotated, also restore the previous Neon password only if the rollback deployment requires it. |
-| Post-deployment verification | Defined in Phase 6 below; mandatory before claiming a fix |
-| Deployment approval | **BLOCKED** — not given |
-
-Manual deployment sequence once all blockers are cleared:
-1. Owner confirms the intended production Neon database and rotates the exposed credential.
-2. Owner sets the confirmed connection string via `DATABASE_URL` (or `NAQER_ACTIVE_DATABASE_URL`) in Vercel; verifies env var names across Production/Preview/Development.
-3. Owner explicitly approves deployment.
-4. Push `main` (or deploy the exact commit `6e40bd14…`).
-5. Wait for deployment readiness, then execute Phase 6.
-
----
-
-## PHASE 6 — Post-deployment acceptance
-
-### Overall status: **NOT APPLICABLE** — no deployment occurred.
-
-The following checks are mandatory before any claim that production checkout is fixed:
-
-| # | Check | Status |
+| Gate | Status | Evidence |
 |---|---|---|
-| 1 | Production site loads | NOT APPLICABLE |
-| 2 | Guest checkout | NOT APPLICABLE |
-| 3 | Checkout with a new customer address | NOT APPLICABLE |
-| 4 | Checkout with a saved address | NOT APPLICABLE |
-| 5 | Empty-cart validation | NOT APPLICABLE |
-| 6 | Duplicate idempotency keys | NOT APPLICABLE |
-| 7 | Correct order totals | NOT APPLICABLE |
-| 8 | Exactly one order per idempotency key | NOT APPLICABLE |
-| 9 | `Order` and `OrderItem` persistence | NOT APPLICABLE |
-| 10 | Customer address persistence | NOT APPLICABLE |
-| 11 | No secrets in browser bundles, logs, or error responses | NOT APPLICABLE |
+| Resolver tests | **VERIFIED** | `node scratch/verify-database-url.mjs` → 12/12 PASS |
+| TypeScript | **VERIFIED** | `npm run typecheck` → exit 0 |
+| Production build | **VERIFIED** | `npm run build` → exit 0 on retry (Next.js 16.4.2 security-advisory nudge on first run) |
+| Migration validation | **VERIFIED (local config only)** | `npx prisma migrate status` → 4 migrations, schema up to date |
+| Secret scan (source + build) | **VERIFIED** | 0 `npg_` tokens, 0 client-bundle findings; 5 credential-shaped strings are placeholders in `.env.example`/docs |
+| Checkout browser matrix | **VERIFIED** | guest/new address/saved address 200, empty cart 400; see `CHECKOUT_REGRESSION_TEST_REPORT.md` |
+| DB persistence + duplicate check | **VERIFIED** | 3 orders each total 2130, 1 item each, exactly 1 row per idempotency key, 2 customer addresses |
+| Test-data cleanup | **VERIFIED** | Only test orders/customers deleted; local orders file restored; working tree clean apart from pre-existing `data/local-db-overlay.json` |
+| Lint | **NOT APPLICABLE** | `next lint` removed in Next.js 16; no ESLint config/dependency in repo |
 
-Use only synthetic test data. Delete only records created by this verification — never genuine customer or order records.
+## 7. Remaining security risks
 
----
+1. **BLOCKED** — Exposed Neon credential still valid (rotation not performed).
+2. **BLOCKED** — Committed credential remains in `main`/`origin/main` history.
+3. **BLOCKED** — Production DB identity unconfirmed; docs conflict.
+4. **BLOCKED** — Vercel Production/Preview/Development env config unknown.
+5. Open — Next.js 16.4.2 security advisory requires a retry on first build; recommended isolated follow-up: `next upgrade --agent=security --internal-nudge-id=e6bd784a-b54e-4cd9-953a-2b042dc6aedc`.
+6. Open — Stale docs (`docs/FINAL_RELEASE_SECURITY_STATUS.md`, `docs/FINAL_GIT_HISTORY_SECURITY_AUDIT.md`) claim no Neon password in history; they predate the 2026-11-19 credential commit and should be corrected.
 
-## Remaining security risks
+## 8. Gate sequence to unblock
 
-| Risk | Status | Notes |
-|---|---|---|
-| Exposed Neon credential still valid | **BLOCKED** | Rotation not performed; treat as compromised until proven otherwise |
-| Committed credential remains in `main`/`origin/main` history | **BLOCKED** | Purge branch exists but applying it requires explicit owner approval and a coordinated force-push |
-| Production database ambiguity | **BLOCKED** | Conflicting docs; owner confirmation absent |
-| Production/Preview/Development env configuration unknown | **BLOCKED** | No Vercel access |
-| Next.js 16.4.2 security advisory | Open | Build requires a retry after the upgrade nudge. Recommended follow-up in a separate worktree: `next upgrade --agent=security --internal-nudge-id=e6bd784a-b54e-4cd9-953a-2b042dc6aedc` |
-| No ESLint configured | Open | Lint unavailable; typecheck is the only static check |
-| Stale security docs claim no Neon password in history | Open | Superseded by direct evidence; should be corrected |
+1. Owner explicitly confirms Neon project / database / branch / schema / role and expected data.
+2. Owner rotates the exposed credential via Neon, updates secure env vars in Vercel, verifies new credential works, then revokes the old one.
+3. Owner provides Vercel project access and confirms Production/Preview/Development env var names/values without printing them.
+4. Verify `npx prisma migrate status` against the confirmed production DB (read-only).
+5. Explicit approval for this exact commit (`84217d42` or later after re-test).
+6. Push/deploy the **exact tested commit**, monitor deployment, run Phase 10 acceptance.
 
----
-
-## Final statement
-
-The code fix is complete, locally verified, and committed locally as `6e40bd141c961edb5bd4f048f87263c737562009`. **Nothing was pushed or deployed.** The live site at `https://naqer-menu.vercel.app` still serves the pre-fix build and remains broken.
-
-Deployment is blocked until all of the following are true: the owner confirms the intended production Neon database, the exposed credential is actually rotated, Vercel access confirms environment configuration, explicit deployment approval is given, and post-deployment browser plus database verification pass. No credential rotation, push, deployment, or production verification is claimed by this document.
+**No credential rotation, push, deployment, or production verification is claimed.**
