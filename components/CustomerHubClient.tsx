@@ -134,6 +134,8 @@ export default function CustomerHubClient({
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   const [addressLabel, setAddressLabel] = useState('المنزل');
+  const [addressCity, setAddressCity] = useState('');
+  const [addressArea, setAddressArea] = useState('');
   const [addressStreet, setAddressStreet] = useState('');
   const [addressBuilding, setAddressBuilding] = useState('');
   const [addressFloor, setAddressFloor] = useState('');
@@ -361,6 +363,8 @@ export default function CustomerHubClient({
   const handleOpenAddAddress = () => {
     setEditingAddressId(null);
     setAddressLabel('المنزل');
+    setAddressCity('');
+    setAddressArea('');
     setAddressStreet('');
     setAddressBuilding('');
     setAddressFloor('');
@@ -373,6 +377,8 @@ export default function CustomerHubClient({
   const handleOpenEditAddress = (addr: CustomerAddressRecord) => {
     setEditingAddressId(addr.id);
     setAddressLabel(addr.label);
+    setAddressCity(addr.city || '');
+    setAddressArea(addr.area || '');
     setAddressStreet(addr.street);
     setAddressBuilding(addr.building || '');
     setAddressFloor(addr.floor || '');
@@ -394,6 +400,8 @@ export default function CustomerHubClient({
           body: JSON.stringify({
             addressId: editingAddressId,
             label: addressLabel,
+            city: addressCity,
+            area: addressArea,
             street: addressStreet,
             building: addressBuilding,
             floor: addressFloor,
@@ -412,6 +420,8 @@ export default function CustomerHubClient({
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             label: addressLabel,
+            city: addressCity,
+            area: addressArea,
             street: addressStreet,
             building: addressBuilding,
             floor: addressFloor,
@@ -422,7 +432,7 @@ export default function CustomerHubClient({
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'فشل إضافة العنوان');
-        setAddresses((prev) => [data.address, ...(addressIsDefault ? prev.map((a) => ({ ...a, isDefault: false })) : prev)]);
+        setAddresses((prev) => [data.address, ...(data.address?.isDefault ? prev.map((a) => ({ ...a, isDefault: false })) : prev)]);
         showToast(isAr ? 'تمت إضافة العنوان بنجاح' : 'Address added', 'success');
       }
       setShowAddressModal(false);
@@ -433,12 +443,39 @@ export default function CustomerHubClient({
     }
   };
 
+  const handleSetDefaultAddress = async (addrId: string) => {
+    try {
+      const res = await fetch('/api/customer/addresses', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ addressId: addrId, action: 'set_default' }),
+      });
+      if (!res.ok) throw new Error('فشل تعيين العنوان كافتراضي');
+      setAddresses((prev) =>
+        prev.map((a) => ({
+          ...a,
+          isDefault: a.id === addrId,
+        }))
+      );
+      showToast(isAr ? 'تم تعيين العنوان كافتراضي' : 'Default address set', 'success');
+    } catch (err: any) {
+      showToast(err.message || 'تعذّر تعيين العنوان كافتراضي', 'error');
+    }
+  };
+
   const handleDeleteAddress = async (addrId: string) => {
     if (!confirm(isAr ? 'هل أنت متأكد من حذف هذا العنوان؟' : 'Are you sure you want to delete this address?')) return;
     try {
       const res = await fetch(`/api/customer/addresses?id=${addrId}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('فشل الحذف');
-      setAddresses((prev) => prev.filter((a) => a.id !== addrId));
+      setAddresses((prev) => {
+        const filtered = prev.filter((a) => a.id !== addrId);
+        const wasDef = prev.find((a) => a.id === addrId)?.isDefault;
+        if (wasDef && filtered.length > 0 && !filtered.some((a) => a.isDefault)) {
+          filtered[0].isDefault = true;
+        }
+        return filtered;
+      });
       showToast(isAr ? 'تم حذف العنوان' : 'Address deleted', 'info');
     } catch {
       showToast(isAr ? 'تعذّر حذف العنوان' : 'Failed to delete address', 'error');
@@ -1198,7 +1235,9 @@ export default function CustomerHubClient({
                     </div>
                   </div>
 
-                  <p className="addr-street">{addr.street}</p>
+                  <p className="addr-street">
+                    {[addr.city, addr.area, addr.street].filter(Boolean).join(' • ')}
+                  </p>
 
                   {(addr.building || addr.floor || addr.apartment) && (
                     <p className="addr-details">
@@ -1211,6 +1250,19 @@ export default function CustomerHubClient({
                   )}
 
                   {addr.notes && <p className="addr-notes">💬 {addr.notes}</p>}
+
+                  {!addr.isDefault && (
+                    <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed var(--border-subtle, #333)' }}>
+                      <button
+                        type="button"
+                        onClick={() => handleSetDefaultAddress(addr.id)}
+                        className="hub-btn hub-btn-secondary"
+                        style={{ fontSize: '0.8rem', padding: '4px 10px' }}
+                      >
+                        {isAr ? '☆ تعيين كعنوان افتراضي' : '☆ Set as Default'}
+                      </button>
+                    </div>
+                  )}
                 </article>
               ))}
             </div>
@@ -1531,7 +1583,32 @@ export default function CustomerHubClient({
                 className="hub-input"
               />
 
-              <label htmlFor="addrStreetInput">{isAr ? 'الشارع والمنطقة بالتفصيل *' : 'Street & Area *'}</label>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div>
+                  <label htmlFor="addrCityInput">{isAr ? 'المدينة / المحافظة' : 'City'}</label>
+                  <input
+                    id="addrCityInput"
+                    type="text"
+                    placeholder={isAr ? 'مثال: المنصورة، جمصة' : 'e.g. Mansoura, Gamasa'}
+                    value={addressCity}
+                    onChange={(e) => setAddressCity(e.target.value)}
+                    className="hub-input"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="addrAreaInput">{isAr ? 'المنطقة / الحي' : 'Area / District'}</label>
+                  <input
+                    id="addrAreaInput"
+                    type="text"
+                    placeholder={isAr ? 'مثال: المركزية، جامعة الدلتا' : 'e.g. Central Dist'}
+                    value={addressArea}
+                    onChange={(e) => setAddressArea(e.target.value)}
+                    className="hub-input"
+                  />
+                </div>
+              </div>
+
+              <label htmlFor="addrStreetInput">{isAr ? 'الشارع بالتفصيل والعلامات المميزة *' : 'Street & Landmarks *'}</label>
               <textarea
                 id="addrStreetInput"
                 placeholder={isAr ? 'اسم الشارع، الحي، العلامات المميزة...' : 'Street name, neighborhood, landmarks...'}

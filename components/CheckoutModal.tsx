@@ -78,6 +78,10 @@ export default function CheckoutModal({
   const [hasClickedWhatsApp, setHasClickedWhatsApp] = useState(false);
   const [confirmingSent, setConfirmingSent] = useState(false);
   const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [saveAddressToProfile, setSaveAddressToProfile] = useState(false);
+  const [newAddressLabel, setNewAddressLabel] = useState('');
+  const [newAddressCity, setNewAddressCity] = useState('');
   const firstInputRef = useRef<HTMLInputElement | null>(null);
   const idempotencyKeyRef = useRef<string | null>(null);
 
@@ -101,11 +105,30 @@ export default function CheckoutModal({
       setWhatsappUrl(null);
       idempotencyKeyRef.current = null;
 
-      // Prefill customer phone if available
+      setSelectedAddressId(null);
+      setSaveAddressToProfile(false);
+      setNewAddressLabel('');
+      setNewAddressCity('');
+
+      // Prefill customer phone if available locally
       try {
         const savedP = localStorage.getItem('naqer_customer_phone');
         if (savedP) setCustomerPhone(savedP);
       } catch {}
+
+      // Prefill customer profile from authenticated session
+      fetch('/api/customer/hub')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((hubData) => {
+          if (hubData?.authenticated && hubData.customer) {
+            if (hubData.customer.name) setCustomerName(hubData.customer.name);
+            if (hubData.customer.phone) {
+              const p = hubData.customer.phone.startsWith('20') ? '0' + hubData.customer.phone.slice(2) : hubData.customer.phone;
+              setCustomerPhone(p);
+            }
+          }
+        })
+        .catch(() => {});
 
       // Fetch saved customer delivery addresses
       fetch('/api/customer/addresses')
@@ -115,9 +138,13 @@ export default function CheckoutModal({
             setSavedAddresses(data.addresses);
             const def = data.addresses.find((a: any) => a.isDefault) || data.addresses[0];
             if (def) {
-              const full = [def.street, def.building, def.floor ? `دور ${def.floor}` : '', def.apartment ? `شقة ${def.apartment}` : ''].filter(Boolean).join('، ');
+              setSelectedAddressId(def.id);
+              const full = [def.city, def.area, def.street, def.building ? `عمارة ${def.building}` : '', def.floor ? `دور ${def.floor}` : '', def.apartment ? `شقة ${def.apartment}` : ''].filter(Boolean).join('، ');
               setDeliveryAddress(full);
             }
+          } else {
+            // First time delivery customer: enable auto-save by default
+            setSaveAddressToProfile(true);
           }
         })
         .catch(() => {});
@@ -252,6 +279,14 @@ export default function CheckoutModal({
           branchId: branchId,
           paymentMethod,
           idempotencyKey,
+          saveAddress: orderType === 'DELIVERY' && saveAddressToProfile,
+          addressDetails: saveAddressToProfile ? {
+            label: newAddressLabel.trim() || (isAr ? 'المنزل' : 'Home'),
+            city: newAddressCity.trim() || undefined,
+            street: deliveryAddress.trim(),
+            notes: notes.trim() || undefined,
+            isDefault: savedAddresses.length === 0,
+          } : undefined,
         }),
       });
       
@@ -413,54 +448,126 @@ export default function CheckoutModal({
       
       {orderType === 'DELIVERY' && (
         <div className="form-group">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-            <label htmlFor="deliveryAddress" style={{ margin: 0 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+            <label htmlFor="deliveryAddress" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '6px' }}>
               <MapPinIcon width={16} height={16} />
               {isAr ? 'عنوان التوصيل *' : 'Delivery Address *'}
             </label>
+            {savedAddresses.length > 0 && selectedAddressId && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedAddressId(null);
+                  setDeliveryAddress('');
+                  setSaveAddressToProfile(true);
+                  setErrors((prev) => ({ ...prev, deliveryAddress: '' }));
+                }}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--brand, #48bb78)',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  padding: 0,
+                }}
+              >
+                {isAr ? '➕ استخدام عنوان آخر' : '➕ Enter New Address'}
+              </button>
+            )}
           </div>
 
           {savedAddresses.length > 0 && (
-            <div style={{ marginBottom: '8px', display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
-              <small style={{ color: 'var(--muted)', fontWeight: 600 }}>{isAr ? 'عناوينك المحفوظة:' : 'Saved:'}</small>
-              {savedAddresses.map((a) => {
-                const full = [a.street, a.building, a.floor ? `دور ${a.floor}` : '', a.apartment ? `شقة ${a.apartment}` : ''].filter(Boolean).join('، ');
-                const isSelected = deliveryAddress === full;
-                return (
-                  <button
-                    key={a.id}
-                    type="button"
-                    style={{
-                      background: isSelected ? 'var(--brand)' : 'var(--bg-2)',
-                      color: isSelected ? '#ffffff' : 'var(--ink)',
-                      border: '1px solid var(--line)',
-                      borderRadius: '8px',
-                      padding: '3px 10px',
-                      fontSize: '0.8rem',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => {
-                      setDeliveryAddress(full);
-                      setErrors((prev) => ({ ...prev, deliveryAddress: '' }));
-                    }}
-                  >
-                    <span>📍 {a.label}</span>
-                  </button>
-                );
-              })}
+            <div style={{ marginBottom: '10px' }}>
+              <small style={{ color: 'var(--muted)', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
+                {isAr ? 'العناوين المحفوظة في حسابك:' : 'Your Saved Addresses:'}
+              </small>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+                {savedAddresses.map((a) => {
+                  const full = [a.city, a.area, a.street, a.building ? `عمارة ${a.building}` : '', a.floor ? `دور ${a.floor}` : '', a.apartment ? `شقة ${a.apartment}` : ''].filter(Boolean).join('، ');
+                  const isSelected = selectedAddressId === a.id;
+                  return (
+                    <button
+                      key={a.id}
+                      type="button"
+                      style={{
+                        background: isSelected ? 'var(--brand, #48bb78)' : 'var(--bg-2, #1f1f23)',
+                        color: isSelected ? '#ffffff' : 'var(--ink, #fff)',
+                        border: isSelected ? '1px solid var(--brand, #48bb78)' : '1px solid var(--line, #333)',
+                        borderRadius: '8px',
+                        padding: '4px 10px',
+                        fontSize: '0.82rem',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        transition: 'all 0.15s ease',
+                      }}
+                      onClick={() => {
+                        setSelectedAddressId(a.id);
+                        setDeliveryAddress(full);
+                        setSaveAddressToProfile(false);
+                        setErrors((prev) => ({ ...prev, deliveryAddress: '' }));
+                      }}
+                    >
+                      <span>📍 {a.label}</span>
+                      {a.isDefault && (
+                        <span style={{ fontSize: '0.7rem', opacity: 0.85 }}>({isAr ? 'افتراضي' : 'Default'})</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
 
           <textarea
             id="deliveryAddress"
             value={deliveryAddress}
-            onChange={(e) => { setDeliveryAddress(e.target.value); setErrors(prev => ({ ...prev, deliveryAddress: '' })); }}
-            placeholder={isAr ? 'اكتب العنوان بالتفصيل: الشارع، المنطقة، رقم المنزل، الطابق...' : 'Enter full address: street, area, building number, floor...'}
+            onChange={(e) => {
+              setDeliveryAddress(e.target.value);
+              setSelectedAddressId(null);
+              setErrors((prev) => ({ ...prev, deliveryAddress: '' }));
+            }}
+            placeholder={isAr ? 'اكتب العنوان بالتفصيل: الشارع، الحي، رقم المنزل، الطابق، الشقة...' : 'Enter full address: street, area, building number, floor, apt...'}
             rows={3}
             className={errors.deliveryAddress ? 'error' : ''}
           />
           {errors.deliveryAddress && <span className="error-msg">{errors.deliveryAddress}</span>}
+
+          {/* Option to Save Address to Customer Profile */}
+          {!selectedAddressId && deliveryAddress.trim().length > 0 && (
+            <div style={{ marginTop: '8px', padding: '10px', background: 'var(--bg-2, #1f1f23)', borderRadius: '8px', border: '1px solid var(--line, #333)' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 600 }}>
+                <input
+                  type="checkbox"
+                  checked={saveAddressToProfile}
+                  onChange={(e) => setSaveAddressToProfile(e.target.checked)}
+                />
+                <span>{isAr ? 'حفظ هذا العنوان في حسابي لاستخدامه في الطلبات القادمة' : 'Save this address to my profile for future orders'}</span>
+              </label>
+
+              {saveAddressToProfile && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '8px' }}>
+                  <input
+                    type="text"
+                    placeholder={isAr ? 'تسمية العنوان (المنزل، العمل...)' : 'Address Label (Home, Work...)'}
+                    value={newAddressLabel}
+                    onChange={(e) => setNewAddressLabel(e.target.value)}
+                    style={{ fontSize: '0.82rem', padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--line)', background: 'var(--bg-1, #121214)', color: 'var(--ink)' }}
+                  />
+                  <input
+                    type="text"
+                    placeholder={isAr ? 'المدينة / المنطقة (اختياري)' : 'City / Area (Optional)'}
+                    value={newAddressCity}
+                    onChange={(e) => setNewAddressCity(e.target.value)}
+                    style={{ fontSize: '0.82rem', padding: '6px 10px', borderRadius: '6px', border: '1px solid var(--line)', background: 'var(--bg-1, #121214)', color: 'var(--ink)' }}
+                  />
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
       

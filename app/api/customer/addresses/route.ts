@@ -11,15 +11,19 @@ import {
   verifyCustomerSession,
 } from "@/lib/customer-session";
 import {
+  ensureCustomerSessionRecordAsync,
+} from "@/lib/customer-store";
+import {
   getCustomerAddressesAsync,
   createCustomerAddressAsync,
   updateCustomerAddressAsync,
+  setDefaultCustomerAddressAsync,
   deleteCustomerAddressAsync,
 } from "@/lib/customer-hub-store";
 
 export const dynamic = "force-dynamic";
 
-async function getAuthorizedCustomerId(request: NextRequest): Promise<string | null> {
+async function getAuthorizedCustomer(request: NextRequest): Promise<{ customerId: string; phoneNormalized: string } | null> {
   const cookieStore = await cookies();
   const cookieToken = cookieStore.get(CUSTOMER_COOKIE_NAME)?.value;
   const authHeader = request.headers.get("authorization");
@@ -27,17 +31,25 @@ async function getAuthorizedCustomerId(request: NextRequest): Promise<string | n
 
   const token = cookieToken || bearerToken;
   const session = verifyCustomerSession(token);
-  return session ? session.customerId : null;
+  if (!session) return null;
+
+  try {
+    const cust = await ensureCustomerSessionRecordAsync(session);
+    return { customerId: cust.id, phoneNormalized: cust.phone };
+  } catch (err) {
+    console.warn("[customer-addresses-api] ensureCustomerSessionRecordAsync error:", err);
+    return { customerId: session.customerId, phoneNormalized: session.phoneNormalized };
+  }
 }
 
 export async function GET(request: NextRequest) {
   try {
-    const customerId = await getAuthorizedCustomerId(request);
-    if (!customerId) {
+    const auth = await getAuthorizedCustomer(request);
+    if (!auth) {
       return NextResponse.json({ error: "غير مصرح به." }, { status: 401 });
     }
 
-    const addresses = await getCustomerAddressesAsync(customerId);
+    const addresses = await getCustomerAddressesAsync(auth.customerId);
     return NextResponse.json({ success: true, addresses });
   } catch (err: any) {
     console.error("[customer-addresses-api] GET Error:", err?.message || err);
@@ -47,13 +59,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const customerId = await getAuthorizedCustomerId(request);
-    if (!customerId) {
+    const auth = await getAuthorizedCustomer(request);
+    if (!auth) {
       return NextResponse.json({ error: "غير مصرح به." }, { status: 401 });
     }
 
     const body = await request.json().catch(() => ({}));
-    const { label, street, building, floor, apartment, notes, isDefault } = body;
+    const { label, city, area, street, building, floor, apartment, notes, isDefault } = body;
 
     if (!label || typeof label !== "string" || !label.trim()) {
       return NextResponse.json({ error: "اسم العنوان مطلوب (مثال: المنزل، العمل)." }, { status: 400 });
@@ -62,8 +74,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "تفاصيل الشارع والمنطقة مطلوبة." }, { status: 400 });
     }
 
-    const address = await createCustomerAddressAsync(customerId, {
+    const address = await createCustomerAddressAsync(auth.customerId, {
       label: label.slice(0, 50),
+      city: typeof city === "string" ? city.slice(0, 100) : undefined,
+      area: typeof area === "string" ? area.slice(0, 100) : undefined,
       street: street.slice(0, 200),
       building: typeof building === "string" ? building.slice(0, 50) : undefined,
       floor: typeof floor === "string" ? floor.slice(0, 20) : undefined,
@@ -81,19 +95,27 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const customerId = await getAuthorizedCustomerId(request);
-    if (!customerId) {
+    const auth = await getAuthorizedCustomer(request);
+    if (!auth) {
       return NextResponse.json({ error: "غير مصرح به." }, { status: 401 });
     }
 
     const body = await request.json().catch(() => ({}));
-    const { addressId, ...updates } = body;
+    const { addressId, action, ...updates } = body;
 
     if (!addressId || typeof addressId !== "string") {
       return NextResponse.json({ error: "معرّف العنوان مطلوب." }, { status: 400 });
     }
 
-    const updated = await updateCustomerAddressAsync(customerId, addressId, updates);
+    if (action === "set_default") {
+      const updated = await setDefaultCustomerAddressAsync(auth.customerId, addressId);
+      if (!updated) {
+        return NextResponse.json({ error: "العنوان غير موجود أو لا تملك صلاحية تعديله." }, { status: 404 });
+      }
+      return NextResponse.json({ success: true, address: updated, message: "تم تعيين العنوان كافتراضي." });
+    }
+
+    const updated = await updateCustomerAddressAsync(auth.customerId, addressId, updates);
     if (!updated) {
       return NextResponse.json({ error: "العنوان غير موجود أو لا تملك صلاحية تعديله." }, { status: 404 });
     }
@@ -107,19 +129,20 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const customerId = await getAuthorizedCustomerId(request);
-    if (!customerId) {
+    const auth = await getAuthorizedCustomer(request);
+    if (!auth) {
       return NextResponse.json({ error: "غير مصرح به." }, { status: 401 });
     }
 
     const { searchParams } = new URL(request.url);
-    const addressId = searchParams.get("id");
+    const body = await request.json().catch(() => ({}));
+    const addressId = searchParams.get("id") || body?.id || body?.addressId;
 
     if (!addressId) {
       return NextResponse.json({ error: "معرّف العنوان مطلوب." }, { status: 400 });
     }
 
-    const deleted = await deleteCustomerAddressAsync(customerId, addressId);
+    const deleted = await deleteCustomerAddressAsync(auth.customerId, addressId);
     if (!deleted) {
       return NextResponse.json({ error: "تعذّر حذف العنوان أو أنه غير موجود." }, { status: 404 });
     }

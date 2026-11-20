@@ -35,6 +35,18 @@ interface CheckoutRequest {
   branchId: string;
   paymentMethod: PaymentMethod;
   idempotencyKey?: string;
+  saveAddress?: boolean;
+  addressDetails?: {
+    label?: string;
+    city?: string;
+    area?: string;
+    street?: string;
+    building?: string;
+    floor?: string;
+    apartment?: string;
+    notes?: string;
+    isDefault?: boolean;
+  };
 }
 
 function validateEgyptianPhone(phone: string): { valid: boolean; normalized: string; error?: string } {
@@ -498,7 +510,8 @@ export async function POST(request: NextRequest) {
     if (!customerRecord) {
       customerRecord = await getOrCreateCustomerByPhoneAsync(
         normalizedPhone,
-        customerName ? customerName.slice(0, 100).trim() : undefined
+        customerName ? customerName.slice(0, 100).trim() : undefined,
+        existingSession?.customerId
       );
     }
     const resolvedCustomerId = customerRecord.id;
@@ -605,6 +618,29 @@ export async function POST(request: NextRequest) {
       });
     } catch (dbErr: any) {
       console.warn("[checkout] DB sync note (relational Order table):", dbErr?.message || dbErr);
+    }
+
+    // Auto-save Delivery Address to Customer's Saved Addresses if requested
+    if (orderType === "DELIVERY" && body.saveAddress) {
+      try {
+        const details = body.addressDetails || {};
+        const streetVal = (details.street || deliveryAddress || "").trim();
+        if (streetVal) {
+          await createCustomerAddressAsync(resolvedCustomerId, {
+            label: details.label || "المنزل",
+            city: details.city,
+            area: details.area,
+            street: streetVal,
+            building: details.building,
+            floor: details.floor,
+            apartment: details.apartment,
+            notes: details.notes || customerNotes,
+            isDefault: Boolean(details.isDefault),
+          });
+        }
+      } catch (addrErr) {
+        console.warn("[checkout] Error auto-saving customer address:", addrErr);
+      }
     }
 
     const customerId = order.customerId || resolvedCustomerId;

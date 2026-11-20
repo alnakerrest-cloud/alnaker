@@ -12,6 +12,8 @@ export interface CustomerAddressRecord {
   id: string;
   customerId: string;
   label: string; // e.g., 'المنزل', 'العمل', 'أخرى'
+  city?: string;
+  area?: string;
   street: string;
   building?: string;
   floor?: string;
@@ -79,7 +81,7 @@ export async function getCustomerAddressesAsync(customerId: string): Promise<Cus
   if (pool) {
     try {
       const res = await pool.query(
-        `SELECT "id", "customerId", "label", "street", "building", "floor", "apartment", "notes", "isDefault", "createdAt", "updatedAt"
+        `SELECT "id", "customerId", "label", "city", "area", "street", "building", "floor", "apartment", "notes", "isDefault", "createdAt", "updatedAt"
          FROM "CustomerAddress"
          WHERE "customerId" = $1
          ORDER BY "isDefault" DESC, "createdAt" DESC`,
@@ -89,6 +91,8 @@ export async function getCustomerAddressesAsync(customerId: string): Promise<Cus
         id: r.id,
         customerId: r.customerId,
         label: r.label,
+        city: r.city || undefined,
+        area: r.area || undefined,
         street: r.street,
         building: r.building || undefined,
         floor: r.floor || undefined,
@@ -110,6 +114,8 @@ export async function createCustomerAddressAsync(
   customerId: string,
   data: {
     label: string;
+    city?: string;
+    area?: string;
     street: string;
     building?: string;
     floor?: string;
@@ -122,9 +128,67 @@ export async function createCustomerAddressAsync(
   const addressId = `addr_${crypto.randomBytes(8).toString("hex")}`;
   const pool = getPgPool();
 
+  const cleanStreet = data.street.trim();
+  const cleanBuilding = data.building?.trim() || null;
+  const cleanFloor = data.floor?.trim() || null;
+  const cleanApartment = data.apartment?.trim() || null;
+  const cleanCity = data.city?.trim() || null;
+  const cleanArea = data.area?.trim() || null;
+  const cleanLabel = data.label?.trim() || "المنزل";
+  const cleanNotes = data.notes?.trim() || null;
+
   if (pool) {
+    // 1. فحص وجود عنوان متطابق لنفس العميل لمنع التكرار (Idempotent Deduping)
+    try {
+      const dupRes = await pool.query(
+        `SELECT "id", "customerId", "label", "city", "area", "street", "building", "floor", "apartment", "notes", "isDefault", "createdAt", "updatedAt"
+         FROM "CustomerAddress"
+         WHERE "customerId" = $1
+           AND LOWER(TRIM("street")) = LOWER($2)
+           AND COALESCE("building", '') = COALESCE($3, '')
+           AND COALESCE("apartment", '') = COALESCE($4, '')
+         LIMIT 1`,
+        [customerId, cleanStreet, cleanBuilding, cleanApartment]
+      );
+      if (dupRes.rows.length > 0) {
+        const existingRow = dupRes.rows[0];
+        // إذا طُلب تعيينه كافتراضي وهو ليس كذلك
+        if (data.isDefault && !existingRow.isDefault) {
+          await setDefaultCustomerAddressAsync(customerId, existingRow.id);
+          existingRow.isDefault = true;
+        }
+        return {
+          id: existingRow.id,
+          customerId: existingRow.customerId,
+          label: existingRow.label,
+          city: existingRow.city || undefined,
+          area: existingRow.area || undefined,
+          street: existingRow.street,
+          building: existingRow.building || undefined,
+          floor: existingRow.floor || undefined,
+          apartment: existingRow.apartment || undefined,
+          notes: existingRow.notes || undefined,
+          isDefault: Boolean(existingRow.isDefault),
+          createdAt: new Date(existingRow.createdAt).toISOString(),
+          updatedAt: new Date(existingRow.updatedAt).toISOString(),
+        };
+      }
+    } catch {}
+
+    // 2. إذا كان هذا أول عنوان للعميل، يصبح تلقائياً افتراضياً
+    let shouldBeDefault = Boolean(data.isDefault);
+    try {
+      const countRes = await pool.query(
+        `SELECT count(*)::int as count FROM "CustomerAddress" WHERE "customerId" = $1`,
+        [customerId]
+      );
+      if ((countRes.rows[0]?.count ?? 0) === 0) {
+        shouldBeDefault = true;
+      }
+    } catch {}
+
     // إذا كان العنوان الافتراضي، يتم إلغاء الافتراضي عن باقي العناوين
-    if (data.isDefault) {
+    if (shouldBeDefault) {
       try {
         await pool.query(
           `UPDATE "CustomerAddress" SET "isDefault" = false WHERE "customerId" = $1`,
@@ -135,19 +199,21 @@ export async function createCustomerAddressAsync(
 
     try {
       const res = await pool.query(
-        `INSERT INTO "CustomerAddress" ("id", "customerId", "label", "street", "building", "floor", "apartment", "notes", "isDefault", "createdAt", "updatedAt")
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        `INSERT INTO "CustomerAddress" ("id", "customerId", "label", "city", "area", "street", "building", "floor", "apartment", "notes", "isDefault", "createdAt", "updatedAt")
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
          RETURNING *`,
         [
           addressId,
           customerId,
-          data.label.trim(),
-          data.street.trim(),
-          data.building?.trim() || null,
-          data.floor?.trim() || null,
-          data.apartment?.trim() || null,
-          data.notes?.trim() || null,
-          Boolean(data.isDefault),
+          cleanLabel,
+          cleanCity,
+          cleanArea,
+          cleanStreet,
+          cleanBuilding,
+          cleanFloor,
+          cleanApartment,
+          cleanNotes,
+          shouldBeDefault,
           now,
           now,
         ]
@@ -157,6 +223,8 @@ export async function createCustomerAddressAsync(
         id: r.id,
         customerId: r.customerId,
         label: r.label,
+        city: r.city || undefined,
+        area: r.area || undefined,
         street: r.street,
         building: r.building || undefined,
         floor: r.floor || undefined,
@@ -175,18 +243,21 @@ export async function createCustomerAddressAsync(
   const newRec: CustomerAddressRecord = {
     id: addressId,
     customerId,
-    label: data.label.trim(),
-    street: data.street.trim(),
-    building: data.building?.trim(),
-    floor: data.floor?.trim(),
-    apartment: data.apartment?.trim(),
-    notes: data.notes?.trim(),
+    label: cleanLabel,
+    city: cleanCity || undefined,
+    area: cleanArea || undefined,
+    street: cleanStreet,
+    building: cleanBuilding || undefined,
+    floor: cleanFloor || undefined,
+    apartment: cleanApartment || undefined,
+    notes: cleanNotes || undefined,
     isDefault: Boolean(data.isDefault),
     createdAt: now,
     updatedAt: now,
   };
 
   const list = memoryAddresses.get(customerId) || [];
+  if (list.length === 0) newRec.isDefault = true;
   if (newRec.isDefault) {
     list.forEach((a) => (a.isDefault = false));
   }
@@ -218,6 +289,14 @@ export async function updateCustomerAddressAsync(
     if (data.label !== undefined) {
       updates.push(`"label" = $${idx++}`);
       values.push(data.label.trim());
+    }
+    if (data.city !== undefined) {
+      updates.push(`"city" = $${idx++}`);
+      values.push(data.city?.trim() || null);
+    }
+    if (data.area !== undefined) {
+      updates.push(`"area" = $${idx++}`);
+      values.push(data.area?.trim() || null);
     }
     if (data.street !== undefined) {
       updates.push(`"street" = $${idx++}`);
@@ -258,6 +337,8 @@ export async function updateCustomerAddressAsync(
       id: r.id,
       customerId: r.customerId,
       label: r.label,
+      city: r.city || undefined,
+      area: r.area || undefined,
       street: r.street,
       building: r.building || undefined,
       floor: r.floor || undefined,
@@ -277,19 +358,73 @@ export async function updateCustomerAddressAsync(
   return item;
 }
 
+export async function setDefaultCustomerAddressAsync(customerId: string, addressId: string): Promise<CustomerAddressRecord | null> {
+  const pool = getPgPool();
+  if (pool) {
+    await pool.query(`UPDATE "CustomerAddress" SET "isDefault" = false WHERE "customerId" = $1`, [customerId]);
+    const res = await pool.query(
+      `UPDATE "CustomerAddress" SET "isDefault" = true, "updatedAt" = NOW() WHERE "customerId" = $1 AND "id" = $2 RETURNING *`,
+      [customerId, addressId]
+    );
+    if (res.rows.length === 0) return null;
+    const r = res.rows[0];
+    return {
+      id: r.id,
+      customerId: r.customerId,
+      label: r.label,
+      city: r.city || undefined,
+      area: r.area || undefined,
+      street: r.street,
+      building: r.building || undefined,
+      floor: r.floor || undefined,
+      apartment: r.apartment || undefined,
+      notes: r.notes || undefined,
+      isDefault: true,
+      createdAt: new Date(r.createdAt).toISOString(),
+      updatedAt: new Date(r.updatedAt).toISOString(),
+    };
+  }
+  const list = memoryAddresses.get(customerId) || [];
+  list.forEach((a) => (a.isDefault = a.id === addressId));
+  return list.find((a) => a.id === addressId) || null;
+}
+
 export async function deleteCustomerAddressAsync(customerId: string, addressId: string): Promise<boolean> {
   const pool = getPgPool();
   if (pool) {
+    // افحص هل كان هذا العنوان هو الافتراضي
+    const checkRes = await pool.query(
+      `SELECT "isDefault" FROM "CustomerAddress" WHERE "customerId" = $1 AND "id" = $2`,
+      [customerId, addressId]
+    );
+    const wasDefault = Boolean(checkRes.rows[0]?.isDefault);
+
     const res = await pool.query(
       `DELETE FROM "CustomerAddress" WHERE "customerId" = $1 AND "id" = $2`,
       [customerId, addressId]
     );
-    return (res.rowCount ?? 0) > 0;
+    const deleted = (res.rowCount ?? 0) > 0;
+
+    // إذا كان افتراضياً وتم حذفه، رقّي أحدث عنوان متبقٍ ليصبح افتراضياً
+    if (deleted && wasDefault) {
+      await pool.query(
+        `UPDATE "CustomerAddress"
+         SET "isDefault" = true
+         WHERE "id" = (
+           SELECT "id" FROM "CustomerAddress" WHERE "customerId" = $1 ORDER BY "createdAt" DESC LIMIT 1
+         )`,
+        [customerId]
+      );
+    }
+
+    return deleted;
   }
   const list = memoryAddresses.get(customerId) || [];
   const idx = list.findIndex((a) => a.id === addressId);
   if (idx !== -1) {
+    const wasDefault = list[idx].isDefault;
     list.splice(idx, 1);
+    if (wasDefault && list.length > 0) list[0].isDefault = true;
     return true;
   }
   return false;

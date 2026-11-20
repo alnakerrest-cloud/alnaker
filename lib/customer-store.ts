@@ -171,12 +171,13 @@ export async function getCustomerByPhoneAsync(phoneOrNormalized: string): Promis
  */
 export async function getOrCreateCustomerByPhoneAsync(
   phoneOrNormalized: string,
-  name?: string
+  name?: string,
+  preferredId?: string
 ): Promise<CustomerRecord> {
   const check = normalizeEgyptianPhone(phoneOrNormalized);
   const normalized = check.valid ? check.normalized : phoneOrNormalized.replace(/\D/g, "");
 
-  // 1. فحص إذا كان موجوداً بالفعل
+  // 1. فحص إذا كان موجوداً بالفعل بالهاتف
   const existing = await getCustomerByPhoneAsync(normalized);
   if (existing) {
     // تحديث الاسم إذا تم تقديمه ولم يكن مسجلاً
@@ -187,9 +188,17 @@ export async function getOrCreateCustomerByPhoneAsync(
     return existing;
   }
 
-  // 2. إنشاء عميل جديد بهوية دائمة ثابتة
+  // 2. فحص إذا كان موجوداً بالـ preferredId
+  if (preferredId) {
+    const existingById = await getCustomerByIdAsync(preferredId);
+    if (existingById) {
+      return existingById;
+    }
+  }
+
+  // 3. إنشاء عميل جديد بهوية دائمة ثابتة
   const now = new Date().toISOString();
-  const newId = generatePersistentCustomerId();
+  const newId = preferredId && preferredId.startsWith("cust_") ? preferredId : generatePersistentCustomerId();
   const newRecord: CustomerRecord = {
     id: newId,
     phone: normalized,
@@ -228,6 +237,34 @@ export async function getOrCreateCustomerByPhoneAsync(
   memoryCustomerMap.set(newRecord.id, newRecord);
   memoryPhoneIndex.set(newRecord.phone, newRecord.id);
   return newRecord;
+}
+
+/**
+ * ضمان وجود سجل العميل في جدول Customer استناداً إلى جلسة العميل الموثقة
+ * يضمن تماماً عدم حدوث أي انتهاك للمفاتيح الأجنبية (Foreign Key)
+ */
+export async function ensureCustomerSessionRecordAsync(session: {
+  customerId: string;
+  phoneNormalized: string;
+  customerName?: string;
+}): Promise<CustomerRecord> {
+  if (!session || !session.customerId) {
+    throw new Error("جلسة غير صالحة");
+  }
+
+  // 1. فحص الـ Customer بالـ ID
+  const existingById = await getCustomerByIdAsync(session.customerId);
+  if (existingById) {
+    return existingById;
+  }
+
+  // 2. إذا لم يكن موجوداً بالـ ID، جلبه أو إنشاؤه بالهاتف مع تفضيل session.customerId
+  const cust = await getOrCreateCustomerByPhoneAsync(
+    session.phoneNormalized,
+    session.customerName,
+    session.customerId
+  );
+  return cust;
 }
 
 export async function updateCustomerNameAsync(customerId: string, name: string): Promise<void> {
