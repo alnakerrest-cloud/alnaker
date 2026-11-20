@@ -2,7 +2,7 @@
 
 Date: 2026-11-20
 Repository: `EbrahimShoeib1999/naqer-menu` · Branch: `main`
-Local commit created: `6e40bd141c961edb5bd4f048f87263c737562009` (`fix(checkout): share secure DB URL resolver and fix OrderItem ids`)
+Local commits created: `6e40bd141c961edb5bd4f048f87263c737562009` (code fix) plus follow-up report commits (see `git log`).
 Reported original HEAD: `de624ef04373722df40dc3a7b9ffa0668aaa8628`
 
 Status vocabulary used below: **VERIFIED**, **NOT VERIFIED**, **BLOCKED**, **NOT APPLICABLE**.
@@ -24,7 +24,7 @@ No deployment was performed. No credential was rotated by this work. No producti
 | Vercel configuration (Production/Preview/Development) | **BLOCKED** | No Vercel project access available locally |
 | Working-tree diff reviewed and clean | **VERIFIED** | See Phase 4 |
 | All local checks passed | **VERIFIED** | Resolver, checkout, idempotency, TypeScript, build, migration, secret scan |
-| Git commit created locally | **VERIFIED** | `6e40bd141c961edb5bd4f048f87263c737562009` |
+| Git commits created locally | **VERIFIED** | Code fix: `6e40bd141c961edb5bd4f048f87263c737562009`; report commits: see `git log` |
 | Git push | **BLOCKED** | Not pushed — push to `main` may trigger Vercel auto-deploy; requires approval |
 | Deployment approval | **BLOCKED** | No explicit approval given |
 | Deployment result | **NOT APPLICABLE** | No deployment executed |
@@ -169,8 +169,8 @@ Database variables must remain server-side; never use a `NEXT_PUBLIC_` prefix fo
 Test records created during verification were removed; a final query returned zero orders and zero customers for all verification phone numbers.
 
 ### Git status — **VERIFIED (commit) / BLOCKED (push)**
-- Local commit: `6e40bd141c961edb5bd4f048f87263c737562009`
-- Branch `main` is **1 commit ahead** of `origin/main`; **not pushed**.
+- Code fix commit: `6e40bd141c961edb5bd4f048f87263c737562009`; additional report commits: see `git log`.
+- Branch `main` is **3 commits ahead** of `origin/main`; **not pushed**.
 - Push is **BLOCKED**: pushing to `main` may trigger a Vercel production deployment, and no deployment approval exists.
 - History rewrite / force-push: **NOT APPLICABLE** — not performed. The prepared `security/history-purge` branch was left untouched.
 
