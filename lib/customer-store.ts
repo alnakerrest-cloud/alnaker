@@ -21,7 +21,12 @@ const memoryCustomerMap = new Map<string, CustomerRecord>(); // id -> CustomerRe
 const memoryPhoneIndex = new Map<string, string>(); // phone -> id
 
 function getPgPool(): pg.Pool | null {
-  const connectionString = getConfiguredDatabaseUrl();
+  let connectionString: string | null;
+  try {
+    connectionString = getConfiguredDatabaseUrl();
+  } catch {
+    return null;
+  }
   if (!connectionString) return null;
 
   const globalObj = globalThis as unknown as { __pgCustomerPool?: pg.Pool };

@@ -152,7 +152,12 @@ const globalForOrders = globalThis as unknown as {
 };
 
 function getPgPool(): pg.Pool | null {
-  const connectionString = getConfiguredDatabaseUrl();
+  let connectionString: string | null;
+  try {
+    connectionString = getConfiguredDatabaseUrl();
+  } catch {
+    return null;
+  }
   if (!connectionString) return null;
   if (!globalForOrders.__pgPool) {
     globalForOrders.__pgPool = new pg.Pool({

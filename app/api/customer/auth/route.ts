@@ -4,6 +4,7 @@
 // ==============================================================================
 
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
 import { activeOtpProvider } from "@/lib/otp-provider";
 import {
   signCustomerSession,
@@ -87,7 +88,8 @@ export async function POST(request: NextRequest) {
       debugCode: otpRes.debugCode,
     });
   } catch (err: any) {
-    console.error("[customer-auth] Error:", err?.message || err);
-    return NextResponse.json({ error: "حدث خطأ أثناء معالجة الطلب" }, { status: 500 });
+    const errorId = `err_${crypto.randomUUID().slice(0, 8)}`;
+    console.error(`[customer-auth][${errorId}] Error:`, err?.message || err);
+    return NextResponse.json({ error: "حدث خطأ أثناء معالجة الطلب", errorId }, { status: 500 });
   }
 }

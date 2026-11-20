@@ -51,7 +51,12 @@ export interface CustomerNotificationRecord {
 }
 
 function getPgPool(): pg.Pool | null {
-  const connectionString = getConfiguredDatabaseUrl();
+  let connectionString: string | null;
+  try {
+    connectionString = getConfiguredDatabaseUrl();
+  } catch {
+    return null;
+  }
   if (!connectionString) return null;
 
   const globalObj = globalThis as unknown as { __pgCustomerHubPool?: pg.Pool };

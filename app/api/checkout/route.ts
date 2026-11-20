@@ -152,8 +152,14 @@ function formatWhatsAppOrderMessage(params: {
 }
 
 export async function POST(request: NextRequest) {
+  let body: CheckoutRequest;
   try {
-    const body = (await request.json()) as CheckoutRequest;
+    body = (await request.json()) as CheckoutRequest;
+  } catch {
+    return NextResponse.json({ error: "طلب غير صالح أو صيغة طلب غير صحيحة." }, { status: 400 });
+  }
+
+  try {
     const {
       locale = "ar",
       items,
