@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import pg from "pg";
 
 import { generateCustomerId } from "./customer-session";
+import { createOrderNotificationAsync } from "./customer-hub-store";
 
 export type OrderStatus =
   | "DRAFT"
@@ -291,11 +292,11 @@ function writeJsonFile<T>(fileName: string, data: T): void {
   }
 }
 
-function loadOrders(): OrderRecord[] {
+export function loadOrders(): OrderRecord[] {
   return readJsonFile<OrderRecord[]>("orders-store.json", []);
 }
 
-function saveOrders(orders: OrderRecord[]): void {
+export function saveOrders(orders: OrderRecord[]): void {
   writeJsonFile("orders-store.json", orders);
 }
 
@@ -789,6 +790,17 @@ export function updateOrderStatus(
   return { success: true, order };
 }
 
+const STATUS_NOTIFICATIONS: Partial<Record<OrderStatus, { title: string; message: string }>> = {
+  RECEIVED: { title: "تم استلام طلبك", message: "تم استلام تفاصيل طلبك وهو بانتظار المراجعة والتأكيد." },
+  CONFIRMED: { title: "تم تأكيد طلبك ✅", message: "تم تأكيد طلبك بنجاح من المطعم وجاري إدراجه بجدول العمل." },
+  PREPARING: { title: "بدأ تحضير وجبتك 🍳", message: "فريق المطبخ بدأ الآن في تجهيز طلبك بعناية." },
+  READY: { title: "طلبك جاهز ✨", message: "طلبك جاهز للاستلام أو الخروج مع مندوب التوصيل." },
+  OUT_FOR_DELIVERY: { title: "الطلب في الطريق إليك 🚚", message: "مندوب التوصيل في طريقه إليك الآن بوجبتك الساخنة." },
+  COMPLETED: { title: "تم تسليم الطلب بنجاح 🎉", message: "نتمنى لك وجبة شهية وتجربة مميزة مع قرية الناقر!" },
+  REJECTED: { title: "تحديث بشأن الطلب ❌", message: "نعتذر عن عدم إمكانية تنفيذ الطلب حالياً." },
+  CANCELLED: { title: "تم إلغاء الطلب 🚫", message: "تم إلغاء الطلب بناءً على رغبتك أو رغبة الفرع." },
+};
+
 export async function updateOrderStatusAsync(
   identifier: string,
   newStatus: OrderStatus,
@@ -807,6 +819,18 @@ export async function updateOrderStatusAsync(
       await persistOrderToDb(result.order);
     } catch (e: any) {
       console.warn("[orders-store] updateOrderStatusAsync DB persist note:", e.message);
+    }
+
+    // إنشاء إشعار حقيقي للعميل صاحب الطلب
+    if (result.order.customerId && STATUS_NOTIFICATIONS[newStatus]) {
+      const notifMeta = STATUS_NOTIFICATIONS[newStatus]!;
+      createOrderNotificationAsync({
+        customerId: result.order.customerId,
+        orderNumber: result.order.orderNumber,
+        title: notifMeta.title,
+        message: `${notifMeta.message} (طلب #${result.order.orderNumber})`,
+        type: "ORDER_STATUS",
+      }).catch((err) => console.warn("[orders-store] Notification creation note:", err.message));
     }
   }
   return result;

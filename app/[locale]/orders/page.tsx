@@ -7,11 +7,20 @@ import {
   verifyCustomerSession,
   type CustomerSessionPayload,
 } from '@/lib/customer-session';
+import { getCustomerByIdAsync } from '@/lib/customer-store';
 import {
-  getOrdersByCustomerPhoneAsync,
-  type OrderRecord,
-} from '@/lib/orders-store';
-import MyOrdersClient from '@/components/MyOrdersClient';
+  getCustomerAddressesAsync,
+  getCustomerFavoritesAsync,
+  getCustomerNotificationsAsync,
+  getUnreadNotificationCountAsync,
+} from '@/lib/customer-hub-store';
+import { getOrdersByCustomerPhoneAsync, type OrderRecord } from '@/lib/orders-store';
+import { getMenuForLocale } from '@/lib/menu-db';
+import { getSiteData } from '@/lib/site-db';
+import { getActiveOffers } from '@/lib/offers-db';
+import { getMenuSettings } from '@/lib/orders-store';
+import { CartProvider } from '@/components/CartContext';
+import CustomerHubClient from '@/components/CustomerHubClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,28 +47,69 @@ export default async function OrdersPage({ params }: OrdersPageProps) {
   const sessionToken = cookieStore.get(CUSTOMER_COOKIE_NAME)?.value;
   const session: CustomerSessionPayload | null = verifyCustomerSession(sessionToken);
 
-  let initialOrders: OrderRecord[] = [];
+  const [categories, site, offers, menuSettings] = await Promise.all([
+    getMenuForLocale(locale as Locale),
+    getSiteData(locale as Locale),
+    getActiveOffers(locale as Locale),
+    Promise.resolve(getMenuSettings()),
+  ]);
+
+  let customerData = undefined;
+  let orders: OrderRecord[] = [];
+  let addresses: any[] = [];
+  let favorites: any[] = [];
+  let notifications: any[] = [];
+  let unreadCount = 0;
+
   if (session) {
     try {
-      initialOrders = await getOrdersByCustomerPhoneAsync(
-        session.phoneNormalized,
-        session.customerId,
-        30
-      );
-    } catch (err) {
-      console.warn('[orders-page] Initial fetch error:', err);
+      const [custRec, ordList, addrList, favList, notifList, unread] = await Promise.all([
+        getCustomerByIdAsync(session.customerId),
+        getOrdersByCustomerPhoneAsync(session.phoneNormalized, session.customerId, 50),
+        getCustomerAddressesAsync(session.customerId),
+        getCustomerFavoritesAsync(session.customerId),
+        getCustomerNotificationsAsync(session.customerId, 20),
+        getUnreadNotificationCountAsync(session.customerId),
+      ]);
+
+      customerData = {
+        id: session.customerId,
+        phone: custRec?.phone || session.phoneNormalized,
+        name: custRec?.name || session.customerName,
+        createdAt: custRec?.createdAt,
+      };
+      orders = ordList;
+      addresses = addrList;
+      favorites = favList;
+      notifications = notifList;
+      unreadCount = unread;
+    } catch (err: any) {
+      console.warn('[orders-page] Error loading customer data:', err.message);
     }
   }
 
   return (
-    <main className="orders-page-container">
-      <MyOrdersClient
-        locale={locale as Locale}
-        initialOrders={initialOrders}
-        initialAuthenticated={Boolean(session)}
-        initialCustomerPhone={session?.phoneNormalized}
-        initialCustomerName={session?.customerName}
-      />
-    </main>
+    <CartProvider
+      categories={categories}
+      branches={site.branches}
+      locale={locale as Locale}
+      currency={site.currency}
+      offers={offers}
+      menuSettings={menuSettings}
+    >
+      <main className="hub-page-root">
+        <CustomerHubClient
+          locale={locale as Locale}
+          initialTab="orders"
+          initialAuthenticated={Boolean(session)}
+          initialCustomer={customerData}
+          initialOrders={orders}
+          initialAddresses={addresses}
+          initialFavorites={favorites}
+          initialNotifications={notifications}
+          initialUnreadCount={unreadCount}
+        />
+      </main>
+    </CartProvider>
   );
 }

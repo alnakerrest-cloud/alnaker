@@ -7,9 +7,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { activeOtpProvider } from "@/lib/otp-provider";
 import {
   signCustomerSession,
-  generateCustomerId,
   CUSTOMER_COOKIE_NAME,
 } from "@/lib/customer-session";
+import { getOrCreateCustomerByPhoneAsync } from "@/lib/customer-store";
 
 function normalizeEgyptianPhone(phone: string): { valid: boolean; normalized: string; error?: string } {
   const digits = phone.replace(/\D/g, "");
@@ -83,8 +83,9 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: verifyRes.error || "رمز غير صالح" }, { status: 400 });
       }
 
-      const customerId = generateCustomerId(normalizedPhone);
-      const sessionToken = signCustomerSession(customerId, normalizedPhone);
+      const customer = await getOrCreateCustomerByPhoneAsync(normalizedPhone);
+      const customerId = customer.id;
+      const sessionToken = signCustomerSession(customerId, normalizedPhone, customer.name);
 
       const response = NextResponse.json({
         success: true,

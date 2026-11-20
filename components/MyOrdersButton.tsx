@@ -58,24 +58,24 @@ export default function MyOrdersButton({ locale }: MyOrdersButtonProps) {
   if (!isMounted) {
     return (
       <Link
-        href={`/${locale}/orders`}
+        href={`/${locale}/account`}
         className="my-orders-btn"
-        aria-label={isAr ? 'طلباتي' : 'My Orders'}
+        aria-label={isAr ? 'حسابي وطلباتي' : 'Customer Hub'}
       >
-        <span className="my-orders-icon" aria-hidden="true">📦</span>
-        <span>{isAr ? 'طلباتي' : 'My Orders'}</span>
+        <span className="my-orders-icon" aria-hidden="true">👤</span>
+        <span>{isAr ? 'حسابي وطلباتي' : 'Customer Hub'}</span>
       </Link>
     );
   }
 
   return (
     <Link
-      href={`/${locale}/orders`}
+      href={`/${locale}/account`}
       className={`my-orders-btn ${activeCount > 0 ? 'has-active' : ''}`}
-      aria-label={isAr ? `طلباتي${activeCount > 0 ? ` (${activeCount} طلب نشط)` : ''}` : `My Orders${activeCount > 0 ? ` (${activeCount} active)` : ''}`}
+      aria-label={isAr ? `حسابي وطلباتي${activeCount > 0 ? ` (${activeCount} طلب نشط)` : ''}` : `Customer Hub & Orders${activeCount > 0 ? ` (${activeCount} active)` : ''}`}
     >
-      <span className="my-orders-icon" aria-hidden="true">📦</span>
-      <span>{isAr ? 'طلباتي' : 'My Orders'}</span>
+      <span className="my-orders-icon" aria-hidden="true">👤</span>
+      <span>{isAr ? 'حسابي وطلباتي' : 'Customer Hub'}</span>
       {activeCount > 0 && (
         <span className="my-orders-badge" aria-label={`${activeCount} active orders`}>
           {activeCount}

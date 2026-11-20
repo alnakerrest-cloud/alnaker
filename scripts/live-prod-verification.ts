@@ -139,8 +139,8 @@ async function verifyLive() {
       console.log(`\nCleaning up audit test order from Neon database...`);
       if (createdOrderId) {
         await pool.query('DELETE FROM "OrderStore" WHERE "id" = $1', [createdOrderId]);
-        await pool.query('DELETE FROM "OrderItem" WHERE "orderId" = $1', [createdOrderId]).catch(() => {});
-        await pool.query('DELETE FROM "Order" WHERE "id" = $1', [createdOrderId]).catch(() => {});
+        await pool.query('DELETE FROM "OrderItem" WHERE "orderId" = $1', [createdOrderId]).catch(() => { });
+        await pool.query('DELETE FROM "Order" WHERE "id" = $1', [createdOrderId]).catch(() => { });
       }
       if (createdOrderNumber) {
         await pool.query('DELETE FROM "OrderStore" WHERE "orderNumber" = $1', [createdOrderNumber]);

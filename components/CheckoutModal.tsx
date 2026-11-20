@@ -77,6 +77,7 @@ export default function CheckoutModal({
   const [verificationToken, setVerificationToken] = useState<string | null>(null);
   const [hasClickedWhatsApp, setHasClickedWhatsApp] = useState(false);
   const [confirmingSent, setConfirmingSent] = useState(false);
+  const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
   const firstInputRef = useRef<HTMLInputElement | null>(null);
   const idempotencyKeyRef = useRef<string | null>(null);
 
@@ -99,6 +100,27 @@ export default function CheckoutModal({
       setSubmittedOrderNumber(null);
       setWhatsappUrl(null);
       idempotencyKeyRef.current = null;
+
+      // Prefill customer phone if available
+      try {
+        const savedP = localStorage.getItem('naqer_customer_phone');
+        if (savedP) setCustomerPhone(savedP);
+      } catch {}
+
+      // Fetch saved customer delivery addresses
+      fetch('/api/customer/addresses')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data && data.addresses && Array.isArray(data.addresses) && data.addresses.length > 0) {
+            setSavedAddresses(data.addresses);
+            const def = data.addresses.find((a: any) => a.isDefault) || data.addresses[0];
+            if (def) {
+              const full = [def.street, def.building, def.floor ? `دور ${def.floor}` : '', def.apartment ? `شقة ${def.apartment}` : ''].filter(Boolean).join('، ');
+              setDeliveryAddress(full);
+            }
+          }
+        })
+        .catch(() => {});
       
       setTimeout(() => {
         firstInputRef.current?.focus();
@@ -391,10 +413,45 @@ export default function CheckoutModal({
       
       {orderType === 'DELIVERY' && (
         <div className="form-group">
-          <label htmlFor="deliveryAddress">
-            <MapPinIcon width={16} height={16} />
-            {isAr ? 'عنوان التوصيل *' : 'Delivery Address *'}
-          </label>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+            <label htmlFor="deliveryAddress" style={{ margin: 0 }}>
+              <MapPinIcon width={16} height={16} />
+              {isAr ? 'عنوان التوصيل *' : 'Delivery Address *'}
+            </label>
+          </div>
+
+          {savedAddresses.length > 0 && (
+            <div style={{ marginBottom: '8px', display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
+              <small style={{ color: 'var(--muted)', fontWeight: 600 }}>{isAr ? 'عناوينك المحفوظة:' : 'Saved:'}</small>
+              {savedAddresses.map((a) => {
+                const full = [a.street, a.building, a.floor ? `دور ${a.floor}` : '', a.apartment ? `شقة ${a.apartment}` : ''].filter(Boolean).join('، ');
+                const isSelected = deliveryAddress === full;
+                return (
+                  <button
+                    key={a.id}
+                    type="button"
+                    style={{
+                      background: isSelected ? 'var(--brand)' : 'var(--bg-2)',
+                      color: isSelected ? '#ffffff' : 'var(--ink)',
+                      border: '1px solid var(--line)',
+                      borderRadius: '8px',
+                      padding: '3px 10px',
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                      setDeliveryAddress(full);
+                      setErrors((prev) => ({ ...prev, deliveryAddress: '' }));
+                    }}
+                  >
+                    <span>📍 {a.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
           <textarea
             id="deliveryAddress"
             value={deliveryAddress}

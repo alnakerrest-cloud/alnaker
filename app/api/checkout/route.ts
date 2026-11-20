@@ -19,7 +19,10 @@ import {
   type AppliedOfferSnapshot
 } from "@/lib/orders-store";
 
-import { signCustomerSession, CUSTOMER_COOKIE_NAME } from "@/lib/customer-session";
+import { cookies } from "next/headers";
+import { signCustomerSession, verifyCustomerSession, CUSTOMER_COOKIE_NAME } from "@/lib/customer-session";
+import { getOrCreateCustomerByPhoneAsync, getCustomerByIdAsync } from "@/lib/customer-store";
+import { getCustomerAddressesAsync, createCustomerAddressAsync, createOrderNotificationAsync } from "@/lib/customer-hub-store";
 
 interface CheckoutRequest {
   locale: "ar" | "en";
@@ -483,10 +486,28 @@ export async function POST(request: NextRequest) {
     });
     const finalWhatsAppUrl = `https://wa.me/${cleanWhatsAppPhone}?text=${encodeURIComponent(finalWhatsAppMsg)}`;
 
-    // 6. Create and DURABLY AWAIT order commit to database
+    // 6. Resolve / Create persistent Customer Identity
+    const cookieStore = await cookies();
+    const existingCookie = cookieStore.get(CUSTOMER_COOKIE_NAME)?.value;
+    const existingSession = verifyCustomerSession(existingCookie);
+
+    let customerRecord;
+    if (existingSession && existingSession.phoneNormalized === normalizedPhone) {
+      customerRecord = await getCustomerByIdAsync(existingSession.customerId);
+    }
+    if (!customerRecord) {
+      customerRecord = await getOrCreateCustomerByPhoneAsync(
+        normalizedPhone,
+        customerName ? customerName.slice(0, 100).trim() : undefined
+      );
+    }
+    const resolvedCustomerId = customerRecord.id;
+
+    // 7. Create and DURABLY AWAIT order commit to database
     const clientIp = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "127.0.0.1";
 
     const order = await createOrder({
+      customerId: resolvedCustomerId,
       orderNumber: generatedOrderNumber,
       verificationToken: generatedToken,
       verificationCode: generatedCode,
@@ -520,6 +541,31 @@ export async function POST(request: NextRequest) {
 
     if (!order || !order.orderNumber) {
       throw new Error("تعذّر حفظ وتأكيد الطلب في قاعدة البيانات");
+    }
+
+    // Auto-save delivery address for customer if provided
+    if (resolvedCustomerId && orderType === "DELIVERY" && deliveryAddress) {
+      const cleanAddr = deliveryAddress.trim();
+      getCustomerAddressesAsync(resolvedCustomerId).then((existingAddrs) => {
+        if (!existingAddrs.some((a) => a.street === cleanAddr || `${a.street} ${a.building || ''}`.trim() === cleanAddr)) {
+          createCustomerAddressAsync(resolvedCustomerId, {
+            label: existingAddrs.length === 0 ? "المنزل" : "عنوان التوصيل",
+            street: cleanAddr,
+            isDefault: existingAddrs.length === 0,
+          }).catch(() => {});
+        }
+      }).catch(() => {});
+    }
+
+    // Initial order notification
+    if (resolvedCustomerId) {
+      createOrderNotificationAsync({
+        customerId: resolvedCustomerId,
+        orderNumber: order.orderNumber,
+        title: "تم استلام طلبك الجديد",
+        message: `تم استلام طلبك رقم ${order.orderNumber} بنجاح بإجمالي ${order.total} ${order.currency || "ج.م"}.`,
+        type: "ORDER_CREATED",
+      }).catch(() => {});
     }
 
     // 7. Optional PostgreSQL Database Sync into relational Order and OrderItem tables
@@ -561,7 +607,7 @@ export async function POST(request: NextRequest) {
       console.warn("[checkout] DB sync note (relational Order table):", dbErr?.message || dbErr);
     }
 
-    const customerId = order.customerId || "";
+    const customerId = order.customerId || resolvedCustomerId;
     const sessionToken = signCustomerSession(customerId, normalizedPhone, order.customerName);
 
     const response = NextResponse.json({
