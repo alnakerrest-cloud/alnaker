@@ -6,6 +6,7 @@
 
 import crypto from "node:crypto";
 import pg from "pg";
+import { getConfiguredDatabaseUrl, pgSslConfig } from "./database-url";
 
 export interface CustomerRecord {
   id: string; // المعرف الثابت الدائم (e.g. cust_xxxxxxxx)
@@ -20,7 +21,7 @@ const memoryCustomerMap = new Map<string, CustomerRecord>(); // id -> CustomerRe
 const memoryPhoneIndex = new Map<string, string>(); // phone -> id
 
 function getPgPool(): pg.Pool | null {
-  const connectionString = process.env.DATABASE_URL || process.env["DATABASE_URL "];
+  const connectionString = getConfiguredDatabaseUrl();
   if (!connectionString) return null;
 
   const globalObj = globalThis as unknown as { __pgCustomerPool?: pg.Pool };
@@ -30,6 +31,7 @@ function getPgPool(): pg.Pool | null {
       max: 5,
       connectionTimeoutMillis: 15000,
       idleTimeoutMillis: 30000,
+      ssl: pgSslConfig(connectionString),
     });
   }
   return globalObj.__pgCustomerPool;

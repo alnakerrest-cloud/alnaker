@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import pg from "pg";
+import { getConfiguredDatabaseUrl, pgSslConfig } from "./database-url";
 
 import { generateCustomerId } from "./customer-session";
 import { createOrderNotificationAsync } from "./customer-hub-store";
@@ -151,7 +152,7 @@ const globalForOrders = globalThis as unknown as {
 };
 
 function getPgPool(): pg.Pool | null {
-  const connectionString = process.env.DATABASE_URL || process.env["DATABASE_URL "];
+  const connectionString = getConfiguredDatabaseUrl();
   if (!connectionString) return null;
   if (!globalForOrders.__pgPool) {
     globalForOrders.__pgPool = new pg.Pool({
@@ -160,6 +161,7 @@ function getPgPool(): pg.Pool | null {
       connectionTimeoutMillis: 15000,
       idleTimeoutMillis: 30000,
       keepAlive: true,
+      ssl: pgSslConfig(connectionString),
     });
     globalForOrders.__pgPool.on("error", (err) => {
       console.warn("[orders-store] PG pool idle note:", err.message);

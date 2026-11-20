@@ -604,7 +604,9 @@ export async function POST(request: NextRequest) {
           idempotencyKey: order.idempotencyKey,
           items: {
             create: verifiedItems.map((vi) => ({
-              id: vi.id,
+              // vi.id is only unique inside one cart (item-<product>-<variant>-<index>).
+              // Prefixing with the order id keeps OrderItem primary keys unique across orders.
+              id: `${order.id}:${vi.id}`,
               productId: vi.productId,
               productName: vi.productName,
               variantLabel: vi.variantLabel,

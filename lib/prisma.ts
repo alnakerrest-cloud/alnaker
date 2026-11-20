@@ -10,6 +10,7 @@ import { PrismaClient } from "@/lib/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import { getLocalDbEngine } from "./local-db-engine";
+import { resolveDatabaseUrl, pgSslConfig } from "./database-url";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient; pool?: pg.Pool };
 
@@ -42,10 +43,7 @@ function getClient(): PrismaClient {
     return instance;
   }
 
-  let connectionString = process.env.DATABASE_URL || process.env["DATABASE_URL "];
-  if (!connectionString || connectionString.includes("ep-withered-bread")) {
-    connectionString = "postgresql://neondb_owner:npg_rFT4piIsBIK-zr1bHpu47gyig7-ph9-n@ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
-  }
+  const connectionString = resolveDatabaseUrl();
 
   // بركة pg واحدة تُعاد استخدامها داخل نفس العملية. القيم مناسبة لـ Neon pooler على serverless.
   const pool =
@@ -56,7 +54,7 @@ function getClient(): PrismaClient {
       connectionTimeoutMillis: 15_000, // مهلة أطول تمنح compute وقتًا للاستيقاظ بدل الفشل السريع
       idleTimeoutMillis: 30_000,
       keepAlive: true, // إبقاء الوصلة حيّة يقلّل إعادة الـ DNS/connect المتكررة
-      ssl: connectionString.includes("sslmode=require") ? { rejectUnauthorized: false } : undefined,
+      ssl: pgSslConfig(connectionString),
     });
   // أخطاء الوصلات الخاملة (قطع من طرف Neon) يجب ألا تُسقط العملية.
   pool.on("error", (err) => {
