@@ -242,6 +242,12 @@ export default function CheckoutModal({
       setSubmittedOrderNumber(data.orderNumber);
       setWhatsappUrl(data.whatsappUrl);
       setVerificationToken(data.verificationToken);
+
+      try {
+        localStorage.setItem('naqer_customer_phone', customerPhone.trim());
+        if (data.customerId) localStorage.setItem('naqer_customer_id', data.customerId);
+        localStorage.setItem('naqer_active_orders_count', '1');
+      } catch {}
       
       idempotencyKeyRef.current = null;
       // Clear cart after successful order creation

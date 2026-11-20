@@ -62,9 +62,13 @@ async function verifyLive() {
       throw new Error(`Checkout failed: ${JSON.stringify(checkoutData)}`);
     }
 
-    createdOrderNumber = checkoutData.orderNumber;
+    createdOrderNumber = checkoutData.orderNumber as string;
     createdOrderId = checkoutData.orderId;
     const token = checkoutData.verificationToken;
+
+    if (!createdOrderNumber) {
+      throw new Error("Order number is null");
+    }
 
     // 2. Verify durable commit in Neon Database immediately
     console.log(`\n2. Verifying Neon PostgreSQL OrderStore for ${createdOrderNumber}...`);

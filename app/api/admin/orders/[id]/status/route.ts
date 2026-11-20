@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSessionAdmin } from "@/lib/auth";
-import { updateOrderStatus, getOrderById, getOrderByIdAsync, type OrderStatus } from "@/lib/orders-store";
+import { updateOrderStatus, updateOrderStatusAsync, getOrderById, getOrderByIdAsync, type OrderStatus } from "@/lib/orders-store";
 import { logAction } from "@/lib/audit";
 
 export async function PATCH(
@@ -27,7 +27,7 @@ export async function PATCH(
     }
 
     const actorName = `${admin.role === "OWNER" ? "المالك / المدير العام" : "مشرف"}: ${admin.displayName || admin.email || admin.id.slice(0, 8)}`;
-    const result = updateOrderStatus(id, status as OrderStatus, actorName, reason);
+    const result = await updateOrderStatusAsync(id, status as OrderStatus, actorName, reason);
 
     if (!result.success) {
       return NextResponse.json({ error: result.error }, { status: 400 });

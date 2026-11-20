@@ -19,6 +19,8 @@ import {
   type AppliedOfferSnapshot
 } from "@/lib/orders-store";
 
+import { signCustomerSession, CUSTOMER_COOKIE_NAME } from "@/lib/customer-session";
+
 interface CheckoutRequest {
   locale: "ar" | "en";
   items: CartItem[];
@@ -559,7 +561,10 @@ export async function POST(request: NextRequest) {
       console.warn("[checkout] DB sync note (relational Order table):", dbErr?.message || dbErr);
     }
 
-    return NextResponse.json({
+    const customerId = order.customerId || "";
+    const sessionToken = signCustomerSession(customerId, normalizedPhone, order.customerName);
+
+    const response = NextResponse.json({
       success: true,
       orderId: order.id,
       orderNumber: order.orderNumber,
@@ -567,8 +572,22 @@ export async function POST(request: NextRequest) {
       verificationCode: order.verificationCode,
       status: order.status,
       whatsappUrl: finalWhatsAppUrl,
+      customerId,
+      customerSessionToken: sessionToken,
       order,
     });
+
+    response.cookies.set({
+      name: CUSTOMER_COOKIE_NAME,
+      value: sessionToken,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 60, // 60 days
+    });
+
+    return response;
   } catch (error: any) {
     console.error("[checkout] Error creating order:", {
       message: error?.message || String(error),

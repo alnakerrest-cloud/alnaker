@@ -148,6 +148,45 @@ export default async function ReceiptPage({ params, searchParams }: ReceiptPageP
         }}
       />
 
+      {/* Customer Navigation Bar */}
+      <div className="no-print" style={{ maxWidth: "680px", margin: "16px auto 0", padding: "0 12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Link
+          href={`/${locale || "ar"}/orders`}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            fontSize: "14px",
+            fontWeight: 700,
+            color: "#92400e",
+            textDecoration: "none",
+            padding: "8px 14px",
+            borderRadius: "8px",
+            background: "#fef3c7",
+            border: "1px solid #fde68a",
+            transition: "all 0.2s ease",
+          }}
+        >
+          <span>📦</span>
+          <span>{locale === "en" ? "← Back to My Orders" : "← العودة إلى قائمة طلباتي"}</span>
+        </Link>
+        <Link
+          href={`/${locale || "ar"}`}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "6px",
+            fontSize: "13px",
+            fontWeight: 600,
+            color: "#64748b",
+            textDecoration: "none",
+          }}
+        >
+          <span>🍽️</span>
+          <span>{locale === "en" ? "Menu" : "تصفح المنيو"}</span>
+        </Link>
+      </div>
+
       <div
         className="receipt-wrapper"
         style={{

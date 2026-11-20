@@ -1,6 +1,7 @@
 import type { SiteData } from '@/lib/site-db';
 import type { Locale } from '@/lib/i18n';
 import LangSwitch from './LangSwitch';
+import MyOrdersButton from './MyOrdersButton';
 import Logo from './Logo';
 import { PhoneIcon, PinIcon } from './Icons';
 
@@ -9,6 +10,7 @@ export default function Hero({ locale, site }: { locale: Locale; site: SiteData 
     <header className="hero">
       <div className="container">
         <div className="hero-top">
+          <MyOrdersButton locale={locale} />
           <LangSwitch locale={locale} />
         </div>
 

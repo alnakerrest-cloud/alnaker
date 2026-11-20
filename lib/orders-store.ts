@@ -3,6 +3,8 @@ import path from "node:path";
 import crypto from "node:crypto";
 import pg from "pg";
 
+import { generateCustomerId } from "./customer-session";
+
 export type OrderStatus =
   | "DRAFT"
   | "PENDING_WHATSAPP"
@@ -76,6 +78,7 @@ export interface OrderRecord {
   paymentMethod: PaymentMethod;
 
   // Customer info
+  customerId?: string;
   customerName?: string;
   customerPhone: string;
   customerPhoneNormalized: string;
@@ -363,6 +366,7 @@ export interface CreateOrderParams {
   orderNumber?: string;
   verificationToken?: string;
   verificationCode?: string;
+  customerId?: string;
   type: OrderType;
   paymentMethod: PaymentMethod;
   customerName?: string;
@@ -440,6 +444,7 @@ export async function createOrder(params: CreateOrderParams): Promise<OrderRecor
     status: "PENDING_WHATSAPP",
     type: params.type,
     paymentMethod: params.paymentMethod,
+    customerId: params.customerId || generateCustomerId(params.customerPhoneNormalized),
     customerName: params.customerName,
     customerPhone: params.customerPhone,
     customerPhoneNormalized: params.customerPhoneNormalized,
@@ -633,6 +638,56 @@ export async function getOrderByIdAsync(id: string): Promise<OrderRecord | null>
   return null;
 }
 
+export async function getOrdersByCustomerPhoneAsync(
+  phoneOrNormalized: string,
+  customerId?: string,
+  limit: number = 25
+): Promise<OrderRecord[]> {
+  const cleanPhone = phoneOrNormalized.replace(/\D/g, "");
+  const orderMap = new Map<string, OrderRecord>();
+
+  // 1. Check local / memory cache first
+  const localOrders = loadOrders();
+  for (const o of localOrders) {
+    const oPhone = (o.customerPhoneNormalized || o.customerPhone || "").replace(/\D/g, "");
+    if ((cleanPhone && (oPhone === cleanPhone || oPhone.endsWith(cleanPhone) || cleanPhone.endsWith(oPhone))) ||
+        (customerId && o.customerId === customerId)) {
+      orderMap.set(o.orderNumber, o);
+    }
+  }
+
+  // 2. Query Neon PostgreSQL database
+  const pool = getPgPool();
+  if (pool) {
+    try {
+      const res = await pool.query(
+        `SELECT "data" FROM "OrderStore" 
+         WHERE ("data"->>'customerPhoneNormalized' = $1 
+            OR "data"->>'customerPhone' = $1
+            OR "data"->>'customerPhoneNormalized' LIKE '%' || $2
+            OR ($3::text IS NOT NULL AND "data"->>'customerId' = $3))
+         ORDER BY "createdAt" DESC
+         LIMIT $4`,
+        [cleanPhone, cleanPhone.slice(-9), customerId || null, limit]
+      );
+
+      for (const row of res.rows) {
+        if (row.data) {
+          const ord = row.data as OrderRecord;
+          orderMap.set(ord.orderNumber, ord);
+        }
+      }
+    } catch (err: any) {
+      console.warn("[orders-store] DB fetch by customer phone note:", err.message);
+    }
+  }
+
+  // Sort by createdAt descending
+  return Array.from(orderMap.values()).sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
 export async function confirmCustomerSentAsync(orderNumber: string): Promise<OrderRecord | null> {
   let order = await getOrderByNumberAsync(orderNumber);
   if (!order) return null;
@@ -732,6 +787,29 @@ export function updateOrderStatus(
   saveOrders(orders);
   persistOrderToDb(order).catch(() => {});
   return { success: true, order };
+}
+
+export async function updateOrderStatusAsync(
+  identifier: string,
+  newStatus: OrderStatus,
+  actor: string = "admin",
+  reasonOrNote?: string
+): Promise<{ success: boolean; order?: OrderRecord; error?: string }> {
+  // First ensure loaded from DB if not in memory
+  let order = await getOrderByIdAsync(identifier);
+  if (!order) {
+    return { success: false, error: "الطلب غير موجود" };
+  }
+
+  const result = updateOrderStatus(identifier, newStatus, actor, reasonOrNote);
+  if (result.success && result.order) {
+    try {
+      await persistOrderToDb(result.order);
+    } catch (e: any) {
+      console.warn("[orders-store] updateOrderStatusAsync DB persist note:", e.message);
+    }
+  }
+  return result;
 }
 
 export interface ListOrdersQuery {
