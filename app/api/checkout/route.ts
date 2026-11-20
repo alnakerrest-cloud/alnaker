@@ -21,7 +21,7 @@ import {
 
 import { cookies } from "next/headers";
 import { signCustomerSession, verifyCustomerSession, CUSTOMER_COOKIE_NAME } from "@/lib/customer-session";
-import { getOrCreateCustomerByPhoneAsync, getCustomerByIdAsync } from "@/lib/customer-store";
+import { getOrCreateCustomerByPhoneAsync, getCustomerByIdAsync, updateCustomerNameAsync } from "@/lib/customer-store";
 import { getCustomerAddressesAsync, createCustomerAddressAsync, createOrderNotificationAsync } from "@/lib/customer-hub-store";
 
 interface CheckoutRequest {
@@ -503,6 +503,8 @@ export async function POST(request: NextRequest) {
     const existingCookie = cookieStore.get(CUSTOMER_COOKIE_NAME)?.value;
     const existingSession = verifyCustomerSession(existingCookie);
 
+    const cleanCustomerName = customerName ? customerName.slice(0, 100).trim() : undefined;
+
     let customerRecord;
     if (existingSession && existingSession.phoneNormalized === normalizedPhone) {
       customerRecord = await getCustomerByIdAsync(existingSession.customerId);
@@ -510,9 +512,12 @@ export async function POST(request: NextRequest) {
     if (!customerRecord) {
       customerRecord = await getOrCreateCustomerByPhoneAsync(
         normalizedPhone,
-        customerName ? customerName.slice(0, 100).trim() : undefined,
+        cleanCustomerName,
         existingSession?.customerId
       );
+    } else if (cleanCustomerName && (!customerRecord.name || customerRecord.name !== cleanCustomerName)) {
+      await updateCustomerNameAsync(customerRecord.id, cleanCustomerName);
+      customerRecord.name = cleanCustomerName;
     }
     const resolvedCustomerId = customerRecord.id;
 

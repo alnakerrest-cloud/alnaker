@@ -5,6 +5,17 @@ import Link from 'next/link';
 import type { Locale } from '@/lib/i18n';
 import type { OrderRecord, OrderStatus } from '@/lib/orders-store';
 import OrderTrackingTimeline from '@/components/OrderTrackingTimeline';
+import {
+  UserIcon,
+  ReceiptIcon,
+  WhatsAppIcon,
+  CloseIcon,
+  TruckIcon,
+  StoreIcon,
+  ClockIcon,
+  UtensilsIcon,
+  SmartphoneIcon,
+} from '@/components/Icons';
 
 interface MyOrdersClientProps {
   locale: Locale;
@@ -16,34 +27,34 @@ interface MyOrdersClientProps {
 
 const TERMINAL_STATUSES: OrderStatus[] = ['COMPLETED', 'REJECTED', 'CANCELLED', 'EXPIRED'];
 
-const STATUS_LABELS_AR: Record<OrderStatus, { label: string; color: string; icon: string }> = {
-  DRAFT: { label: 'مسودة', color: '#64748b', icon: '📝' },
-  PENDING_WHATSAPP: { label: 'بانتظار الإرسال عبر واتساب', color: '#f59e0b', icon: '⏳' },
-  CUSTOMER_CONFIRMED_SENT: { label: 'تم الإرسال - بانتظار المراجعة', color: '#3b82f6', icon: '📩' },
-  RECEIVED: { label: 'تم استلام الطلب', color: '#3b82f6', icon: '📥' },
-  CONFIRMED: { label: 'تم تأكيد الطلب', color: '#10b981', icon: '✅' },
-  PREPARING: { label: 'جاري التحضير بالمطعم', color: '#8b5cf6', icon: '🍳' },
-  READY: { label: 'جاهز للاستلام', color: '#16a34a', icon: '✨' },
-  OUT_FOR_DELIVERY: { label: 'خرج للتوصيل مع المندوب', color: '#0ea5e9', icon: '🚚' },
-  COMPLETED: { label: 'تم التسليم بنجاح', color: '#22c55e', icon: '🎉' },
-  REJECTED: { label: 'تم الاعتذار عن الطلب', color: '#ef4444', icon: '❌' },
-  CANCELLED: { label: 'تم إلغاء الطلب', color: '#ef4444', icon: '🚫' },
-  EXPIRED: { label: 'انتهت صلاحية الطلب', color: '#94a3b8', icon: '⏰' },
+const STATUS_LABELS_AR: Record<OrderStatus, { label: string; color: string }> = {
+  DRAFT: { label: 'مسودة', color: '#64748b' },
+  PENDING_WHATSAPP: { label: 'بانتظار الإرسال عبر واتساب', color: '#b45309' },
+  CUSTOMER_CONFIRMED_SENT: { label: 'تم الإرسال - بانتظار المراجعة', color: '#1e40af' },
+  RECEIVED: { label: 'تم استلام الطلب', color: '#1e40af' },
+  CONFIRMED: { label: 'تم تأكيد الطلب', color: '#5c2a26' },
+  PREPARING: { label: 'جاري التحضير بالمطعم', color: '#7d3b34' },
+  READY: { label: 'جاهز للاستلام', color: '#854d0e' },
+  OUT_FOR_DELIVERY: { label: 'خرج للتوصيل مع المندوب', color: '#0369a1' },
+  COMPLETED: { label: 'تم التسليم بنجاح', color: '#166534' },
+  REJECTED: { label: 'تم الاعتذار عن الطلب', color: '#991b1b' },
+  CANCELLED: { label: 'تم إلغاء الطلب', color: '#991b1b' },
+  EXPIRED: { label: 'انتهت صلاحية الطلب', color: '#64748b' },
 };
 
-const STATUS_LABELS_EN: Record<OrderStatus, { label: string; color: string; icon: string }> = {
-  DRAFT: { label: 'Draft', color: '#64748b', icon: '📝' },
-  PENDING_WHATSAPP: { label: 'Pending WhatsApp Dispatch', color: '#f59e0b', icon: '⏳' },
-  CUSTOMER_CONFIRMED_SENT: { label: 'Sent - Awaiting Review', color: '#3b82f6', icon: '📩' },
-  RECEIVED: { label: 'Order Received', color: '#3b82f6', icon: '📥' },
-  CONFIRMED: { label: 'Order Confirmed', color: '#10b981', icon: '✅' },
-  PREPARING: { label: 'Preparing in Kitchen', color: '#8b5cf6', icon: '🍳' },
-  READY: { label: 'Ready for Pickup', color: '#16a34a', icon: '✨' },
-  OUT_FOR_DELIVERY: { label: 'Out for Delivery', color: '#0ea5e9', icon: '🚚' },
-  COMPLETED: { label: 'Delivered Successfully', color: '#22c55e', icon: '🎉' },
-  REJECTED: { label: 'Order Rejected', color: '#ef4444', icon: '❌' },
-  CANCELLED: { label: 'Order Cancelled', color: '#ef4444', icon: '🚫' },
-  EXPIRED: { label: 'Order Expired', color: '#94a3b8', icon: '⏰' },
+const STATUS_LABELS_EN: Record<OrderStatus, { label: string; color: string }> = {
+  DRAFT: { label: 'Draft', color: '#64748b' },
+  PENDING_WHATSAPP: { label: 'Pending WhatsApp Dispatch', color: '#b45309' },
+  CUSTOMER_CONFIRMED_SENT: { label: 'Sent - Awaiting Review', color: '#1e40af' },
+  RECEIVED: { label: 'Order Received', color: '#1e40af' },
+  CONFIRMED: { label: 'Order Confirmed', color: '#5c2a26' },
+  PREPARING: { label: 'Preparing in Kitchen', color: '#7d3b34' },
+  READY: { label: 'Ready for Pickup', color: '#854d0e' },
+  OUT_FOR_DELIVERY: { label: 'Out for Delivery', color: '#0369a1' },
+  COMPLETED: { label: 'Delivered Successfully', color: '#166534' },
+  REJECTED: { label: 'Order Rejected', color: '#991b1b' },
+  CANCELLED: { label: 'Order Cancelled', color: '#991b1b' },
+  EXPIRED: { label: 'Order Expired', color: '#64748b' },
 };
 
 export default function MyOrdersClient({
@@ -103,8 +114,8 @@ export default function MyOrdersClient({
         if (prevSt && prevSt !== newOrd.status) {
           const stLabel = statusMeta[newOrd.status]?.label || newOrd.status;
           const msg = isAr
-            ? `🔔 تحديث للطلب ${newOrd.orderNumber}: أصبح الآن (${stLabel})`
-            : `🔔 Order ${newOrd.orderNumber} updated to: ${stLabel}`;
+            ? `تحديث للطلب #${newOrd.orderNumber}: أصبح الآن (${stLabel})`
+            : `Order #${newOrd.orderNumber} updated to: ${stLabel}`;
           setNotificationMsg(msg);
           setTimeout(() => setNotificationMsg(null), 7000);
         }
@@ -227,7 +238,9 @@ export default function MyOrdersClient({
       {notificationMsg && (
         <aside aria-label="Notification" className="orders-notification-banner">
           <span>{notificationMsg}</span>
-          <button type="button" aria-label={isAr ? "إغلاق التنبيه" : "Dismiss alert"} onClick={() => setNotificationMsg(null)}>✕</button>
+          <button type="button" aria-label={isAr ? "إغلاق التنبيه" : "Dismiss alert"} onClick={() => setNotificationMsg(null)}>
+            <CloseIcon width={14} height={14} />
+          </button>
         </aside>
       )}
 
@@ -240,7 +253,10 @@ export default function MyOrdersClient({
         <h1 className="orders-page-title">{isAr ? 'طلباتي' : 'My Orders'}</h1>
         {authenticated && (
           <div className="orders-customer-chip">
-            <span>👤 {customerName || (isAr ? 'عميل قرية الناقر' : 'Customer')}</span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <UserIcon width={14} height={14} />
+              <span>{customerName || (isAr ? 'عميل قرية الناقر' : 'Customer')}</span>
+            </span>
             {customerPhone && <span dir="ltr">({customerPhone})</span>}
             <button type="button" onClick={handleLogout} className="orders-logout-link" title={isAr ? 'تسجيل الخروج' : 'Log out'}>
               {isAr ? 'خروج' : 'Exit'}
@@ -252,7 +268,9 @@ export default function MyOrdersClient({
       {/* Guest Phone Verification Card (When not authenticated) */}
       {showPhoneAuth && !authenticated && (
         <section aria-labelledby="orders-login-card-heading" className="orders-auth-card">
-          <div className="orders-auth-icon">📱</div>
+          <div className="orders-auth-icon-circle" style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--bg-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--brand)', border: '1px solid var(--line)' }}>
+            <SmartphoneIcon width={28} height={28} />
+          </div>
           <h2 id="orders-login-card-heading" className="orders-auth-title">
             {isAr ? 'استعراض ومتابعة طلباتك' : 'Access Your Orders'}
           </h2>
@@ -279,7 +297,7 @@ export default function MyOrdersClient({
                   className="orders-auth-input"
                 />
                 <button type="submit" disabled={authLoading} className="orders-auth-submit">
-                  {authLoading ? (isAr ? 'جاري الإرسال...' : 'Sending...') : (isAr ? 'متابعة ←' : 'Continue →')}
+                  {authLoading ? (isAr ? 'جاري الإرسال...' : 'Sending...') : (isAr ? 'متابعة' : 'Continue')}
                 </button>
               </div>
               {authError && <p className="orders-auth-error">{authError}</p>}
@@ -347,7 +365,9 @@ export default function MyOrdersClient({
 
             {activeOrders.length === 0 ? (
               <div className="orders-empty-card">
-                <div className="empty-icon">🍽️</div>
+                <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--bg-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--brand)', border: '1px solid var(--line)' }}>
+                  <UtensilsIcon width={28} height={28} />
+                </div>
                 <h3>{isAr ? 'لا يوجد طلب حالي قيد التنفيذ' : 'No Active Orders'}</h3>
                 <p>
                   {isAr
@@ -361,7 +381,7 @@ export default function MyOrdersClient({
             ) : (
               <div className="active-orders-grid">
                 {activeOrders.map((order) => {
-                  const meta = statusMeta[order.status] || { label: order.status, color: '#f59e0b', icon: '⏳' };
+                  const meta = statusMeta[order.status] || { label: order.status, color: '#c98f2b' };
                   const isDelivery = order.type === 'DELIVERY';
 
                   return (
@@ -369,12 +389,21 @@ export default function MyOrdersClient({
                       <div className="active-card-top">
                         <div className="active-order-identifiers">
                           <span className="active-order-number">#{order.orderNumber}</span>
-                          <span className="active-order-type">
-                            {isDelivery ? (isAr ? '🚚 توصيل للمنزل' : '🚚 Delivery') : (isAr ? '🏢 استلام من الفرع' : '🏢 Takeaway')}
+                          <span className="active-order-type" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            {isDelivery ? (
+                              <>
+                                <TruckIcon width={14} height={14} />
+                                <span>{isAr ? 'توصيل للمنزل' : 'Delivery'}</span>
+                              </>
+                            ) : (
+                              <>
+                                <StoreIcon width={14} height={14} />
+                                <span>{isAr ? 'استلام من الفرع' : 'Takeaway'}</span>
+                              </>
+                            )}
                           </span>
                         </div>
-                        <div className="active-order-status-badge" style={{ backgroundColor: `${meta.color}1a`, color: meta.color, borderColor: `${meta.color}4d` }}>
-                          <span className="status-badge-icon">{meta.icon}</span>
+                        <div className="active-order-status-badge" style={{ backgroundColor: `${meta.color}14`, color: meta.color, borderColor: `${meta.color}40` }}>
                           <span className="status-badge-text">{meta.label}</span>
                         </div>
                       </div>
@@ -417,7 +446,7 @@ export default function MyOrdersClient({
                           href={`/${locale}/receipt/${order.orderNumber}?token=${encodeURIComponent(order.verificationToken)}`}
                           className="action-btn receipt-btn"
                         >
-                          <span>🧾</span>
+                          <ReceiptIcon width={16} height={16} />
                           <span>{isAr ? 'عرض الفاتورة والإيصال' : 'View Receipt'}</span>
                         </Link>
                         {order.whatsappUrl && (
@@ -427,7 +456,7 @@ export default function MyOrdersClient({
                             rel="noopener noreferrer"
                             className="action-btn whatsapp-btn"
                           >
-                            <span>💬</span>
+                            <WhatsAppIcon width={16} height={16} />
                             <span>{isAr ? 'مراسلة الفرع عبر واتساب' : 'Chat on WhatsApp'}</span>
                           </a>
                         )}
@@ -443,7 +472,7 @@ export default function MyOrdersClient({
           <section className="orders-section previous-section">
             <div className="orders-section-header">
               <h2>
-                <span>📜</span>
+                <ClockIcon width={20} height={20} />
                 <span>{isAr ? 'الطلبات السابقة' : 'Previous Orders'}</span>
                 {previousOrders.length > 0 && (
                   <span className="section-count-pill subtle">{previousOrders.length}</span>
@@ -458,7 +487,7 @@ export default function MyOrdersClient({
             ) : (
               <div className="previous-orders-list">
                 {previousOrders.map((order) => {
-                  const meta = statusMeta[order.status] || { label: order.status, color: '#64748b', icon: '📦' };
+                  const meta = statusMeta[order.status] || { label: order.status, color: '#64748b' };
                   const itemCount = order.items.reduce((acc, i) => acc + i.quantity, 0);
 
                   return (
@@ -483,8 +512,7 @@ export default function MyOrdersClient({
                             <span className="prev-price-val">{order.total}</span>
                             <span className="prev-price-curr">{order.currency || (isAr ? 'ج.م' : 'EGP')}</span>
                           </div>
-                          <div className="prev-status-pill" style={{ color: meta.color, backgroundColor: `${meta.color}15` }}>
-                            <span>{meta.icon}</span>
+                          <div className="prev-status-pill" style={{ color: meta.color, backgroundColor: `${meta.color}15`, borderColor: `${meta.color}35` }}>
                             <span>{meta.label}</span>
                           </div>
                         </div>
@@ -495,7 +523,7 @@ export default function MyOrdersClient({
                           href={`/${locale}/receipt/${order.orderNumber}?token=${encodeURIComponent(order.verificationToken)}`}
                           className="prev-details-btn"
                         >
-                          {isAr ? 'عرض التفاصيل ←' : 'View Details →'}
+                          {isAr ? 'عرض التفاصيل' : 'View Details'}
                         </Link>
                       </div>
                     </article>

@@ -7,6 +7,32 @@ import type { OrderRecord, OrderStatus } from '@/lib/orders-store';
 import OrderTrackingTimeline from '@/components/OrderTrackingTimeline';
 import { useCart } from '@/components/CartContext';
 import type { CustomerAddressRecord, CustomerFavoriteItem, CustomerNotificationRecord } from '@/lib/customer-hub-store';
+import {
+  UserIcon,
+  HeartIcon,
+  BellIcon,
+  ClockIcon,
+  EditIcon,
+  ReceiptIcon,
+  RefreshIcon,
+  PackageIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  SmartphoneIcon,
+  UtensilsIcon,
+  CartIcon,
+  MapPinIcon,
+  TrashIcon,
+  PlusIcon,
+  CloseIcon,
+  CheckIcon,
+  AlertCircleIcon,
+  WhatsAppIcon,
+  CardIcon,
+  CashIcon,
+  TruckIcon,
+  StoreIcon,
+} from '@/components/Icons';
 
 export type CustomerHubTab =
   | 'overview'
@@ -37,34 +63,34 @@ interface CustomerHubClientProps {
 
 const TERMINAL_STATUSES: OrderStatus[] = ['COMPLETED', 'REJECTED', 'CANCELLED', 'EXPIRED'];
 
-const STATUS_LABELS_AR: Record<OrderStatus, { label: string; color: string; icon: string }> = {
-  DRAFT: { label: 'مسودة', color: '#64748b', icon: '📝' },
-  PENDING_WHATSAPP: { label: 'بانتظار إرسال واتساب', color: '#f59e0b', icon: '⏳' },
-  CUSTOMER_CONFIRMED_SENT: { label: 'تم الإرسال - بانتظار المراجعة', color: '#3b82f6', icon: '📩' },
-  RECEIVED: { label: 'تم استلام الطلب', color: '#3b82f6', icon: '📥' },
-  CONFIRMED: { label: 'تم تأكيد الطلب', color: '#10b981', icon: '✅' },
-  PREPARING: { label: 'جاري التحضير بالمطبخ', color: '#8b5cf6', icon: '🍳' },
-  READY: { label: 'جاهز للاستلام', color: '#16a34a', icon: '✨' },
-  OUT_FOR_DELIVERY: { label: 'خرج للتوصيل مع المندوب', color: '#0ea5e9', icon: '🚚' },
-  COMPLETED: { label: 'تم التسليم بنجاح', color: '#22c55e', icon: '🎉' },
-  REJECTED: { label: 'تم الاعتذار عن الطلب', color: '#ef4444', icon: '❌' },
-  CANCELLED: { label: 'تم إلغاء الطلب', color: '#ef4444', icon: '🚫' },
-  EXPIRED: { label: 'انتهت صلاحية الطلب', color: '#94a3b8', icon: '⏰' },
+const STATUS_LABELS_AR: Record<OrderStatus, { label: string; color: string }> = {
+  DRAFT: { label: 'مسودة', color: '#64748b' },
+  PENDING_WHATSAPP: { label: 'بانتظار إرسال واتساب', color: '#b45309' },
+  CUSTOMER_CONFIRMED_SENT: { label: 'تم الإرسال - بانتظار المراجعة', color: '#1e40af' },
+  RECEIVED: { label: 'تم استلام الطلب', color: '#1e40af' },
+  CONFIRMED: { label: 'تم تأكيد الطلب', color: '#5c2a26' },
+  PREPARING: { label: 'جاري التحضير بالمطبخ', color: '#7d3b34' },
+  READY: { label: 'جاهز للاستلام', color: '#854d0e' },
+  OUT_FOR_DELIVERY: { label: 'خرج للتوصيل مع المندوب', color: '#0369a1' },
+  COMPLETED: { label: 'تم التسليم بنجاح', color: '#166534' },
+  REJECTED: { label: 'تم الاعتذار عن الطلب', color: '#991b1b' },
+  CANCELLED: { label: 'تم إلغاء الطلب', color: '#991b1b' },
+  EXPIRED: { label: 'انتهت صلاحية الطلب', color: '#64748b' },
 };
 
-const STATUS_LABELS_EN: Record<OrderStatus, { label: string; color: string; icon: string }> = {
-  DRAFT: { label: 'Draft', color: '#64748b', icon: '📝' },
-  PENDING_WHATSAPP: { label: 'Pending WhatsApp Dispatch', color: '#f59e0b', icon: '⏳' },
-  CUSTOMER_CONFIRMED_SENT: { label: 'Sent - Awaiting Review', color: '#3b82f6', icon: '📩' },
-  RECEIVED: { label: 'Order Received', color: '#3b82f6', icon: '📥' },
-  CONFIRMED: { label: 'Order Confirmed', color: '#10b981', icon: '✅' },
-  PREPARING: { label: 'Preparing in Kitchen', color: '#8b5cf6', icon: '🍳' },
-  READY: { label: 'Ready for Pickup', color: '#16a34a', icon: '✨' },
-  OUT_FOR_DELIVERY: { label: 'Out for Delivery', color: '#0ea5e9', icon: '🚚' },
-  COMPLETED: { label: 'Delivered Successfully', color: '#22c55e', icon: '🎉' },
-  REJECTED: { label: 'Order Rejected', color: '#ef4444', icon: '❌' },
-  CANCELLED: { label: 'Order Cancelled', color: '#ef4444', icon: '🚫' },
-  EXPIRED: { label: 'Order Expired', color: '#94a3b8', icon: '⏰' },
+const STATUS_LABELS_EN: Record<OrderStatus, { label: string; color: string }> = {
+  DRAFT: { label: 'Draft', color: '#64748b' },
+  PENDING_WHATSAPP: { label: 'Pending WhatsApp Dispatch', color: '#b45309' },
+  CUSTOMER_CONFIRMED_SENT: { label: 'Sent - Awaiting Review', color: '#1e40af' },
+  RECEIVED: { label: 'Order Received', color: '#1e40af' },
+  CONFIRMED: { label: 'Order Confirmed', color: '#5c2a26' },
+  PREPARING: { label: 'Preparing in Kitchen', color: '#7d3b34' },
+  READY: { label: 'Ready for Pickup', color: '#854d0e' },
+  OUT_FOR_DELIVERY: { label: 'Out for Delivery', color: '#0369a1' },
+  COMPLETED: { label: 'Delivered Successfully', color: '#166534' },
+  REJECTED: { label: 'Order Rejected', color: '#991b1b' },
+  CANCELLED: { label: 'Order Cancelled', color: '#991b1b' },
+  EXPIRED: { label: 'Order Expired', color: '#64748b' },
 };
 
 export default function CustomerHubClient({
@@ -129,6 +155,12 @@ export default function CustomerHubClient({
   const [phoneChangeLoading, setPhoneChangeLoading] = useState(false);
   const [phoneChangeError, setPhoneChangeError] = useState<string | null>(null);
   const [phoneDebugCode, setPhoneDebugCode] = useState<string | null>(null);
+
+  // Profile Name Editing
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [nameInput, setNameInput] = useState(customer?.name || '');
+  const [nameLoading, setNameLoading] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   // Address Modal State
   const [showAddressModal, setShowAddressModal] = useState(false);
@@ -356,6 +388,39 @@ export default function CustomerHubClient({
       setPhoneChangeError(err.message || 'فشل التحقق.');
     } finally {
       setPhoneChangeLoading(false);
+    }
+  };
+
+  // Profile Name Save Handler
+  const handleSaveName = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!nameInput.trim()) {
+      setNameError(isAr ? 'الرجاء إدخال الاسم' : 'Please enter a name');
+      return;
+    }
+    setNameLoading(true);
+    setNameError(null);
+    try {
+      const res = await fetch('/api/customer/profile', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: nameInput.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || (isAr ? 'تعذر حفظ الاسم' : 'Failed to save name'));
+      }
+      const updatedName = data.customer?.name || nameInput.trim();
+      if (customer) {
+        setCustomer({ ...customer, name: updatedName });
+      }
+      localStorage.setItem('naqer_customer_name', updatedName);
+      setIsEditingName(false);
+      showToast(isAr ? 'تم تحديث الاسم بنجاح!' : 'Name updated successfully!', 'success');
+    } catch (err: any) {
+      setNameError(err.message || (isAr ? 'حدث خطأ أثناء حفظ الاسم' : 'Error updating name'));
+    } finally {
+      setNameLoading(false);
     }
   };
 
@@ -614,7 +679,9 @@ export default function CustomerHubClient({
         </header>
 
         <section className="hub-auth-box">
-          <div className="hub-auth-icon">📱</div>
+          <div className="hub-auth-icon-circle">
+            <SmartphoneIcon width={28} height={28} />
+          </div>
           <h2>{isAr ? 'تسجيل الدخول والوصول لحسابك' : 'Access Your Customer Account'}</h2>
           <p>
             {isAr
@@ -637,7 +704,7 @@ export default function CustomerHubClient({
                   className="hub-input"
                 />
                 <button type="submit" disabled={loginLoading} className="hub-btn hub-btn-primary">
-                  {loginLoading ? (isAr ? 'جاري الإرسال...' : 'Sending...') : (isAr ? 'متابعة ←' : 'Continue →')}
+                  {loginLoading ? (isAr ? 'جاري الإرسال...' : 'Sending...') : (isAr ? 'متابعة' : 'Continue')}
                 </button>
               </div>
               {loginError && <p className="hub-error-msg">{loginError}</p>}
@@ -693,7 +760,9 @@ export default function CustomerHubClient({
       {toastMsg && (
         <aside aria-label="Alert" className={`hub-toast-banner ${toastMsg.type}`}>
           <span>{toastMsg.text}</span>
-          <button type="button" aria-label={isAr ? "إغلاق التنبيه" : "Dismiss alert"} onClick={() => setToastMsg(null)}>✕</button>
+          <button type="button" aria-label={isAr ? "إغلاق التنبيه" : "Dismiss alert"} onClick={() => setToastMsg(null)}>
+            <CloseIcon width={14} height={14} />
+          </button>
         </aside>
       )}
 
@@ -709,7 +778,9 @@ export default function CustomerHubClient({
 
         <div className="hub-header-user">
           <div className="hub-user-chip">
-            <span className="user-avatar">👤</span>
+            <span className="user-avatar">
+              <UserIcon width={16} height={16} />
+            </span>
             <div className="user-meta">
               <strong>{customer?.name || (isAr ? 'عميل قرية الناقر' : 'Valued Customer')}</strong>
               <small dir="ltr">{customer?.phone}</small>
@@ -728,7 +799,7 @@ export default function CustomerHubClient({
           onClick={() => setActiveTab('overview')}
           className={`hub-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
         >
-          <span>📊</span>
+          <UtensilsIcon width={16} height={16} />
           <span>{isAr ? 'نظرة عامة' : 'Overview'}</span>
         </button>
 
@@ -737,7 +808,7 @@ export default function CustomerHubClient({
           onClick={() => setActiveTab('orders')}
           className={`hub-tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
         >
-          <span>📦</span>
+          <PackageIcon width={16} height={16} />
           <span>{isAr ? 'طلباتي' : 'My Orders'}</span>
           {activeOrders.length > 0 && <span className="tab-badge pulse">{activeOrders.length}</span>}
         </button>
@@ -747,7 +818,7 @@ export default function CustomerHubClient({
           onClick={() => setActiveTab('profile')}
           className={`hub-tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
         >
-          <span>👤</span>
+          <UserIcon width={16} height={16} />
           <span>{isAr ? 'بياناتي' : 'Profile'}</span>
         </button>
 
@@ -756,7 +827,7 @@ export default function CustomerHubClient({
           onClick={() => setActiveTab('addresses')}
           className={`hub-tab-btn ${activeTab === 'addresses' ? 'active' : ''}`}
         >
-          <span>📍</span>
+          <MapPinIcon width={16} height={16} />
           <span>{isAr ? 'عناويني' : 'Addresses'}</span>
           {addresses.length > 0 && <span className="tab-badge">{addresses.length}</span>}
         </button>
@@ -766,7 +837,7 @@ export default function CustomerHubClient({
           onClick={() => setActiveTab('favorites')}
           className={`hub-tab-btn ${activeTab === 'favorites' ? 'active' : ''}`}
         >
-          <span>❤️</span>
+          <HeartIcon width={16} height={16} />
           <span>{isAr ? 'المفضلة' : 'Favorites'}</span>
           {favorites.length > 0 && <span className="tab-badge">{favorites.length}</span>}
         </button>
@@ -776,7 +847,7 @@ export default function CustomerHubClient({
           onClick={() => setActiveTab('notifications')}
           className={`hub-tab-btn ${activeTab === 'notifications' ? 'active' : ''}`}
         >
-          <span>🔔</span>
+          <BellIcon width={16} height={16} />
           <span>{isAr ? 'الإشعارات' : 'Notifications'}</span>
           {unreadNotifCount > 0 && <span className="tab-badge red">{unreadNotifCount}</span>}
         </button>
@@ -786,7 +857,7 @@ export default function CustomerHubClient({
           onClick={() => setActiveTab('wallet')}
           className={`hub-tab-btn ${activeTab === 'wallet' ? 'active' : ''}`}
         >
-          <span>💳</span>
+          <CardIcon width={16} height={16} />
           <span>{isAr ? 'المحفظة' : 'Wallet'}</span>
         </button>
 
@@ -795,7 +866,7 @@ export default function CustomerHubClient({
           onClick={() => setActiveTab('install')}
           className={`hub-tab-btn ${activeTab === 'install' ? 'active' : ''}`}
         >
-          <span>📲</span>
+          <SmartphoneIcon width={16} height={16} />
           <span>{isAr ? 'تثبيت التطبيق' : 'App'}</span>
         </button>
       </nav>
@@ -809,7 +880,7 @@ export default function CustomerHubClient({
           <div className="hub-welcome-banner">
             <div className="welcome-text">
               <h2 id="hub-welcome-heading">
-                {isAr ? `أهلاً بيك 👋 ${customer?.name ? customer.name : ''}` : `Welcome 👋 ${customer?.name || ''}`}
+                {isAr ? `أهلاً بك، ${customer?.name ? customer.name : 'عميلنا العزيز'}` : `Welcome, ${customer?.name || 'Valued Customer'}`}
               </h2>
               <p>
                 {isAr
@@ -818,7 +889,7 @@ export default function CustomerHubClient({
               </p>
             </div>
             <Link href={`/${locale}`} className="hub-cta-btn">
-              <span>🍽️</span>
+              <UtensilsIcon width={18} height={18} />
               <span>{isAr ? 'تصفح قائمة الطعام' : 'Browse Menu'}</span>
             </Link>
           </div>
@@ -841,7 +912,7 @@ export default function CustomerHubClient({
                   <div className="spotlight-meta-row">
                     <span className="label">{isAr ? 'حالة الطلب:' : 'Status:'}</span>
                     <span className="val badge-val" style={{ color: statusMeta[latestActiveOrder.status]?.color }}>
-                      {statusMeta[latestActiveOrder.status]?.icon} {statusMeta[latestActiveOrder.status]?.label}
+                      {statusMeta[latestActiveOrder.status]?.label}
                     </span>
                   </div>
                   <div className="spotlight-meta-row">
@@ -869,29 +940,31 @@ export default function CustomerHubClient({
                     onClick={() => setActiveTab('orders')}
                     className="hub-btn hub-btn-primary"
                   >
-                    <span>📦</span>
+                    <PackageIcon width={16} height={16} />
                     <span>{isAr ? 'متابعة الطلب في قائمة طلباتي' : 'View in My Orders'}</span>
                   </button>
                   <Link
                     href={`/${locale}/receipt/${latestActiveOrder.orderNumber}?token=${encodeURIComponent(latestActiveOrder.verificationToken)}`}
                     className="hub-btn hub-btn-secondary"
                   >
-                    <span>🧾</span>
+                    <ReceiptIcon width={16} height={16} />
                     <span>{isAr ? 'عرض الفاتورة' : 'View Receipt'}</span>
                   </Link>
                 </div>
               </div>
             ) : (
               <div className="spotlight-empty">
-                <span className="empty-emoji">🍽️</span>
-                <h4>{isAr ? 'مفيش طلبات نشطة حالياً' : 'No Active Orders Currently'}</h4>
+                <div className="empty-icon-circle">
+                  <UtensilsIcon width={32} height={32} />
+                </div>
+                <h4>{isAr ? 'لا توجد طلبات نشطة حالياً' : 'No Active Orders Currently'}</h4>
                 <p>
                   {isAr
                     ? 'جميع طلباتك السابقة مكتملة بنجاح، أو يمكنك تصفح قائمة الطعام وطلب وجبتك المفضلة الآن!'
                     : 'All previous orders have been completed. Browse our menu to enjoy your favorite meal!'}
                 </p>
                 <Link href={`/${locale}`} className="hub-btn hub-btn-primary">
-                  {isAr ? 'اطلب الآن من المنيو ←' : 'Order Now From Menu →'}
+                  {isAr ? 'اطلب الآن من المنيو' : 'Order Now From Menu'}
                 </Link>
               </div>
             )}
@@ -900,7 +973,9 @@ export default function CustomerHubClient({
           {/* Customer Real Insights (Zero Mock Data) */}
           <div className="hub-insights-grid">
             <div className="insight-card" onClick={() => setActiveTab('orders')} role="button" tabIndex={0}>
-              <span className="insight-icon">📦</span>
+              <div className="insight-icon-box">
+                <PackageIcon width={22} height={22} />
+              </div>
               <div className="insight-info">
                 <strong>{orders.length}</strong>
                 <span>{isAr ? 'إجمالي الطلبات' : 'Total Orders'}</span>
@@ -908,7 +983,9 @@ export default function CustomerHubClient({
             </div>
 
             <div className="insight-card" onClick={() => setActiveTab('orders')} role="button" tabIndex={0}>
-              <span className="insight-icon">🎉</span>
+              <div className="insight-icon-box">
+                <CheckCircleIcon width={22} height={22} />
+              </div>
               <div className="insight-info">
                 <strong>{previousOrders.length}</strong>
                 <span>{isAr ? 'طلبات سابقة مكتملة' : 'Completed Orders'}</span>
@@ -916,7 +993,9 @@ export default function CustomerHubClient({
             </div>
 
             <div className="insight-card" onClick={() => setActiveTab('addresses')} role="button" tabIndex={0}>
-              <span className="insight-icon">📍</span>
+              <div className="insight-icon-box">
+                <MapPinIcon width={22} height={22} />
+              </div>
               <div className="insight-info">
                 <strong>{addresses.length}</strong>
                 <span>{isAr ? 'عناوين مسجلة' : 'Saved Addresses'}</span>
@@ -924,7 +1003,9 @@ export default function CustomerHubClient({
             </div>
 
             <div className="insight-card" onClick={() => setActiveTab('favorites')} role="button" tabIndex={0}>
-              <span className="insight-icon">❤️</span>
+              <div className="insight-icon-box">
+                <HeartIcon width={22} height={22} />
+              </div>
               <div className="insight-info">
                 <strong>{favorites.length}</strong>
                 <span>{isAr ? 'وجبات مفضلة' : 'Favorite Meals'}</span>
@@ -941,11 +1022,11 @@ export default function CustomerHubClient({
         <section aria-labelledby="hub-orders-heading" className="hub-tab-content">
           <div className="hub-section-top">
             <h2 id="hub-orders-heading">
-              <span>📦</span>
+              <PackageIcon width={22} height={22} />
               <span>{isAr ? 'إدارة ومتابعة الطلبات' : 'Orders & Live Tracking'}</span>
             </h2>
             <Link href={`/${locale}`} className="hub-btn hub-btn-sm">
-              <span>➕</span>
+              <PlusIcon width={14} height={14} />
               <span>{isAr ? 'طلب جديد' : 'New Order'}</span>
             </Link>
           </div>
@@ -971,12 +1052,21 @@ export default function CustomerHubClient({
                       <div className="card-top">
                         <div className="card-id-block">
                           <span className="card-order-num">#{ord.orderNumber}</span>
-                          <span className="card-type-tag">
-                            {ord.type === 'DELIVERY' ? (isAr ? '🚚 توصيل' : '🚚 Delivery') : (isAr ? '🏢 استلام' : '🏢 Pickup')}
+                          <span className="card-type-tag" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            {ord.type === 'DELIVERY' ? (
+                              <>
+                                <TruckIcon width={14} height={14} />
+                                <span>{isAr ? 'توصيل' : 'Delivery'}</span>
+                              </>
+                            ) : (
+                              <>
+                                <StoreIcon width={14} height={14} />
+                                <span>{isAr ? 'استلام' : 'Pickup'}</span>
+                              </>
+                            )}
                           </span>
                         </div>
-                        <div className="status-badge" style={{ backgroundColor: `${meta?.color}22`, color: meta?.color, borderColor: `${meta?.color}44` }}>
-                          <span>{meta?.icon}</span>
+                        <div className="status-badge" style={{ backgroundColor: `${meta?.color}18`, color: meta?.color, borderColor: `${meta?.color}40` }}>
                           <span>{meta?.label}</span>
                         </div>
                       </div>
@@ -1014,7 +1104,7 @@ export default function CustomerHubClient({
                           href={`/${locale}/receipt/${ord.orderNumber}?token=${encodeURIComponent(ord.verificationToken)}`}
                           className="hub-btn hub-btn-secondary"
                         >
-                          <span>🧾</span>
+                          <ReceiptIcon width={16} height={16} />
                           <span>{isAr ? 'عرض الفاتورة والإيصال' : 'View Receipt'}</span>
                         </Link>
                         {ord.whatsappUrl && (
@@ -1024,7 +1114,7 @@ export default function CustomerHubClient({
                             rel="noopener noreferrer"
                             className="hub-btn hub-btn-whatsapp"
                           >
-                            <span>💬</span>
+                            <WhatsAppIcon width={16} height={16} />
                             <span>{isAr ? 'مراسلة الفرع' : 'WhatsApp'}</span>
                           </a>
                         )}
@@ -1039,7 +1129,7 @@ export default function CustomerHubClient({
           {/* Previous Orders & Smart Reorder */}
           <div className="orders-group-block">
             <h3 className="group-heading">
-              <span>📜</span>
+              <ClockIcon width={18} height={18} />
               <span>{isAr ? 'سجل الطلبات السابقة' : 'Previous Orders History'}</span>
               <span className="count-pill subtle">{previousOrders.length}</span>
             </h3>
@@ -1072,8 +1162,8 @@ export default function CustomerHubClient({
 
                         <div className="prev-price-line">
                           <strong className="price-val">{ord.total} {ord.currency || 'ج.م'}</strong>
-                          <span className="status-pill" style={{ color: meta?.color, backgroundColor: `${meta?.color}15` }}>
-                            {meta?.icon} {meta?.label}
+                          <span className="status-pill" style={{ color: meta?.color, backgroundColor: `${meta?.color}15`, borderColor: `${meta?.color}35` }}>
+                            {meta?.label}
                           </span>
                         </div>
                       </div>
@@ -1084,14 +1174,14 @@ export default function CustomerHubClient({
                           onClick={() => handleInitiateReorder(ord)}
                           className="hub-btn hub-btn-reorder"
                         >
-                          <span>🔄</span>
+                          <RefreshIcon width={16} height={16} />
                           <span>{isAr ? 'إعادة الطلب' : 'Reorder'}</span>
                         </button>
                         <Link
                           href={`/${locale}/receipt/${ord.orderNumber}?token=${encodeURIComponent(ord.verificationToken)}`}
                           className="hub-btn hub-btn-secondary"
                         >
-                          <span>🧾</span>
+                          <ReceiptIcon width={16} height={16} />
                           <span>{isAr ? 'الفاتورة' : 'Receipt'}</span>
                         </Link>
                       </div>
@@ -1111,7 +1201,7 @@ export default function CustomerHubClient({
         <section aria-labelledby="hub-profile-heading" className="hub-tab-content">
           <div className="hub-section-top">
             <h2 id="hub-profile-heading">
-              <span>👤</span>
+              <UserIcon width={22} height={22} />
               <span>{isAr ? 'الملف الشخصي وإدارة الهاتف' : 'Profile & Identity'}</span>
             </h2>
           </div>
@@ -1130,10 +1220,58 @@ export default function CustomerHubClient({
             <div className="profile-row">
               <div className="profile-label">
                 <strong>{isAr ? 'الاسم المسجل' : 'Customer Name'}</strong>
+                <small>{isAr ? 'اسمك المستخدم في الفواتير والتوصيل وإكمال الطلب تلقائياً' : 'Used for autofill during checkout'}</small>
               </div>
-              <div className="profile-value">
-                <span>{customer?.name || (isAr ? 'عميل قرية الناقر' : 'Valued Customer')}</span>
-              </div>
+              {!isEditingName ? (
+                <div className="profile-value" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <span style={{ fontWeight: 700, color: 'var(--brand-deep)' }}>
+                    {customer?.name || (isAr ? 'عميل قرية الناقر' : 'Valued Customer')}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setNameInput(customer?.name || '');
+                      setIsEditingName(true);
+                      setNameError(null);
+                    }}
+                    className="hub-btn hub-btn-secondary hub-btn-sm"
+                    title={isAr ? 'تعديل الاسم' : 'Edit Name'}
+                  >
+                    <EditIcon width={14} height={14} />
+                    <span>{isAr ? 'تعديل' : 'Edit'}</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="profile-value" style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '340px', width: '100%' }}>
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <input
+                      type="text"
+                      value={nameInput}
+                      onChange={(e) => setNameInput(e.target.value)}
+                      placeholder={isAr ? 'اسمك بالكامل' : 'Your Full Name'}
+                      className="hub-input"
+                      style={{ padding: '8px 12px', fontSize: '0.9rem' }}
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSaveName}
+                      disabled={nameLoading}
+                      className="hub-btn hub-btn-primary hub-btn-sm"
+                    >
+                      {nameLoading ? (isAr ? 'جاري الحفظ...' : 'Saving...') : (isAr ? 'حفظ' : 'Save')}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setIsEditingName(false); setNameError(null); }}
+                      className="hub-btn hub-btn-secondary hub-btn-sm"
+                    >
+                      {isAr ? 'إلغاء' : 'Cancel'}
+                    </button>
+                  </div>
+                  {nameError && <p className="hub-error-msg">{nameError}</p>}
+                </div>
+              )}
             </div>
 
             <div className="profile-row highlight">
@@ -1154,7 +1292,7 @@ export default function CustomerHubClient({
                   }}
                   className="hub-btn hub-btn-secondary"
                 >
-                  <span>✏️</span>
+                  <EditIcon width={14} height={14} />
                   <span>{isAr ? 'تغيير رقم الهاتف' : 'Change Phone'}</span>
                 </button>
               </div>
@@ -1179,7 +1317,7 @@ export default function CustomerHubClient({
         <section aria-labelledby="hub-addresses-heading" className="hub-tab-content">
           <div className="hub-section-top">
             <h2 id="hub-addresses-heading">
-              <span>📍</span>
+              <MapPinIcon width={22} height={22} />
               <span>{isAr ? 'عناوين التوصيل المحفوظة' : 'Saved Delivery Addresses'}</span>
             </h2>
             <button
@@ -1187,14 +1325,16 @@ export default function CustomerHubClient({
               onClick={handleOpenAddAddress}
               className="hub-btn hub-btn-primary"
             >
-              <span>➕</span>
+              <PlusIcon width={14} height={14} />
               <span>{isAr ? 'إضافة عنوان جديد' : 'Add New Address'}</span>
             </button>
           </div>
 
           {addresses.length === 0 ? (
             <div className="hub-empty-card">
-              <span className="empty-emoji">📍</span>
+              <div className="empty-icon-circle">
+                <MapPinIcon width={32} height={32} />
+              </div>
               <h4>{isAr ? 'لا توجد عناوين محفوظة بعد' : 'No Saved Addresses Yet'}</h4>
               <p>
                 {isAr
@@ -1211,7 +1351,7 @@ export default function CustomerHubClient({
                 <article key={addr.id} className={`address-card ${addr.isDefault ? 'is-default' : ''}`}>
                   <div className="addr-card-top">
                     <div className="addr-label-wrap">
-                      <span className="addr-icon">📍</span>
+                      <MapPinIcon width={16} height={16} />
                       <strong>{addr.label}</strong>
                       {addr.isDefault && <span className="default-pill">{isAr ? 'الافتراضي' : 'Default'}</span>}
                     </div>
@@ -1222,7 +1362,7 @@ export default function CustomerHubClient({
                         className="icon-action-btn"
                         title={isAr ? 'تعديل' : 'Edit'}
                       >
-                        ✏️
+                        <EditIcon width={14} height={14} />
                       </button>
                       <button
                         type="button"
@@ -1230,7 +1370,7 @@ export default function CustomerHubClient({
                         className="icon-action-btn danger"
                         title={isAr ? 'حذف' : 'Delete'}
                       >
-                        🗑️
+                        <TrashIcon width={14} height={14} />
                       </button>
                     </div>
                   </div>
@@ -1249,17 +1389,17 @@ export default function CustomerHubClient({
                     </p>
                   )}
 
-                  {addr.notes && <p className="addr-notes">💬 {addr.notes}</p>}
+                  {addr.notes && <p className="addr-notes">{addr.notes}</p>}
 
                   {!addr.isDefault && (
-                    <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed var(--border-subtle, #333)' }}>
+                    <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px dashed var(--line, #e9d9be)' }}>
                       <button
                         type="button"
                         onClick={() => handleSetDefaultAddress(addr.id)}
                         className="hub-btn hub-btn-secondary"
                         style={{ fontSize: '0.8rem', padding: '4px 10px' }}
                       >
-                        {isAr ? '☆ تعيين كعنوان افتراضي' : '☆ Set as Default'}
+                        {isAr ? 'تعيين كعنوان افتراضي' : 'Set as Default'}
                       </button>
                     </div>
                   )}
@@ -1277,14 +1417,16 @@ export default function CustomerHubClient({
         <section aria-labelledby="hub-favorites-heading" className="hub-tab-content">
           <div className="hub-section-top">
             <h2 id="hub-favorites-heading">
-              <span>❤️</span>
+              <HeartIcon width={22} height={22} />
               <span>{isAr ? 'الوجبات المفضلة' : 'Favorite Meals'}</span>
             </h2>
           </div>
 
           {favorites.length === 0 ? (
             <div className="hub-empty-card">
-              <span className="empty-emoji">❤️</span>
+              <div className="empty-icon-circle">
+                <HeartIcon width={32} height={32} />
+              </div>
               <h4>{isAr ? 'قائمة المفضلة فارغة حالياً' : 'No Favorites Yet'}</h4>
               <p>
                 {isAr
@@ -1292,7 +1434,7 @@ export default function CustomerHubClient({
                   : 'Browse the menu and click the heart icon on your favorite dishes.'}
               </p>
               <Link href={`/${locale}`} className="hub-btn hub-btn-primary">
-                {isAr ? 'تصفح قائمة الطعام والوجبات ←' : 'Browse Menu Meals →'}
+                {isAr ? 'تصفح قائمة الطعام والوجبات' : 'Browse Menu Meals'}
               </Link>
             </div>
           ) : (
@@ -1313,7 +1455,7 @@ export default function CustomerHubClient({
                       onClick={() => handleAddFavoriteToCart(fav)}
                       className="hub-btn hub-btn-primary"
                     >
-                      <span>🛒</span>
+                      <CartIcon width={16} height={16} />
                       <span>{isAr ? 'أضف للسلة' : 'Add to Cart'}</span>
                     </button>
                     <button
@@ -1322,7 +1464,7 @@ export default function CustomerHubClient({
                       className="hub-btn hub-btn-secondary"
                       title={isAr ? 'إزالة' : 'Remove'}
                     >
-                      <span>✕</span>
+                      <CloseIcon width={14} height={14} />
                     </button>
                   </div>
                 </article>
@@ -1339,7 +1481,7 @@ export default function CustomerHubClient({
         <section aria-labelledby="hub-notifications-heading" className="hub-tab-content">
           <div className="hub-section-top">
             <h2 id="hub-notifications-heading">
-              <span>🔔</span>
+              <BellIcon width={22} height={22} />
               <span>{isAr ? 'مركز الإشعارات المباشرة' : 'Notifications Center'}</span>
             </h2>
             {unreadNotifCount > 0 && (
@@ -1348,7 +1490,7 @@ export default function CustomerHubClient({
                 onClick={handleMarkAllNotificationsRead}
                 className="hub-btn hub-btn-secondary"
               >
-                <span>✓</span>
+                <CheckIcon width={14} height={14} />
                 <span>{isAr ? 'تحديد الكل كمقروء' : 'Mark all as read'}</span>
               </button>
             )}
@@ -1356,7 +1498,9 @@ export default function CustomerHubClient({
 
           {notifications.length === 0 ? (
             <div className="hub-empty-card mini">
-              <span className="empty-emoji">🔔</span>
+              <div className="empty-icon-circle">
+                <BellIcon width={32} height={32} />
+              </div>
               <h4>{isAr ? 'لا توجد إشعارات حالياً' : 'No Notifications'}</h4>
               <p>{isAr ? 'ستصلك هنا إشعارات فورية بكل تحديث يطرأ على طلباتك من المطعم.' : 'You will receive real-time updates regarding your orders here.'}</p>
             </div>
@@ -1374,8 +1518,8 @@ export default function CustomerHubClient({
                   role="button"
                   tabIndex={0}
                 >
-                  <div className="notif-icon">
-                    {notif.type === 'ORDER_STATUS' ? '📦' : '🔔'}
+                  <div className="notif-icon-box">
+                    <PackageIcon width={18} height={18} />
                   </div>
                   <div className="notif-content">
                     <div className="notif-title-row">
@@ -1404,13 +1548,13 @@ export default function CustomerHubClient({
         <section aria-labelledby="hub-wallet-heading" className="hub-tab-content">
           <div className="hub-section-top">
             <h2 id="hub-wallet-heading">
-              <span>💳</span>
+              <CardIcon width={22} height={22} />
               <span>{isAr ? 'المحفظة الرقمية ورصيد الحساب' : 'Digital Wallet'}</span>
             </h2>
           </div>
 
           <div className="hub-wallet-card">
-            <span className="wallet-badge">🔒 {isAr ? 'قيد التجهيز المالي' : 'Coming Soon'}</span>
+            <span className="wallet-badge">{isAr ? 'قيد التجهيز المالي' : 'Coming Soon'}</span>
             <h3>{isAr ? 'المحفظة الرقمية ورصيد المكافآت' : 'Digital Wallet & Cashback'}</h3>
             <p>
               {isAr
@@ -1419,9 +1563,15 @@ export default function CustomerHubClient({
             </p>
             <div className="wallet-methods-info">
               <strong>{isAr ? 'طرق الدفع المدعومة حالياً بكل أمان:' : 'Supported Payment Methods:'}</strong>
-              <ul>
-                <li>💵 {isAr ? 'الدفع نقداً عند استلام الطلب من المندوب أو بالفرع (Cash on Delivery).' : 'Cash on Delivery.'}</li>
-                <li>💳 {isAr ? 'الدفع عبر بطاقات الخصم المباشر والائتمان بنقاط البيع المحمولة مع المندوب.' : 'POS Card on Delivery.'}</li>
+              <ul style={{ listStyle: 'none', padding: 0 }}>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <CashIcon width={16} height={16} />
+                  <span>{isAr ? 'الدفع نقداً عند استلام الطلب من المندوب أو بالفرع (Cash on Delivery).' : 'Cash on Delivery.'}</span>
+                </li>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <CardIcon width={16} height={16} />
+                  <span>{isAr ? 'الدفع عبر بطاقات الخصم المباشر والائتمان بنقاط البيع المحمولة مع المندوب.' : 'POS Card on Delivery.'}</span>
+                </li>
               </ul>
             </div>
           </div>
@@ -1435,13 +1585,15 @@ export default function CustomerHubClient({
         <section aria-labelledby="hub-install-heading" className="hub-tab-content">
           <div className="hub-section-top">
             <h2 id="hub-install-heading">
-              <span>📲</span>
+              <SmartphoneIcon width={22} height={22} />
               <span>{isAr ? 'تثبيت تطبيق قرية الناقر' : 'Install Naqer App'}</span>
             </h2>
           </div>
 
           <div className="hub-install-card">
-            <div className="install-icon">⚡</div>
+            <div className="install-icon-box">
+              <SmartphoneIcon width={28} height={28} />
+            </div>
             <h3>{isAr ? 'تجربة أسرع بدون تحميل من المتاجر' : 'Fast PWA App Experience'}</h3>
             <p>
               {isAr
@@ -1451,7 +1603,7 @@ export default function CustomerHubClient({
 
             {isAppInstalled ? (
               <div className="install-done-badge">
-                <span>✅</span>
+                <CheckCircleIcon width={16} height={16} />
                 <span>{isAr ? 'التطبيق مثبت بالفعل على جهازك!' : 'App is already installed!'}</span>
               </div>
             ) : (
@@ -1460,7 +1612,7 @@ export default function CustomerHubClient({
                 onClick={handleInstallApp}
                 className="hub-btn hub-btn-primary hub-btn-lg"
               >
-                <span>📲</span>
+                <SmartphoneIcon width={18} height={18} />
                 <span>{isAr ? 'تثبيت التطبيق على الشاشة الرئيسية' : 'Install to Home Screen'}</span>
               </button>
             )}
@@ -1485,7 +1637,9 @@ export default function CustomerHubClient({
           <div className="hub-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>{isAr ? 'تغيير رقم الهاتف المسجل' : 'Change Phone Number'}</h3>
-              <button type="button" onClick={() => setShowPhoneModal(false)} className="close-btn">✕</button>
+              <button type="button" onClick={() => setShowPhoneModal(false)} className="close-btn" aria-label={isAr ? 'إغلاق' : 'Close'}>
+                <CloseIcon width={18} height={18} />
+              </button>
             </div>
 
             <div className="modal-body">
@@ -1514,7 +1668,7 @@ export default function CustomerHubClient({
                       {isAr ? 'إلغاء' : 'Cancel'}
                     </button>
                     <button type="submit" disabled={phoneChangeLoading} className="hub-btn hub-btn-primary">
-                      {phoneChangeLoading ? (isAr ? 'جاري الإرسال...' : 'Sending...') : (isAr ? 'إرسال الرمز ←' : 'Send Code →')}
+                      {phoneChangeLoading ? (isAr ? 'جاري الإرسال...' : 'Sending...') : (isAr ? 'إرسال الرمز' : 'Send Code')}
                     </button>
                   </div>
                 </form>
@@ -1568,7 +1722,9 @@ export default function CustomerHubClient({
           <div className="hub-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>{editingAddressId ? (isAr ? 'تعديل العنوان' : 'Edit Address') : (isAr ? 'إضافة عنوان توصيل جديد' : 'Add Delivery Address')}</h3>
-              <button type="button" onClick={() => setShowAddressModal(false)} className="close-btn">✕</button>
+              <button type="button" onClick={() => setShowAddressModal(false)} className="close-btn" aria-label={isAr ? 'إغلاق' : 'Close'}>
+                <CloseIcon width={18} height={18} />
+              </button>
             </div>
 
             <form onSubmit={handleSaveAddress} className="modal-form">
@@ -1692,13 +1848,15 @@ export default function CustomerHubClient({
           <div className="hub-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>{isAr ? `إعادة طلب وجبات طلب #${reorderModalOrder.orderNumber}` : `Reorder #${reorderModalOrder.orderNumber}`}</h3>
-              <button type="button" onClick={() => setReorderModalOrder(null)} className="close-btn">✕</button>
+              <button type="button" onClick={() => setReorderModalOrder(null)} className="close-btn" aria-label={isAr ? 'إغلاق' : 'Close'}>
+                <CloseIcon width={18} height={18} />
+              </button>
             </div>
 
             <div className="modal-body">
               {reorderLoading ? (
                 <div className="hub-loading-box">
-                  <span>⏳</span>
+                  <ClockIcon width={24} height={24} />
                   <p>{isAr ? 'جاري فحص توافر المنتجات والأسعار الحالية بالمنيو...' : 'Checking product availability & prices...'}</p>
                 </div>
               ) : reorderResult ? (
@@ -1717,7 +1875,10 @@ export default function CustomerHubClient({
                   {/* Unavailable Warnings */}
                   {reorderResult.unavailableItems.length > 0 && (
                     <div className="reorder-warning-box">
-                      <strong>⚠️ {isAr ? 'أصناف غير متوفرة حالياً بالفرع:' : 'Currently Unavailable:'}</strong>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <AlertCircleIcon width={16} height={16} />
+                        <strong>{isAr ? 'أصناف غير متوفرة حالياً بالفرع:' : 'Currently Unavailable:'}</strong>
+                      </div>
                       <ul>
                         {reorderResult.unavailableItems.map((un, i) => (
                           <li key={i}>{un.productName}: {un.reason}</li>
@@ -1729,7 +1890,10 @@ export default function CustomerHubClient({
                   {/* Price Changes */}
                   {reorderResult.priceChanges.length > 0 && (
                     <div className="reorder-info-box">
-                      <strong>ℹ️ {isAr ? 'تحديثات في الأسعار الحالية:' : 'Price Updates:'}</strong>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <AlertCircleIcon width={16} height={16} />
+                        <strong>{isAr ? 'تحديثات في الأسعار الحالية:' : 'Price Updates:'}</strong>
+                      </div>
                       <ul>
                         {reorderResult.priceChanges.map((pc, i) => (
                           <li key={i}>{pc.productName}: السعر الحالي {pc.currentPrice} ج.م (كان {pc.oldPrice} ج.م)</li>
@@ -1748,7 +1912,7 @@ export default function CustomerHubClient({
                       onClick={handleApplyReorderToCart}
                       className="hub-btn hub-btn-primary"
                     >
-                      <span>🛒</span>
+                      <CartIcon width={16} height={16} />
                       <span>{isAr ? 'إضافة إلى السلة ومتابعة الطلب' : 'Add to Cart & Checkout'}</span>
                     </button>
                   </div>

@@ -115,49 +115,49 @@ export default function OrderTrackingTimeline({
       key: 'review',
       labelAr: 'قيد المراجعة',
       labelEn: 'Under Review',
-      descAr: 'تم إنشاء الطلب وفي انتظار اعتماد المطعم',
-      descEn: 'Order created, awaiting restaurant check',
-      icon: '⏳',
+      descAr: 'تم تسجيل الطلب بانتظار الفرع',
+      descEn: 'Order placed, awaiting branch',
+      stepNum: 1,
     },
     {
       key: 'received',
       labelAr: 'تم الاستلام',
       labelEn: 'Received',
-      descAr: 'استلم المطعم تفاصيل طلبك بنجاح',
+      descAr: 'استلم المطعم تفاصيل طلبك',
       descEn: 'Restaurant received your details',
-      icon: '📥',
+      stepNum: 2,
     },
     {
       key: 'confirmed',
       labelAr: 'تم التأكيد',
       labelEn: 'Confirmed',
-      descAr: 'تمت الموافقة الرسمية واعتماد الإيصال',
-      descEn: 'Approved by management',
-      icon: '✅',
+      descAr: 'تمت مراجعة واعتماد الطلب',
+      descEn: 'Order confirmed by team',
+      stepNum: 3,
     },
     {
       key: 'preparing',
       labelAr: 'جاري التجهيز',
       labelEn: 'Preparing',
-      descAr: 'الشيف يقوم بإعداد وتغليف الوجبة',
+      descAr: 'الشيف يجهز طلبك طازجاً',
       descEn: 'Kitchen is preparing your meal',
-      icon: '👨‍🍳',
+      stepNum: 4,
     },
     {
       key: 'dispatch',
       labelAr: 'جاهز / للتوصيل',
-      labelEn: 'Ready / On The Way',
-      descAr: 'طلبك جاهز للاستلام أو في الطريق إليك',
+      labelEn: 'Ready / Out',
+      descAr: 'جاهز للاستلام أو مع المندوب',
       descEn: 'Ready for pickup or out for delivery',
-      icon: '🛵',
+      stepNum: 5,
     },
     {
       key: 'completed',
       labelAr: 'تم التسليم',
       labelEn: 'Delivered',
-      descAr: 'تم استلام الطلب بالهناء والشفاء',
+      descAr: 'بالهناء والشفاء',
       descEn: 'Enjoy your meal!',
-      icon: '🎉',
+      stepNum: 6,
     },
   ];
 
@@ -165,12 +165,12 @@ export default function OrderTrackingTimeline({
     <div
       className="order-tracking-card"
       style={{
-        background: '#ffffff',
-        border: '1px solid #e2e8f0',
-        borderRadius: '16px',
-        padding: '24px',
-        marginBottom: '24px',
-        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+        background: 'var(--surface, #ffffff)',
+        border: '1.5px solid var(--line, #e9d9be)',
+        borderRadius: 'var(--radius, 18px)',
+        padding: '22px',
+        marginBottom: '20px',
+        boxShadow: 'var(--shadow, 0 1px 0 rgba(92, 42, 38, 0.05))',
         direction: isAr ? 'rtl' : 'ltr',
       }}
     >
@@ -182,25 +182,41 @@ export default function OrderTrackingTimeline({
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: '12px',
-          borderBottom: '1px solid #f1f5f9',
-          paddingBottom: '16px',
-          marginBottom: '20px',
+          borderBottom: '1px solid var(--line, #e9d9be)',
+          paddingBottom: '14px',
+          marginBottom: '18px',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <span style={{ fontSize: '24px' }}>📡</span>
+          <div
+            style={{
+              width: '32px',
+              height: '32px',
+              borderRadius: '50%',
+              background: 'var(--bg-2, #f3e6cf)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--brand, #5c2a26)',
+              fontWeight: 800,
+              fontSize: '14px',
+            }}
+          >
+            ●
+          </div>
           <div>
             <h3
               style={{
                 margin: 0,
-                fontSize: '17px',
+                fontSize: '16px',
                 fontWeight: 800,
-                color: '#0f172a',
+                color: 'var(--brand-deep, #43201d)',
+                fontFamily: 'var(--font-display)',
               }}
             >
               {isAr ? 'متابعة حالة الطلب المباشرة' : 'Live Order Tracking'}
             </h3>
-            <p style={{ margin: '2px 0 0', fontSize: '13px', color: '#64748b' }}>
+            <p style={{ margin: '2px 0 0', fontSize: '12px', color: 'var(--muted, #7c6a5f)' }}>
               {isAr ? 'تحديث تلقائي لحالة التجهيز والتوصيل' : 'Real-time kitchen and dispatch status'}
             </p>
           </div>
@@ -212,13 +228,13 @@ export default function OrderTrackingTimeline({
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            background: isPolling ? '#ecfdf5' : '#f8fafc',
-            border: `1px solid ${isPolling ? '#a7f3d0' : '#e2e8f0'}`,
+            background: isPolling ? 'var(--bg-2, #f3e6cf)' : 'var(--surface, #ffffff)',
+            border: `1px solid ${isPolling ? 'var(--gold, #c98f2b)' : 'var(--line, #e9d9be)'}`,
             borderRadius: '20px',
-            padding: '6px 14px',
+            padding: '5px 12px',
             fontSize: '12px',
             fontWeight: 700,
-            color: isPolling ? '#059669' : '#64748b',
+            color: isPolling ? 'var(--brand-deep, #43201d)' : 'var(--muted, #7c6a5f)',
           }}
         >
           {isPolling ? (
@@ -229,17 +245,14 @@ export default function OrderTrackingTimeline({
                   width: '8px',
                   height: '8px',
                   borderRadius: '50%',
-                  background: '#10b981',
-                  boxShadow: '0 0 0 3px rgba(16, 185, 129, 0.3)',
+                  background: '#16a34a',
+                  boxShadow: '0 0 0 3px rgba(22, 163, 74, 0.25)',
                 }}
               />
               <span>{isAr ? 'مباشر (تحديث كل 5ث)' : 'Live (every 5s)'}</span>
             </>
           ) : (
-            <>
-              <span>⏹️</span>
-              <span>{isAr ? 'حالة نهائية' : 'Completed'}</span>
-            </>
+            <span>{isAr ? 'حالة نهائية' : 'Completed'}</span>
           )}
           <span style={{ opacity: 0.7, fontSize: '11px' }} suppressHydrationWarning>
             {isMounted
@@ -260,18 +273,15 @@ export default function OrderTrackingTimeline({
             background: '#fef2f2',
             border: '1px solid #fecaca',
             borderRadius: '12px',
-            padding: '16px',
-            marginBottom: '20px',
+            padding: '14px',
+            marginBottom: '18px',
             display: 'flex',
             alignItems: 'flex-start',
             gap: '12px',
           }}
         >
-          <span style={{ fontSize: '24px' }}>
-            {status === 'REJECTED' ? '❌' : status === 'CANCELLED' ? '🚫' : '⏰'}
-          </span>
           <div style={{ flex: 1 }}>
-            <h4 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 700, color: '#991b1b' }}>
+            <h4 style={{ margin: '0 0 4px', fontSize: '14px', fontWeight: 700, color: '#991b1b' }}>
               {status === 'REJECTED'
                 ? isAr
                   ? 'تم الاعتذار عن قبول الطلب'
@@ -284,7 +294,7 @@ export default function OrderTrackingTimeline({
                 ? 'انتهت صلاحية الطلب'
                 : 'Order Expired'}
             </h4>
-            <p style={{ margin: 0, fontSize: '13px', color: '#b91c1c', lineHeight: 1.5 }}>
+            <p style={{ margin: 0, fontSize: '12px', color: '#b91c1c', lineHeight: 1.5 }}>
               {status === 'REJECTED'
                 ? data?.rejectionReason || (isAr ? 'نعتذر عن عدم إمكانية تلبية الطلب حالياً.' : 'Unable to fulfill this order.')
                 : status === 'CANCELLED'
@@ -302,16 +312,15 @@ export default function OrderTrackingTimeline({
         className="tracking-stepper"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-          gap: '10px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))',
+          gap: '8px',
           position: 'relative',
-          padding: '10px 0',
+          padding: '4px 0',
         }}
       >
         {steps.map((st, i) => {
           const isDone = !isFailed && currentStep > i;
           const isCurrent = !isFailed && currentStep === i;
-          const isUpcoming = isFailed || currentStep < i;
 
           return (
             <div
@@ -321,52 +330,52 @@ export default function OrderTrackingTimeline({
                 flexDirection: 'column',
                 alignItems: 'center',
                 textAlign: 'center',
-                padding: '12px 8px',
+                padding: '12px 6px',
                 borderRadius: '12px',
                 background: isCurrent
-                  ? '#eff6ff'
+                  ? 'var(--bg-2, #f3e6cf)'
                   : isDone
-                  ? '#f0fdf4'
-                  : '#f8fafc',
+                  ? '#fffdf8'
+                  : 'var(--surface, #ffffff)',
                 border: `1.5px solid ${
                   isCurrent
-                    ? '#3b82f6'
+                    ? 'var(--gold, #c98f2b)'
                     : isDone
-                    ? '#86efac'
-                    : '#e2e8f0'
+                    ? 'var(--line, #e9d9be)'
+                    : 'var(--line, #e9d9be)'
                 }`,
-                transition: 'all 0.3s ease',
+                transition: 'all 0.2s ease',
                 position: 'relative',
               }}
             >
               <div
                 style={{
-                  width: '36px',
-                  height: '36px',
+                  width: '32px',
+                  height: '32px',
                   borderRadius: '50%',
                   background: isCurrent
-                    ? '#2563eb'
+                    ? 'var(--brand, #5c2a26)'
                     : isDone
-                    ? '#16a34a'
-                    : '#e2e8f0',
-                  color: isCurrent || isDone ? '#ffffff' : '#64748b',
+                    ? 'var(--gold, #c98f2b)'
+                    : 'var(--bg-2, #f3e6cf)',
+                  color: isCurrent || isDone ? '#ffffff' : 'var(--muted, #7c6a5f)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: isDone ? '18px' : '15px',
+                  fontSize: isDone ? '16px' : '13px',
                   fontWeight: 800,
-                  marginBottom: '8px',
-                  boxShadow: isCurrent ? '0 0 0 4px rgba(37, 99, 235, 0.2)' : 'none',
+                  marginBottom: '6px',
+                  boxShadow: isCurrent ? '0 0 0 3px rgba(92, 42, 38, 0.2)' : 'none',
                 }}
               >
-                {isDone ? '✓' : st.icon}
+                {isDone ? '✓' : st.stepNum}
               </div>
 
               <div
                 style={{
-                  fontSize: '13px',
+                  fontSize: '12px',
                   fontWeight: isCurrent ? 800 : 700,
-                  color: isCurrent ? '#1e40af' : isDone ? '#166534' : '#64748b',
+                  color: isCurrent ? 'var(--brand-deep, #43201d)' : isDone ? 'var(--ink, #2b1b18)' : 'var(--muted, #7c6a5f)',
                   marginBottom: '2px',
                 }}
               >
@@ -375,8 +384,8 @@ export default function OrderTrackingTimeline({
 
               <div
                 style={{
-                  fontSize: '11px',
-                  color: isCurrent ? '#3b82f6' : '#94a3b8',
+                  fontSize: '10px',
+                  color: isCurrent ? 'var(--brand, #5c2a26)' : 'var(--muted, #7c6a5f)',
                   lineHeight: 1.3,
                 }}
               >
@@ -392,7 +401,7 @@ export default function OrderTrackingTimeline({
         <div
           style={{
             marginTop: '20px',
-            borderTop: '1px dashed #e2e8f0',
+            borderTop: '1px dashed var(--line, #e9d9be)',
             paddingTop: '16px',
           }}
         >
@@ -400,14 +409,13 @@ export default function OrderTrackingTimeline({
             style={{
               fontSize: '12px',
               fontWeight: 700,
-              color: '#475569',
+              color: 'var(--brand-deep, #43201d)',
               marginBottom: '10px',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
             }}
           >
-            <span>📜</span>
             <span>{isAr ? 'سجل أحداث الطلب الموثق:' : 'Verified Audit History:'}</span>
           </div>
 
@@ -421,17 +429,17 @@ export default function OrderTrackingTimeline({
                   justifyContent: 'space-between',
                   fontSize: '12px',
                   padding: '6px 10px',
-                  background: '#f8fafc',
+                  background: 'var(--bg-2, #f3e6cf)',
                   borderRadius: '6px',
-                  borderRight: isAr ? '3px solid #3b82f6' : 'none',
-                  borderLeft: !isAr ? '3px solid #3b82f6' : 'none',
+                  borderRight: isAr ? '3px solid var(--brand, #5c2a26)' : 'none',
+                  borderLeft: !isAr ? '3px solid var(--brand, #5c2a26)' : 'none',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <strong style={{ color: '#0f172a' }}>{entry.action}</strong>
-                  {entry.note && <span style={{ color: '#64748b' }}>({entry.note})</span>}
+                  <strong style={{ color: 'var(--brand-deep, #43201d)' }}>{entry.action}</strong>
+                  {entry.note && <span style={{ color: 'var(--muted, #7c6a5f)' }}>({entry.note})</span>}
                 </div>
-                <span style={{ color: '#94a3b8', fontFamily: 'monospace', fontSize: '11px' }}>
+                <span style={{ color: 'var(--muted, #7c6a5f)', fontFamily: 'monospace', fontSize: '11px' }}>
                   {new Date(entry.timestamp).toLocaleTimeString(isAr ? 'ar-EG' : 'en-US', {
                     hour: '2-digit',
                     minute: '2-digit',

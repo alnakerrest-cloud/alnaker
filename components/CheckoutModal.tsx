@@ -84,18 +84,16 @@ export default function CheckoutModal({
   const [newAddressCity, setNewAddressCity] = useState('');
   const firstInputRef = useRef<HTMLInputElement | null>(null);
   const idempotencyKeyRef = useRef<string | null>(null);
+  const prevIsOpenRef = useRef(false);
 
   // Available orderable branches
   const orderableBranches = branches.filter(b => b.isOrderable && b.isActive);
 
-  // Reset form when modal opens/closes
+  // Reset and populate form only when modal transitions from closed to open
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !prevIsOpenRef.current) {
       setStep('branch');
       setOrderType('DELIVERY');
-      setCustomerName('');
-      setCustomerPhone('');
-      setDeliveryAddress('');
       setBranchId(selectedBranchId);
       setPaymentMethod('CASH');
       setNotes(customerNotes);
@@ -110,27 +108,33 @@ export default function CheckoutModal({
       setNewAddressLabel('');
       setNewAddressCity('');
 
-      // Prefill customer phone if available locally
+      // 1. Instant zero-latency prefill from localStorage if available
       try {
+        const savedName = localStorage.getItem('naqer_customer_name');
+        if (savedName) setCustomerName(savedName);
         const savedP = localStorage.getItem('naqer_customer_phone');
         if (savedP) setCustomerPhone(savedP);
       } catch {}
 
-      // Prefill customer profile from authenticated session
+      // 2. Fetch authenticated customer profile from Server (Single Source of Truth)
       fetch('/api/customer/hub')
         .then((res) => (res.ok ? res.json() : null))
         .then((hubData) => {
           if (hubData?.authenticated && hubData.customer) {
-            if (hubData.customer.name) setCustomerName(hubData.customer.name);
+            if (hubData.customer.name) {
+              setCustomerName(hubData.customer.name);
+              try { localStorage.setItem('naqer_customer_name', hubData.customer.name); } catch {}
+            }
             if (hubData.customer.phone) {
               const p = hubData.customer.phone.startsWith('20') ? '0' + hubData.customer.phone.slice(2) : hubData.customer.phone;
               setCustomerPhone(p);
+              try { localStorage.setItem('naqer_customer_phone', p); } catch {}
             }
           }
         })
         .catch(() => {});
 
-      // Fetch saved customer delivery addresses
+      // 3. Fetch saved customer delivery addresses
       fetch('/api/customer/addresses')
         .then((res) => (res.ok ? res.json() : null))
         .then((data) => {
@@ -153,6 +157,7 @@ export default function CheckoutModal({
         firstInputRef.current?.focus();
       }, 100);
     }
+    prevIsOpenRef.current = isOpen;
   }, [isOpen, selectedBranchId, customerNotes]);
 
   // Background scroll lock & Escape key
@@ -301,6 +306,7 @@ export default function CheckoutModal({
       setVerificationToken(data.verificationToken);
 
       try {
+        if (customerName.trim()) localStorage.setItem('naqer_customer_name', customerName.trim());
         localStorage.setItem('naqer_customer_phone', customerPhone.trim());
         if (data.customerId) localStorage.setItem('naqer_customer_id', data.customerId);
         localStorage.setItem('naqer_active_orders_count', '1');
@@ -414,13 +420,17 @@ export default function CheckoutModal({
       <h3>{isAr ? 'بيانات العميل' : 'Customer Details'}</h3>
       
       <div className="form-group">
-        <label htmlFor="customerName">{isAr ? 'الاسم (اختياري)' : 'Name (Optional)'}</label>
+        <label htmlFor="customerName">{isAr ? 'الاسم بالكامل *' : 'Full Name *'}</label>
         <input
           ref={firstInputRef}
           id="customerName"
           type="text"
           value={customerName}
-          onChange={(e) => { setCustomerName(e.target.value); setErrors(prev => ({ ...prev, customerName: '' })); }}
+          onChange={(e) => {
+            setCustomerName(e.target.value);
+            setErrors(prev => ({ ...prev, customerName: '' }));
+            try { localStorage.setItem('naqer_customer_name', e.target.value); } catch {}
+          }}
           placeholder={isAr ? 'أحمد محمد' : 'Ahmed Mohamed'}
           className={errors.customerName ? 'error' : ''}
         />
@@ -436,7 +446,11 @@ export default function CheckoutModal({
           id="customerPhone"
           type="tel"
           value={customerPhone}
-          onChange={(e) => { setCustomerPhone(e.target.value); setErrors(prev => ({ ...prev, customerPhone: '' })); }}
+          onChange={(e) => {
+            setCustomerPhone(e.target.value);
+            setErrors(prev => ({ ...prev, customerPhone: '' }));
+            try { localStorage.setItem('naqer_customer_phone', e.target.value); } catch {}
+          }}
           placeholder="01024994092"
           className={errors.customerPhone ? 'error' : ''}
           maxLength={15}
