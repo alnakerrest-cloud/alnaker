@@ -10,7 +10,7 @@
     "build:test": "node scripts/run-test-env-build.mjs",
     "start": "next start --hostname 127.0.0.1 --port 3001",
     "postinstall": "prisma generate",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
     "db:generate": "prisma generate",
     "db:push": "echo \"DISABLED: use migrate dev (destructive)\"",
     "db:baseline": "node scripts/baseline.mjs",
