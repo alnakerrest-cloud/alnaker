@@ -10,7 +10,7 @@ import { isLocale } from '@/lib/i18n';
 import { getMenuForLocale } from '@/lib/menu-db';
 import { getSiteData } from '@/lib/site-db';
 import { getActiveOffers } from '@/lib/offers-db';
-import { getMenuSettingsAsync, getMostOrderedProductStats } from '@/lib/orders-store';
+import { getMenuSettingsAsync, getMostOrderedProductStats, normalizeOrderingMode } from '@/lib/orders-store';
 
 // The menu and the site chrome (hero/footer/branches/phone/settings) now come from Neon. Admin
 // writes call revalidatePath('/ar'|'/en') for instant updates; this timer is the safety net so the
@@ -29,7 +29,8 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
     Promise.resolve(getMostOrderedProductStats()),
   ]);
 
-  if (menuSettings.mode === 'TEMPORARILY_CLOSED') {
+  const activeMode = normalizeOrderingMode(menuSettings.mode);
+  if (activeMode === 'TEMPORARILY_CLOSED') {
     return (
       <>
         <JsonLd locale={locale} site={site} />

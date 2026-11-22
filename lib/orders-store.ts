@@ -6,6 +6,7 @@ import { getConfiguredDatabaseUrl, pgSslConfig } from "./database-url";
 
 import { generateCustomerId } from "./customer-session";
 import { createOrderNotificationAsync } from "./customer-hub-store";
+import { type OrderingMode, normalizeOrderingMode } from "./order-settings-types";
 
 export type OrderStatus =
   | "DRAFT"
@@ -23,7 +24,7 @@ export type OrderStatus =
 
 export type OrderType = "DELIVERY" | "TAKEAWAY";
 export type PaymentMethod = "CASH" | "CARD";
-export type MenuMode = "VIEW_AND_ORDER" | "VIEW_ONLY" | "TEMPORARILY_CLOSED";
+// MenuMode is imported and re-exported from ./order-settings-types
 
 export interface SelectedOptionSnapshot {
   id: string;
@@ -69,6 +70,7 @@ export interface OrderRecord {
   orderNumber: string;
   verificationToken: string;
   verificationCode: string;
+  orderingMode?: OrderingMode;
   createdAt: string;
   updatedAt: string;
   expiresAt: string;
@@ -124,6 +126,13 @@ export {
   type OrderSuspensionReason,
   type BranchOverrideSettings,
   type MenuModeSettings,
+  type OrderingMode,
+  type MenuMode,
+  normalizeOrderingMode,
+  type OrderingModeFeatures,
+  ORDERING_MODE_FEATURES,
+  type OrderingModeMeta,
+  ORDERING_MODES_META,
   REASON_PRESETS,
   DEFAULT_SETTINGS,
 } from "./order-settings-types";
@@ -148,6 +157,7 @@ function getOrdersDir(): string {
 const globalForOrders = globalThis as unknown as {
   __cachedOrders?: OrderRecord[];
   __cachedSettings?: MenuModeSettings;
+  __cachedSettingsTimestamp?: number;
   __pgPool?: pg.Pool;
 };
 
@@ -337,7 +347,13 @@ export function getMenuSettings(): MenuModeSettings {
 }
 
 export async function getMenuSettingsAsync(forceFresh = false): Promise<MenuModeSettings> {
-  if (!forceFresh && globalForOrders.__cachedSettings) {
+  const now = Date.now();
+  if (
+    !forceFresh &&
+    globalForOrders.__cachedSettings &&
+    globalForOrders.__cachedSettingsTimestamp &&
+    now - globalForOrders.__cachedSettingsTimestamp < 5000
+  ) {
     return globalForOrders.__cachedSettings;
   }
   const pool = getPgPool();
@@ -350,6 +366,7 @@ export async function getMenuSettingsAsync(forceFresh = false): Promise<MenuMode
         const rawData = res.rows[0].data;
         const dbSettings = (typeof rawData === "string" ? JSON.parse(rawData) : rawData) as MenuModeSettings;
         globalForOrders.__cachedSettings = dbSettings;
+        globalForOrders.__cachedSettingsTimestamp = now;
         return dbSettings;
       }
     } catch (err: any) {
@@ -386,7 +403,13 @@ export async function updateMenuSettingsAsync(partial: Partial<MenuModeSettings>
   }
 
   globalForOrders.__cachedSettings = updated;
+  globalForOrders.__cachedSettingsTimestamp = Date.now();
   return updated;
+}
+
+export function invalidateMenuSettingsCache(): void {
+  globalForOrders.__cachedSettings = undefined;
+  globalForOrders.__cachedSettingsTimestamp = undefined;
 }
 
 export function updateMenuSettings(partial: Partial<MenuModeSettings>): MenuModeSettings {
@@ -441,6 +464,7 @@ export interface CreateOrderParams {
   orderNumber?: string;
   verificationToken?: string;
   verificationCode?: string;
+  orderingMode?: OrderingMode;
   customerId?: string;
   type: OrderType;
   paymentMethod: PaymentMethod;
@@ -513,6 +537,7 @@ export async function createOrder(params: CreateOrderParams): Promise<OrderRecor
     orderNumber,
     verificationToken,
     verificationCode,
+    orderingMode: params.orderingMode || normalizeOrderingMode(settings.mode),
     createdAt: now.toISOString(),
     updatedAt: now.toISOString(),
     expiresAt: expiresAt.toISOString(),
@@ -1076,7 +1101,8 @@ export function getOrdersStats(): OrdersStats {
 
   for (const o of orders) {
     totalOrders++;
-    const isToday = o.createdAt.slice(0, 10) === todayDateStr;
+    const createdStr = typeof o.createdAt === "string" ? o.createdAt : o.createdAt ? new Date(o.createdAt).toISOString() : "";
+    const isToday = Boolean(createdStr && createdStr.slice(0, 10) === todayDateStr);
     if (isToday) {
       ordersToday++;
     }

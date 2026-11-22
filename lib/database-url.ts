@@ -106,7 +106,13 @@ export function resolveDatabaseUrl(): string {
 
 /** إعدادات SSL المتوافقة مع Neon، مشتقة من العنوان المضبوط فقط. */
 export function pgSslConfig(connectionString: string) {
-  return connectionString.includes("sslmode=require")
-    ? { rejectUnauthorized: false }
-    : undefined;
+  const str = connectionString.toLowerCase();
+  const requiresSsl =
+    str.includes("sslmode=require") ||
+    str.includes("sslmode=verify-full") ||
+    str.includes("sslmode=verify-ca") ||
+    str.includes("ssl=true") ||
+    str.includes(".neon.tech");
+
+  return requiresSsl ? { rejectUnauthorized: false } : undefined;
 }

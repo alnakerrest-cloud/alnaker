@@ -298,11 +298,50 @@ class LocalDbEngine {
         const nestedAssignments = data.productAssignments?.create;
         delete data.productAssignments;
 
+        const nestedProductTargets = Array.isArray(data.productTargets?.create)
+          ? data.productTargets.create
+          : Array.isArray(data.productTargets)
+          ? data.productTargets
+          : [];
+        delete data.productTargets;
+
+        const nestedCategoryTargets = Array.isArray(data.categoryTargets?.create)
+          ? data.categoryTargets.create
+          : Array.isArray(data.categoryTargets)
+          ? data.categoryTargets
+          : [];
+        delete data.categoryTargets;
+
+        const nestedLocationTargets = Array.isArray(data.locationTargets?.create)
+          ? data.locationTargets.create
+          : Array.isArray(data.locationTargets)
+          ? data.locationTargets
+          : [];
+        delete data.locationTargets;
+
         const record = {
           ...data,
           id,
           createdAt: data.createdAt || now,
           updatedAt: data.updatedAt || now,
+          productTargets: nestedProductTargets.map((pt: any) => ({
+            id: pt.id || crypto.randomUUID(),
+            offerId: id,
+            productId: pt.productId,
+            createdAt: now,
+          })),
+          categoryTargets: nestedCategoryTargets.map((ct: any) => ({
+            id: ct.id || crypto.randomUUID(),
+            offerId: id,
+            categoryId: ct.categoryId,
+            createdAt: now,
+          })),
+          locationTargets: nestedLocationTargets.map((lt: any) => ({
+            id: lt.id || crypto.randomUUID(),
+            offerId: id,
+            targetLocationId: lt.targetLocationId,
+            createdAt: now,
+          })),
         };
 
         const table = engine.getRawTable(modelName);
@@ -872,7 +911,12 @@ class LocalDbEngine {
 
       if (modelName === "Offer") {
         if (include.productTargets) {
-          result.productTargets = (row.productTargets || []).map((pt: any) => {
+          const rawTargets = Array.isArray(row.productTargets)
+            ? row.productTargets
+            : Array.isArray(row.productTargets?.create)
+            ? row.productTargets.create
+            : [];
+          result.productTargets = rawTargets.map((pt: any) => {
             const prod = this.getRawTable("Product").find((p) => p.id === pt.productId);
             return {
               ...pt,
@@ -881,10 +925,18 @@ class LocalDbEngine {
           });
         }
         if (include.categoryTargets) {
-          result.categoryTargets = row.categoryTargets || [];
+          result.categoryTargets = Array.isArray(row.categoryTargets)
+            ? row.categoryTargets
+            : Array.isArray(row.categoryTargets?.create)
+            ? row.categoryTargets.create
+            : [];
         }
         if (include.locationTargets) {
-          result.locationTargets = row.locationTargets || [];
+          result.locationTargets = Array.isArray(row.locationTargets)
+            ? row.locationTargets
+            : Array.isArray(row.locationTargets?.create)
+            ? row.locationTargets.create
+            : [];
         }
       }
 

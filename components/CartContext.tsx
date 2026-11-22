@@ -14,7 +14,7 @@ import type { VBranch } from '@/lib/site-db';
 import type { VOffer } from '@/lib/offers';
 import { calculateOfferDiscount } from '@/lib/offers';
 import type { Locale } from '@/lib/i18n';
-import type { MenuModeSettings } from '@/lib/order-settings-types';
+import { type MenuModeSettings, normalizeOrderingMode } from '@/lib/order-settings-types';
 import {
   CART_STORAGE_KEY,
   type CartItem,
@@ -109,7 +109,8 @@ export function CartProvider({
   offers?: VOffer[];
   menuSettings?: MenuModeSettings;
 }) {
-  const isViewOnly = menuSettings?.mode === 'VIEW_ONLY' || menuSettings?.mode === 'TEMPORARILY_CLOSED';
+  const normalizedMode = normalizeOrderingMode(menuSettings?.mode);
+  const isViewOnly = normalizedMode === 'DISPLAY_ONLY' || normalizedMode === 'TEMPORARILY_CLOSED';
   const [cart, setCart] = useState<CartItem[]>([]);
   const [customerNotes, setCustomerNotes] = useState('');
   const [isCartOpen, setIsCartOpen] = useState(false);

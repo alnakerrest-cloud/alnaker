@@ -1,8 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import type { MenuModeSettings, BranchOverrideSettings, OrderSuspensionReason } from "@/lib/order-settings-types";
-import { REASON_PRESETS } from "@/lib/order-settings-types";
+import type {
+  MenuModeSettings,
+  BranchOverrideSettings,
+  OrderSuspensionReason,
+  OrderingMode,
+} from "@/lib/order-settings-types";
+import {
+  REASON_PRESETS,
+  ORDERING_MODES_META,
+  ORDERING_MODE_FEATURES,
+  normalizeOrderingMode,
+} from "@/lib/order-settings-types";
 
 interface BranchInfo {
   id: string;
@@ -34,14 +44,32 @@ export default function OrderSettingsClient({
     expectedResumeAt: "",
     displayPosition: "TOP_BANNER",
     ...initialSettings,
+    mode: normalizeOrderingMode(initialSettings?.mode),
   }));
 
   const [previewLocale, setPreviewLocale] = useState<"ar" | "en">("ar");
   const [isSaving, setIsSaving] = useState(false);
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-  const handleModeChange = (mode: MenuModeSettings["mode"]) => {
-    setSettings((prev) => ({ ...prev, mode }));
+  // Safe mode transition confirmation modal state
+  const [pendingModeSwitch, setPendingModeSwitch] = useState<OrderingMode | null>(null);
+
+  const activeMode = normalizeOrderingMode(settings.mode);
+  const activeMeta = ORDERING_MODES_META[activeMode];
+
+  const handleModeCardClick = (targetMode: OrderingMode) => {
+    if (targetMode === activeMode) return;
+    setPendingModeSwitch(targetMode);
+  };
+
+  const confirmModeSwitch = () => {
+    if (!pendingModeSwitch) return;
+    setSettings((prev) => ({ ...prev, mode: pendingModeSwitch }));
+    setPendingModeSwitch(null);
+  };
+
+  const cancelModeSwitch = () => {
+    setPendingModeSwitch(null);
   };
 
   const handleGlobalTypeToggle = (type: "allowDelivery" | "allowTakeaway") => {
@@ -97,7 +125,11 @@ export default function OrderSettingsClient({
         throw new Error(data.error || "فشل في حفظ إعدادات الطلبات");
       }
       setFeedback({ type: "success", message: data.message || "تم حفظ الإعدادات بنجاح." });
-      setSettings(data.settings);
+      setSettings((prev) => ({
+        ...prev,
+        ...data.settings,
+        mode: normalizeOrderingMode(data.settings?.mode),
+      }));
       setTimeout(() => setFeedback(null), 5000);
     } catch (err: any) {
       setFeedback({ type: "error", message: err.message || "حدث خطأ أثناء الحفظ." });
@@ -106,16 +138,22 @@ export default function OrderSettingsClient({
     }
   };
 
-  const isGlobalActive = settings.mode === "VIEW_AND_ORDER";
+  const isOrderingAllowed = activeMode === "FULL_ORDERING" || activeMode === "WHATSAPP_DATABASE";
   const orderableBranchCount = branches.filter((b) => {
     const o = settings.branchOverrides[b.id];
     return o ? o.isOrderable && o.isOpen : b.isOrderable && b.isActive;
   }).length;
 
   const activePreset = settings.reasonCode && REASON_PRESETS[settings.reasonCode];
+  const MODES_LIST: OrderingMode[] = [
+    "FULL_ORDERING",
+    "WHATSAPP_DATABASE",
+    "DISPLAY_ONLY",
+    "TEMPORARILY_CLOSED",
+  ];
 
   return (
-    <div style={{ maxWidth: "1140px", margin: "0 auto", paddingBottom: "60px" }}>
+    <div style={{ maxWidth: "1180px", margin: "0 auto", paddingBottom: "70px" }}>
       {/* Top Header */}
       <div
         style={{
@@ -128,11 +166,13 @@ export default function OrderSettingsClient({
         }}
       >
         <div>
-          <h1 style={{ margin: 0, fontSize: "24px", fontWeight: 800, color: "#0f172a" }}>
-            إعدادات وتفعيل الطلبات | Order Settings
-          </h1>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <h1 style={{ margin: 0, fontSize: "24px", fontWeight: 800, color: "#0f172a" }}>
+              إعدادات أوضاع الطلب وتجربة العميل | Ordering Modes & Customer Ops
+            </h1>
+          </div>
           <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: "14px" }}>
-            التحكم المركزي في إتاحة استقبال طلبات الطعام، تنبيهات توقف الطلبات، الفروع، وطرق التوصيل.
+            التحكم الديناميكي اللحظي في أوضاع الطلب، قنوات الاستقبال، الإغلاق المؤقت، وساعات عمل الفروع دون إعادة نشر التطبيق.
           </p>
         </div>
 
@@ -142,7 +182,7 @@ export default function OrderSettingsClient({
           disabled={isSaving}
           className="admin-btn admin-btn-primary"
           style={{
-            minWidth: "160px",
+            minWidth: "170px",
             padding: "12px 24px",
             fontSize: "15px",
             fontWeight: 700,
@@ -151,6 +191,7 @@ export default function OrderSettingsClient({
             justifyContent: "center",
             gap: "8px",
             borderRadius: "10px",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.08)",
           }}
         >
           {isSaving ? "جاري الحفظ..." : "💾 حفظ التغييرات"}
@@ -190,31 +231,23 @@ export default function OrderSettingsClient({
         <div
           style={{
             background: "#fff",
-            border: "1px solid #e2e8f0",
+            border: `1.5px solid ${activeMeta.borderColor}`,
             borderRadius: "12px",
             padding: "18px 20px",
             boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
           }}
         >
           <div style={{ fontSize: "13px", color: "#64748b", fontWeight: 600, marginBottom: "6px" }}>
-            حالة النظام العامة
+            وضع التشغيل النشط حالياً
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span
-              style={{
-                width: "12px",
-                height: "12px",
-                borderRadius: "50%",
-                background: isGlobalActive ? "#16a34a" : settings.mode === "VIEW_ONLY" ? "#d97706" : "#dc2626",
-              }}
-            />
-            <strong style={{ fontSize: "16px", color: "#0f172a" }}>
-              {settings.mode === "VIEW_AND_ORDER"
-                ? "مفعّل ويستقبل طلبات"
-                : settings.mode === "VIEW_ONLY"
-                ? "وضع العرض فقط (View Only)"
-                : "إغلاق مؤقت"}
-            </strong>
+            <span style={{ fontSize: "20px" }}>{activeMeta.icon}</span>
+            <div>
+              <strong style={{ fontSize: "16px", color: activeMeta.color, display: "block" }}>
+                الوضع {activeMeta.letter} — {activeMeta.titleAr}
+              </strong>
+              <small style={{ color: "#64748b", fontSize: "11px" }}>{activeMeta.titleEn}</small>
+            </div>
           </div>
         </div>
 
@@ -228,10 +261,10 @@ export default function OrderSettingsClient({
           }}
         >
           <div style={{ fontSize: "13px", color: "#64748b", fontWeight: 600, marginBottom: "6px" }}>
-            جاهزية الفروع
+            جاهزية الفروع للطلبات
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "18px" }}>🏢</span>
+            <span style={{ fontSize: "20px" }}>🏢</span>
             <strong style={{ fontSize: "16px", color: "#0f172a" }}>
               {orderableBranchCount} من {branches.length} فروع جاهزة
             </strong>
@@ -248,12 +281,12 @@ export default function OrderSettingsClient({
           }}
         >
           <div style={{ fontSize: "13px", color: "#64748b", fontWeight: 600, marginBottom: "6px" }}>
-            شريط تنبيه التوقف
+            شريط تنبيه التوقف في المنيو
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "18px" }}>🔔</span>
+            <span style={{ fontSize: "20px" }}>🔔</span>
             <strong style={{ fontSize: "15px", color: settings.enableNotice !== false ? "#16a34a" : "#64748b" }}>
-              {settings.enableNotice !== false ? "مفعّل في المنيو" : "معطّل"}
+              {settings.enableNotice !== false ? "مفعّل في واجهة العميل" : "معطّل"}
             </strong>
           </div>
         </div>
@@ -268,9 +301,9 @@ export default function OrderSettingsClient({
           }}
         >
           <div style={{ fontSize: "13px", color: "#64748b", fontWeight: 600, marginBottom: "6px" }}>
-            آخر تحديث للإعدادات
+            آخر تعديل مسجل
           </div>
-          <div style={{ fontSize: "13px", color: "#334155" }}>
+          <div style={{ fontSize: "13px", color: "#334155", fontWeight: 600 }}>
             {settings.updatedAt ? new Date(settings.updatedAt).toLocaleString("ar-EG") : "—"}
           </div>
           {settings.updatedBy && (
@@ -281,91 +314,234 @@ export default function OrderSettingsClient({
         </div>
       </div>
 
-      {/* Section 1: Global Operations */}
+      {/* SECTION 1: Ordering & Customer Experience Settings (4 Operational Modes) */}
       <div
         style={{
           background: "#fff",
           border: "1px solid #e2e8f0",
-          borderRadius: "14px",
-          padding: "24px",
-          marginBottom: "24px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+          borderRadius: "16px",
+          padding: "26px",
+          marginBottom: "28px",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.04)",
         }}
       >
-        <h2 style={{ margin: "0 0 16px", fontSize: "18px", fontWeight: 700, color: "#0f172a" }}>
-          1. وضع التشغيل العام للمطعم والمنيو
-        </h2>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "12px", marginBottom: "20px" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{ fontSize: "22px" }}>🎛️</span>
+              <h2 style={{ margin: 0, fontSize: "19px", fontWeight: 800, color: "#0f172a" }}>
+                1. إعدادات أوضاع الطلب وتجربة العميل | Ordering & Customer Experience Settings
+              </h2>
+            </div>
+            <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: "14px" }}>
+              اختر الوضع المناسب لتشغيل المطعم. التبديل يتم فوريًا على الخادم مع ضمان كامل لسلامة كافة الطلبات وحسابات العملاء التاريخية.
+            </p>
+          </div>
+        </div>
 
+        {/* 4 Interactive Mode Cards */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: "14px",
-            marginBottom: "20px",
+            gap: "16px",
+            marginBottom: "24px",
           }}
         >
-          <button
-            type="button"
-            onClick={() => handleModeChange("VIEW_AND_ORDER")}
-            style={{
-              padding: "16px",
-              borderRadius: "10px",
-              border: settings.mode === "VIEW_AND_ORDER" ? "2px solid #16a34a" : "1px solid #e2e8f0",
-              background: settings.mode === "VIEW_AND_ORDER" ? "#f0fdf4" : "#fff",
-              textAlign: "right",
-              cursor: "pointer",
-            }}
-          >
-            <div style={{ fontSize: "20px", marginBottom: "6px" }}>✅</div>
-            <strong style={{ display: "block", fontSize: "15px", color: "#0f172a" }}>استقبال الطلبات مفعّل</strong>
-            <small style={{ color: "#64748b", display: "block", marginTop: "4px" }}>
-              المنيو متاح للتصفح، والسلة وإتمام الطلبات تعمل بشكل طبيعي في جميع الفروع المفعّلة.
-            </small>
-          </button>
+          {MODES_LIST.map((modeKey) => {
+            const meta = ORDERING_MODES_META[modeKey];
+            const isSelected = activeMode === modeKey;
 
-          <button
-            type="button"
-            onClick={() => handleModeChange("VIEW_ONLY")}
-            style={{
-              padding: "16px",
-              borderRadius: "10px",
-              border: settings.mode === "VIEW_ONLY" ? "2px solid #d97706" : "1px solid #e2e8f0",
-              background: settings.mode === "VIEW_ONLY" ? "#fffbeb" : "#fff",
-              textAlign: "right",
-              cursor: "pointer",
-            }}
-          >
-            <div style={{ fontSize: "20px", marginBottom: "6px" }}>👁️</div>
-            <strong style={{ display: "block", fontSize: "15px", color: "#0f172a" }}>وضع العرض فقط (View Only)</strong>
-            <small style={{ color: "#64748b", display: "block", marginTop: "4px" }}>
-              المنيو وجميع الأصناف والصور والأسعار متاحة 100% للتصفح، مع إيقاف استقبال الطلبات نهائياً في جميع الفروع.
-            </small>
-          </button>
+            return (
+              <div
+                key={modeKey}
+                onClick={() => handleModeCardClick(modeKey)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleModeCardClick(modeKey);
+                  }
+                }}
+                style={{
+                  border: isSelected ? `2.5px solid ${meta.color}` : "1.5px solid #e2e8f0",
+                  background: isSelected ? meta.bgColor : "#ffffff",
+                  borderRadius: "14px",
+                  padding: "20px",
+                  cursor: isSelected ? "default" : "pointer",
+                  transition: "all 0.2s ease",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  boxShadow: isSelected ? `0 4px 14px ${meta.borderColor}` : "0 1px 3px rgba(0,0,0,0.03)",
+                  position: "relative",
+                  outline: "none",
+                }}
+              >
+                <div>
+                  {/* Top card header */}
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "32px",
+                          height: "32px",
+                          borderRadius: "8px",
+                          background: isSelected ? meta.color : "#f1f5f9",
+                          color: isSelected ? "#fff" : "#475569",
+                          fontSize: "16px",
+                          fontWeight: 800,
+                        }}
+                      >
+                        {meta.letter}
+                      </span>
+                      <span style={{ fontSize: "20px" }}>{meta.icon}</span>
+                    </div>
 
-          <button
-            type="button"
-            onClick={() => handleModeChange("TEMPORARILY_CLOSED")}
-            style={{
-              padding: "16px",
-              borderRadius: "10px",
-              border: settings.mode === "TEMPORARILY_CLOSED" ? "2px solid #dc2626" : "1px solid #e2e8f0",
-              background: settings.mode === "TEMPORARILY_CLOSED" ? "#fef2f2" : "#fff",
-              textAlign: "right",
-              cursor: "pointer",
-            }}
-          >
-            <div style={{ fontSize: "20px", marginBottom: "6px" }}>🛑</div>
-            <strong style={{ display: "block", fontSize: "15px", color: "#0f172a" }}>إغلاق مؤقت للمطعم</strong>
-            <small style={{ color: "#64748b", display: "block", marginTop: "4px" }}>
-              توقف كامل عن استقبال أي طلبات جديدة مع إعلام الزبائن بالإغلاق المؤقت.
-            </small>
-          </button>
+                    <span
+                      style={{
+                        padding: "3px 9px",
+                        borderRadius: "12px",
+                        fontSize: "11px",
+                        fontWeight: 700,
+                        background: isSelected ? meta.color : "#f1f5f9",
+                        color: isSelected ? "#fff" : "#64748b",
+                      }}
+                    >
+                      {isSelected ? "الوضع النشط ✓" : "انقر للتفعيل"}
+                    </span>
+                  </div>
+
+                  {/* Titles */}
+                  <strong style={{ display: "block", fontSize: "16px", fontWeight: 800, color: "#0f172a", marginBottom: "2px" }}>
+                    {meta.titleAr}
+                  </strong>
+                  <span style={{ display: "block", fontSize: "12px", color: "#64748b", fontWeight: 600, marginBottom: "8px" }}>
+                    {meta.titleEn}
+                  </span>
+
+                  <span
+                    style={{
+                      display: "inline-block",
+                      fontSize: "11px",
+                      fontWeight: 700,
+                      color: meta.color,
+                      background: isSelected ? "#ffffff" : meta.bgColor,
+                      border: `1px solid ${meta.borderColor}`,
+                      padding: "2px 8px",
+                      borderRadius: "6px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    {meta.badgeAr}
+                  </span>
+
+                  <p style={{ margin: "0 0 14px", fontSize: "13px", color: "#475569", lineHeight: "1.45" }}>
+                    {meta.descriptionAr}
+                  </p>
+
+                  {/* Bullet points */}
+                  <ul style={{ margin: 0, paddingRight: "18px", paddingLeft: 0, fontSize: "12px", color: "#334155", lineHeight: "1.55" }}>
+                    {meta.bulletPointsAr.map((bullet, idx) => (
+                      <li key={idx} style={{ marginBottom: "4px" }}>
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div style={{ marginTop: "16px", paddingTop: "12px", borderTop: "1px dashed rgba(0,0,0,0.08)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <small style={{ color: "#64748b", fontSize: "11px" }}>
+                    {isSelected ? "مطبّق حالياً على جميع الواجهات" : "يتطلب تأكيد التبديل"}
+                  </small>
+                  {isSelected && (
+                    <span style={{ fontSize: "13px", fontWeight: 800, color: meta.color }}>
+                      ● نشط
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Feature Matrix Comparison Table */}
+        <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "12px", padding: "18px", marginBottom: "20px", overflowX: "auto" }}>
+          <h3 style={{ margin: "0 0 12px", fontSize: "14px", fontWeight: 800, color: "#0f172a", display: "flex", alignItems: "center", gap: "6px" }}>
+            <span>📊</span>
+            <span>مصفوفة مقارنة قدرات الأوضاع الأربعة | Runtime Modes Feature Matrix</span>
+          </h3>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12.5px", textAlign: "right" }}>
+            <thead>
+              <tr style={{ borderBottom: "2px solid #cbd5e1", color: "#475569" }}>
+                <th style={{ padding: "8px 10px", fontWeight: 700 }}>الخاصية / Feature</th>
+                <th style={{ padding: "8px 10px", textAlign: "center", fontWeight: 700 }}>أ: نظام متكامل</th>
+                <th style={{ padding: "8px 10px", textAlign: "center", fontWeight: 700 }}>ب: واتساب + قاعدة البيانات</th>
+                <th style={{ padding: "8px 10px", textAlign: "center", fontWeight: 700 }}>ج: عرض فقط</th>
+                <th style={{ padding: "8px 10px", textAlign: "center", fontWeight: 700 }}>د: إغلاق مؤقت</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ borderBottom: "1px solid #e2e8f0" }}>
+                <td style={{ padding: "8px 10px", fontWeight: 600, color: "#0f172a" }}>إنشاء وحفظ الطلبات في قاعدة البيانات</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e2e8f0" }}>
+                <td style={{ padding: "8px 10px", fontWeight: 600, color: "#0f172a" }}>توثيق جلسة العميل وحفظ العناوين</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e2e8f0" }}>
+                <td style={{ padding: "8px 10px", fontWeight: 600, color: "#0f172a" }}>التتبع المباشر لطلب العميل (Live Tracking)</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗ (عبر واتساب)</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e2e8f0" }}>
+                <td style={{ padding: "8px 10px", fontWeight: 600, color: "#0f172a" }}>استعلام العميل الدوري (Polling 5s)</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗ (متوقف تماماً)</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e2e8f0" }}>
+                <td style={{ padding: "8px 10px", fontWeight: 600, color: "#0f172a" }}>التوجيه المباشر لواتساب الفرع</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>اختياري</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#0284c7", fontWeight: 800 }}>✓ أساسي</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+              </tr>
+              <tr style={{ borderBottom: "1px solid #e2e8f0" }}>
+                <td style={{ padding: "8px 10px", fontWeight: 600, color: "#0f172a" }}>التزامن التلقائي لإدارة الطلبات (LiveSync)</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓ تلقائي</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#0284c7", fontWeight: 800 }}>يدوي (زر تحديث)</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#94a3b8" }}>✗</td>
+              </tr>
+              <tr>
+                <td style={{ padding: "8px 10px", fontWeight: 600, color: "#0f172a" }}>حماية سجل وسوابق طلبات العملاء القديمة</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓ 100% محفوظ</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓ 100% محفوظ</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓ 100% محفوظ</td>
+                <td style={{ padding: "8px 10px", textAlign: "center", color: "#16a34a", fontWeight: 800 }}>✓ 100% محفوظ</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         {/* Global Order Type Toggles */}
-        <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: "16px" }}>
+        <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: "18px" }}>
           <h3 style={{ margin: "0 0 12px", fontSize: "15px", fontWeight: 700, color: "#0f172a" }}>
-            أنواع الطلبات المدعومة على مستوى المطعم
+            أنواع الطلبات المدعومة عند استقبال الطلبات
           </h3>
           <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
             <label
@@ -409,15 +585,123 @@ export default function OrderSettingsClient({
         </div>
       </div>
 
-      {/* Section 2: Order Suspension Notice & Customer Alerts */}
+      {/* Confirmation Modal for Safe Mode Transitions */}
+      {pendingModeSwitch && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(15, 23, 42, 0.6)",
+            backdropFilter: "blur(4px)",
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) cancelModeSwitch();
+          }}
+        >
+          <div
+            style={{
+              background: "#ffffff",
+              borderRadius: "16px",
+              maxWidth: "560px",
+              width: "100%",
+              padding: "26px",
+              boxShadow: "0 20px 40px rgba(0,0,0,0.2)",
+              direction: "rtl",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "14px" }}>
+              <span style={{ fontSize: "28px" }}>⚠️</span>
+              <div>
+                <h3 style={{ margin: 0, fontSize: "19px", fontWeight: 800, color: "#0f172a" }}>
+                  تأكيد تبديل وضع تشغيل المطعم
+                </h3>
+                <span style={{ fontSize: "12px", color: "#64748b" }}>Confirm Restaurant Operational Mode Switch</span>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "12px", margin: "16px 0", padding: "14px", background: "#f8fafc", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+              <div style={{ flex: 1, textAlign: "center" }}>
+                <small style={{ color: "#64748b", display: "block", fontSize: "11px" }}>الوضع الحالي</small>
+                <strong style={{ color: activeMeta.color, fontSize: "14px" }}>{activeMeta.titleAr}</strong>
+              </div>
+              <span style={{ fontSize: "20px", color: "#94a3b8" }}>⬅️</span>
+              <div style={{ flex: 1, textAlign: "center" }}>
+                <small style={{ color: "#64748b", display: "block", fontSize: "11px" }}>الوضع الجديد المطلوب</small>
+                <strong style={{ color: ORDERING_MODES_META[pendingModeSwitch].color, fontSize: "14px" }}>
+                  {ORDERING_MODES_META[pendingModeSwitch].titleAr}
+                </strong>
+              </div>
+            </div>
+
+            <div style={{ fontSize: "13.5px", color: "#334155", lineHeight: "1.6", marginBottom: "18px" }}>
+              <p style={{ margin: "0 0 10px" }}>
+                أنت على وشك التبديل إلى <strong>{ORDERING_MODES_META[pendingModeSwitch].titleAr}</strong> ({ORDERING_MODES_META[pendingModeSwitch].titleEn}):
+              </p>
+              <div style={{ background: ORDERING_MODES_META[pendingModeSwitch].bgColor, border: `1px solid ${ORDERING_MODES_META[pendingModeSwitch].borderColor}`, borderRadius: "8px", padding: "10px 14px", color: ORDERING_MODES_META[pendingModeSwitch].color, fontSize: "13px" }}>
+                {ORDERING_MODES_META[pendingModeSwitch].descriptionAr}
+              </div>
+            </div>
+
+            <div style={{ background: "#f0fdf4", border: "1px solid #86efac", borderRadius: "10px", padding: "12px 14px", marginBottom: "22px", fontSize: "12.5px", color: "#166534", display: "flex", alignItems: "center", gap: "8px" }}>
+              <span>🛡️</span>
+              <span>
+                <strong>أمان البيانات مضمون:</strong> هذا الإجراء فوري ويعتمد على الخادم، ولن يؤدي مطلقًا إلى حذف أو تعديل أو فقدان أي من طلبات العملاء السابقة أو سجلات التدقيق التاريخية.
+              </span>
+            </div>
+
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px" }}>
+              <button
+                type="button"
+                onClick={cancelModeSwitch}
+                style={{
+                  padding: "10px 18px",
+                  borderRadius: "8px",
+                  border: "1px solid #cbd5e1",
+                  background: "#ffffff",
+                  color: "#475569",
+                  fontWeight: 700,
+                  fontSize: "14px",
+                  cursor: "pointer",
+                }}
+              >
+                إلغاء التراجع
+              </button>
+              <button
+                type="button"
+                onClick={confirmModeSwitch}
+                style={{
+                  padding: "10px 22px",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: ORDERING_MODES_META[pendingModeSwitch].color,
+                  color: "#ffffff",
+                  fontWeight: 800,
+                  fontSize: "14px",
+                  cursor: "pointer",
+                  boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+                }}
+              >
+                تأكيد التبديل الآن
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SECTION 2: Order Suspension Notice & Customer Alerts */}
       <div
         style={{
           background: "#fff",
           border: "1px solid #e2e8f0",
-          borderRadius: "14px",
-          padding: "24px",
-          marginBottom: "24px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+          borderRadius: "16px",
+          padding: "26px",
+          marginBottom: "28px",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.04)",
         }}
       >
         <div
@@ -430,9 +714,12 @@ export default function OrderSettingsClient({
             marginBottom: "8px",
           }}
         >
-          <h2 style={{ margin: 0, fontSize: "18px", fontWeight: 700, color: "#0f172a" }}>
-            2. إعدادات شريط تنبيه توقف الطلبات (Suspension Notice & Reason)
-          </h2>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ fontSize: "20px" }}>🔔</span>
+            <h2 style={{ margin: 0, fontSize: "18px", fontWeight: 700, color: "#0f172a" }}>
+              2. إعدادات شريط تنبيه توقف الطلبات (Suspension Notice & Reason)
+            </h2>
+          </div>
           <label
             style={{
               display: "inline-flex",
@@ -451,140 +738,98 @@ export default function OrderSettingsClient({
             <input
               type="checkbox"
               checked={settings.enableNotice !== false}
-              onChange={(e) => setSettings((p) => ({ ...p, enableNotice: e.target.checked }))}
+              onChange={(e) => setSettings((prev) => ({ ...prev, enableNotice: e.target.checked }))}
               style={{ width: "16px", height: "16px" }}
             />
-            <span>{settings.enableNotice !== false ? "شريط التنبيه مفعّل" : "شريط التنبيه معطّل"}</span>
+            <span>{settings.enableNotice !== false ? "الشريط مفعّل" : "الشريط معطّل"}</span>
           </label>
         </div>
-
         <p style={{ margin: "0 0 20px", color: "#64748b", fontSize: "14px" }}>
-          يظهر هذا التنبيه أعلى المنيو في وضع &quot;العرض فقط&quot; أو &quot;الإغلاق المؤقت&quot; لتوضيح سبب عدم إمكانية إتمام الطلبات ووقت الاستئناف دون حجب تصفح المنتجات والأسعار.
+          يظهر هذا التنبيه أعلى المنيو عند توقف الطلبات أو وضع العرض فقط ليشرح للعميل سبب التوقف بلباقة ووضوح.
         </p>
 
-        {/* Reason preset dropdown & Expected Resume */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "16px",
-            background: "#f8fafc",
-            border: "1px solid #e2e8f0",
-            borderRadius: "10px",
-            padding: "16px",
-            marginBottom: "20px",
-          }}
-        >
-          <div>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#334155", marginBottom: "6px" }}>
-              سبب توقف الطلبات المسبق (Reason Preset)
-            </label>
-            <select
-              value={settings.reasonCode || "HIGH_ORDER_VOLUME"}
-              onChange={(e) => handleReasonPresetChange(e.target.value as OrderSuspensionReason)}
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: "8px",
-                border: "1px solid #cbd5e1",
-                fontSize: "14px",
-                background: "#fff",
-                fontWeight: 600,
-              }}
-            >
-              <option value="HIGH_ORDER_VOLUME">ضغط كبير على الطلبات (High order volume)</option>
-              <option value="TEMPORARILY_CLOSED">إغلاق مؤقت للمطعم (Temporarily closed)</option>
-              <option value="OUTSIDE_WORKING_HOURS">خارج ساعات العمل الرسمية (Outside operating hours)</option>
-              <option value="MAINTENANCE">أعمال صيانة وتحديث (Maintenance and updates)</option>
-              <option value="CUSTOM">سبب مخصص (Custom reason)</option>
-            </select>
-            <small style={{ color: "#64748b", display: "block", marginTop: "4px" }}>
-              اختيار سبب يقوم بالتعبئة التلقائية للنصوص مع إمكانية تعديلها بحرية أدناه.
-            </small>
-          </div>
-
-          <div>
-            <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#334155", marginBottom: "6px" }}>
-              وقت الاستئناف المتوقع (Expected Resume Time - اختياري)
-            </label>
-            <input
-              type="text"
-              placeholder="مثال: الساعة 7:00 مساءً أو 07:00 PM"
-              value={settings.expectedResumeAt || ""}
-              onChange={(e) => setSettings((p) => ({ ...p, expectedResumeAt: e.target.value }))}
-              style={{
-                width: "100%",
-                padding: "10px 12px",
-                borderRadius: "8px",
-                border: "1px solid #cbd5e1",
-                fontSize: "14px",
-                background: "#fff",
-              }}
-            />
-            <small style={{ color: "#64748b", display: "block", marginTop: "4px" }}>
-              اتركه فارغاً إذا لم يكن هناك وقت استئناف محدد.
-            </small>
+        {/* Reason Presets Buttons */}
+        <div style={{ marginBottom: "20px" }}>
+          <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#334155", marginBottom: "8px" }}>
+            قوالب أسباب التوقف الجاهزة (Reason Presets):
+          </label>
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            {(Object.keys(REASON_PRESETS) as OrderSuspensionReason[]).map((key) => {
+              const p = REASON_PRESETS[key];
+              const isSelected = settings.reasonCode === key;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => handleReasonPresetChange(key)}
+                  style={{
+                    padding: "7px 14px",
+                    borderRadius: "8px",
+                    border: isSelected ? "1.5px solid #0f172a" : "1px solid #cbd5e1",
+                    background: isSelected ? "#0f172a" : "#fff",
+                    color: isSelected ? "#fff" : "#334155",
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  {p.labelAr}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Bilingual Inputs: Title */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+        {/* Notice Content Fields (Arabic & English) */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "20px" }}>
           <div>
             <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#334155", marginBottom: "6px" }}>
               عنوان التنبيه (عربي)
             </label>
             <input
               type="text"
-              value={settings.noticeTitleAr || ""}
-              onChange={(e) => setSettings((p) => ({ ...p, noticeTitleAr: e.target.value }))}
-              placeholder="الطلبات متوقفة مؤقتًا"
+              value={settings.noticeTitleAr ?? ""}
+              onChange={(e) => setSettings((prev) => ({ ...prev, noticeTitleAr: e.target.value }))}
               style={{
                 width: "100%",
-                padding: "10px 12px",
+                padding: "9px 12px",
                 borderRadius: "8px",
                 border: "1px solid #cbd5e1",
                 fontSize: "14px",
-                fontFamily: "inherit",
               }}
             />
           </div>
 
           <div>
             <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#334155", marginBottom: "6px" }}>
-              Notice Title (English)
+              عنوان التنبيه (إنجليزي)
             </label>
             <input
               type="text"
-              dir="ltr"
-              value={settings.noticeTitleEn || ""}
-              onChange={(e) => setSettings((p) => ({ ...p, noticeTitleEn: e.target.value }))}
-              placeholder="Ordering is temporarily unavailable"
+              value={settings.noticeTitleEn ?? ""}
+              onChange={(e) => setSettings((prev) => ({ ...prev, noticeTitleEn: e.target.value }))}
               style={{
                 width: "100%",
-                padding: "10px 12px",
+                padding: "9px 12px",
                 borderRadius: "8px",
                 border: "1px solid #cbd5e1",
                 fontSize: "14px",
-                fontFamily: "inherit",
+                direction: "ltr",
               }}
             />
           </div>
-        </div>
 
-        {/* Bilingual Inputs: Message Description */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "24px" }}>
           <div>
             <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#334155", marginBottom: "6px" }}>
-              نص الرسالة التوضيحية (عربي)
+              رسالة التنبيه والتفاصيل (عربي)
             </label>
             <textarea
               rows={3}
-              value={settings.noticeMessageAr || ""}
-              onChange={(e) => setSettings((p) => ({ ...p, noticeMessageAr: e.target.value }))}
-              placeholder="يمكنك تصفح المنيو والأسعار، لكن استقبال الطلبات غير متاح حاليًا..."
+              value={settings.noticeMessageAr ?? ""}
+              onChange={(e) => setSettings((prev) => ({ ...prev, noticeMessageAr: e.target.value }))}
               style={{
                 width: "100%",
-                padding: "10px 12px",
+                padding: "9px 12px",
                 borderRadius: "8px",
                 border: "1px solid #cbd5e1",
                 fontSize: "14px",
@@ -595,235 +840,161 @@ export default function OrderSettingsClient({
 
           <div>
             <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#334155", marginBottom: "6px" }}>
-              Notice Message (English)
+              رسالة التنبيه والتفاصيل (إنجليزي)
             </label>
             <textarea
               rows={3}
-              dir="ltr"
-              value={settings.noticeMessageEn || ""}
-              onChange={(e) => setSettings((p) => ({ ...p, noticeMessageEn: e.target.value }))}
-              placeholder="You can browse our menu and prices, but orders are not being accepted right now..."
+              value={settings.noticeMessageEn ?? ""}
+              onChange={(e) => setSettings((prev) => ({ ...prev, noticeMessageEn: e.target.value }))}
               style={{
                 width: "100%",
-                padding: "10px 12px",
+                padding: "9px 12px",
                 borderRadius: "8px",
                 border: "1px solid #cbd5e1",
                 fontSize: "14px",
                 fontFamily: "inherit",
+                direction: "ltr",
               }}
             />
           </div>
         </div>
 
-        {/* Interactive Live Customer Preview Box */}
-        <div
-          style={{
-            border: "1px solid #fde68a",
-            background: "#fffdf5",
-            borderRadius: "12px",
-            padding: "18px 20px",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexWrap: "wrap",
-              gap: "10px",
-              borderBottom: "1px solid #fef3c7",
-              paddingBottom: "12px",
-              marginBottom: "14px",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <span style={{ fontSize: "16px" }}>👁️</span>
-              <strong style={{ fontSize: "14px", color: "#92400e" }}>
-                معاينة حية لشريط التنبيه كما سيظهر للعميل (Live Customer Preview)
-              </strong>
-            </div>
+        {/* Expected Resume Time & Display Position */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "20px" }}>
+          <div>
+            <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#334155", marginBottom: "6px" }}>
+              الموعد المتوقع لاستئناف الطلبات (اختياري)
+            </label>
+            <input
+              type="text"
+              placeholder="مثال: الساعة 5:00 مساءً أو غداً ظهراً"
+              value={settings.expectedResumeAt ?? ""}
+              onChange={(e) => setSettings((prev) => ({ ...prev, expectedResumeAt: e.target.value }))}
+              style={{
+                width: "100%",
+                padding: "9px 12px",
+                borderRadius: "8px",
+                border: "1px solid #cbd5e1",
+                fontSize: "14px",
+              }}
+            />
+          </div>
 
-            <div style={{ display: "flex", gap: "6px" }}>
+          <div>
+            <label style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#334155", marginBottom: "6px" }}>
+              موضع التنبيه في المنيو
+            </label>
+            <select
+              value={settings.displayPosition ?? "TOP_BANNER"}
+              onChange={(e) => setSettings((prev) => ({ ...prev, displayPosition: e.target.value as any }))}
+              style={{
+                width: "100%",
+                padding: "9px 12px",
+                borderRadius: "8px",
+                border: "1px solid #cbd5e1",
+                fontSize: "14px",
+                background: "#fff",
+              }}
+            >
+              <option value="TOP_BANNER">شريط علوي بارز أعلى الصفحة (Top Banner)</option>
+              <option value="STICKY_HEADER">شريط مثبت أسفل الهيدر (Sticky Bar)</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Live Preview Card */}
+        <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "10px", padding: "16px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+            <span style={{ fontSize: "12px", fontWeight: 700, color: "#64748b" }}>
+              👁️ معاينة فورية لشكل التنبيه كما يظهر للعميل:
+            </span>
+            <div style={{ display: "flex", gap: "4px" }}>
               <button
                 type="button"
                 onClick={() => setPreviewLocale("ar")}
                 style={{
-                  padding: "4px 12px",
+                  padding: "4px 8px",
                   borderRadius: "6px",
-                  fontSize: "12px",
+                  fontSize: "11px",
                   fontWeight: 700,
-                  cursor: "pointer",
-                  border: previewLocale === "ar" ? "1px solid #d97706" : "1px solid #e2e8f0",
-                  background: previewLocale === "ar" ? "#d97706" : "#fff",
+                  border: "none",
+                  background: previewLocale === "ar" ? "#0f172a" : "#e2e8f0",
                   color: previewLocale === "ar" ? "#fff" : "#475569",
+                  cursor: "pointer",
                 }}
               >
-                عربي (RTL)
+                عربي
               </button>
               <button
                 type="button"
                 onClick={() => setPreviewLocale("en")}
                 style={{
-                  padding: "4px 12px",
+                  padding: "4px 8px",
                   borderRadius: "6px",
-                  fontSize: "12px",
+                  fontSize: "11px",
                   fontWeight: 700,
-                  cursor: "pointer",
-                  border: previewLocale === "en" ? "1px solid #d97706" : "1px solid #e2e8f0",
-                  background: previewLocale === "en" ? "#d97706" : "#fff",
+                  border: "none",
+                  background: previewLocale === "en" ? "#0f172a" : "#e2e8f0",
                   color: previewLocale === "en" ? "#fff" : "#475569",
+                  cursor: "pointer",
                 }}
               >
-                English (LTR)
+                EN
               </button>
             </div>
           </div>
 
-          {settings.enableNotice === false ? (
-            <div
-              style={{
-                padding: "14px",
-                background: "#f8fafc",
-                border: "1px dashed #cbd5e1",
-                borderRadius: "10px",
-                textAlign: "center",
-                color: "#64748b",
-                fontSize: "13px",
-              }}
-            >
-              ⚠️ التنبيه معطّل حالياً — لن يظهر هذا الشريط في المنيو حتى تقوم بتفعيله.
+          <div
+            style={{
+              background: "#fffbeb",
+              border: "1px solid #fde68a",
+              borderRadius: "8px",
+              padding: "14px 16px",
+              direction: previewLocale === "ar" ? "rtl" : "ltr",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+              <span style={{ fontSize: "18px" }}>🔔</span>
+              <strong style={{ fontSize: "14px", color: "#92400e" }}>
+                {previewLocale === "ar" ? settings.noticeTitleAr : settings.noticeTitleEn}
+              </strong>
+              {activePreset && (
+                <span style={{ fontSize: "11px", background: "#fef3c7", padding: "2px 6px", borderRadius: "4px", color: "#b45309" }}>
+                  {previewLocale === "ar" ? activePreset.labelAr : activePreset.labelEn}
+                </span>
+              )}
             </div>
-          ) : (
-            <div
-              dir={previewLocale === "ar" ? "rtl" : "ltr"}
-              style={{
-                background: "linear-gradient(135deg, #fffdf5 0%, #fffbeb 100%)",
-                border: "1px solid #fde68a",
-                borderRadius: "12px",
-                padding: "16px 18px",
-                boxShadow: "0 2px 10px rgba(217, 119, 6, 0.08)",
-                display: "flex",
-                flexDirection: "column",
-                gap: "10px",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                  gap: "10px",
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  <span
-                    style={{
-                      width: "34px",
-                      height: "34px",
-                      borderRadius: "8px",
-                      background: "#fef3c7",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "17px",
-                      flexShrink: 0,
-                    }}
-                  >
-                    🔒
-                  </span>
-                  <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                      <span style={{ fontSize: "15px", fontWeight: 800, color: "#92400e" }}>
-                        {previewLocale === "ar"
-                          ? settings.noticeTitleAr || "الطلبات متوقفة مؤقتًا"
-                          : settings.noticeTitleEn || "Ordering is temporarily unavailable"}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: "11px",
-                          fontWeight: 700,
-                          padding: "2px 8px",
-                          borderRadius: "6px",
-                          background: "#fef3c7",
-                          color: "#b45309",
-                          border: "1px solid #fde68a",
-                        }}
-                      >
-                        {previewLocale === "ar" ? "وضع العرض فقط" : "View-Only Mode"}
-                      </span>
-                    </div>
-
-                    {activePreset && (
-                      <div style={{ fontSize: "12px", color: "#b45309", marginTop: "2px", fontWeight: 600 }}>
-                        {previewLocale === "ar"
-                          ? `سبب التوقف: ${activePreset.labelAr}`
-                          : `Reason: ${activePreset.labelEn}`}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {settings.expectedResumeAt && (
-                  <div
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      padding: "4px 10px",
-                      borderRadius: "20px",
-                      background: "#fff",
-                      border: "1px solid #fde68a",
-                      fontSize: "12px",
-                      fontWeight: 700,
-                      color: "#92400e",
-                    }}
-                  >
-                    <span>⏱️</span>
-                    <span>
-                      {previewLocale === "ar"
-                        ? `الاستئناف المتوقع: ${settings.expectedResumeAt}`
-                        : `Expected: ${settings.expectedResumeAt}`}
-                    </span>
-                  </div>
-                )}
+            <p style={{ margin: 0, fontSize: "13px", color: "#b45309", lineHeight: "1.4" }}>
+              {previewLocale === "ar" ? settings.noticeMessageAr : settings.noticeMessageEn}
+            </p>
+            {settings.expectedResumeAt && (
+              <div style={{ marginTop: "6px", fontSize: "11px", color: "#d97706", fontWeight: 700 }}>
+                ⏳ {previewLocale === "ar" ? "الاستئناف المتوقع:" : "Expected Resume:"} {settings.expectedResumeAt}
               </div>
-
-              <p
-                style={{
-                  margin: 0,
-                  fontSize: "13px",
-                  lineHeight: "1.5",
-                  color: "#78350f",
-                  paddingTop: "4px",
-                  borderTop: "1px dashed #fde68a",
-                }}
-              >
-                {previewLocale === "ar"
-                  ? settings.noticeMessageAr || "يمكنك تصفح المنيو والأسعار، لكن استقبال الطلبات غير متاح حاليًا."
-                  : settings.noticeMessageEn || "You can browse our menu and prices, but orders are not being accepted right now."}
-              </p>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Section 3: Branch-Level Controls */}
+      {/* SECTION 3: Branch-Level Controls */}
       <div
         style={{
           background: "#fff",
           border: "1px solid #e2e8f0",
-          borderRadius: "14px",
-          padding: "24px",
-          marginBottom: "24px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+          borderRadius: "16px",
+          padding: "26px",
+          marginBottom: "28px",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.04)",
         }}
       >
-        <h2 style={{ margin: "0 0 6px", fontSize: "18px", fontWeight: 700, color: "#0f172a" }}>
-          3. التحكم في الفروع وساعات العمل المستقلة
-        </h2>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+          <span style={{ fontSize: "20px" }}>🏢</span>
+          <h2 style={{ margin: 0, fontSize: "18px", fontWeight: 700, color: "#0f172a" }}>
+            3. التحكم في الفروع وساعات العمل المستقلة | Branch Operations
+          </h2>
+        </div>
         <p style={{ margin: "0 0 20px", color: "#64748b", fontSize: "14px" }}>
-          إذا كان الوضع العام مفعلاً، يمكنك تعطيل فرع معين مؤقتاً للصيانة مع استمرار باقي الفروع. أما إذا كان الوضع العام للعرض فقط، فتتوقف جميع الفروع إجبارياً.
+          إذا كان وضع التشغيل العام يستقبل طلبات، يمكنك تعطيل فرع معين مؤقتاً للصيانة مع استمرار باقي الفروع. أما في وضعي العرض فقط أو الإغلاق المؤقت فتتوقف جميع الفروع إجبارياً.
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -870,11 +1041,11 @@ export default function OrderSettingsClient({
                         borderRadius: "8px",
                         fontSize: "13px",
                         fontWeight: 700,
-                        background: !isGlobalActive ? "#fee2e2" : isBranchActive ? "#dcfce7" : "#fee2e2",
-                        color: !isGlobalActive ? "#991b1b" : isBranchActive ? "#166534" : "#991b1b",
+                        background: !isOrderingAllowed ? "#fee2e2" : isBranchActive ? "#dcfce7" : "#fee2e2",
+                        color: !isOrderingAllowed ? "#991b1b" : isBranchActive ? "#166534" : "#991b1b",
                       }}
                     >
-                      {!isGlobalActive
+                      {!isOrderingAllowed
                         ? "معطّل بالوضع العام للمطعم"
                         : isBranchActive
                         ? "متاح للطلبات الآن"

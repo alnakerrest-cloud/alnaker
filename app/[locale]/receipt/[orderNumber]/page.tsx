@@ -201,13 +201,67 @@ export default async function ReceiptPage({ params, searchParams }: ReceiptPageP
           fontFamily: "system-ui, -apple-system, sans-serif",
         }}
       >
-        {/* Dynamic Live Order Tracking Timeline */}
-        <OrderTrackingTimeline
-          orderNumber={order.orderNumber}
-          token={order.verificationToken}
-          initialStatus={order.status}
-          locale={locale}
-        />
+        {/* Dynamic Live Order Tracking Timeline - Only for FULL_ORDERING */}
+        {order.orderingMode === "FULL_ORDERING" ? (
+          <OrderTrackingTimeline
+            orderNumber={order.orderNumber}
+            token={order.verificationToken}
+            initialStatus={order.status}
+            locale={locale}
+          />
+        ) : (
+          <div
+            className="whatsapp-order-notice"
+            style={{
+              background: "#f0fdf4",
+              border: "1.5px solid #86efac",
+              borderRadius: "16px",
+              padding: "18px 20px",
+              marginBottom: "24px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "14px",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <span style={{ fontSize: "28px" }}>💬</span>
+              <div>
+                <h4 style={{ margin: 0, fontSize: "16px", fontWeight: 700, color: "#166534" }}>
+                  {locale === "en" ? "WhatsApp Direct Order" : "طلب واتساب مباشر"}
+                </h4>
+                <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#15803d" }}>
+                  {locale === "en"
+                    ? "Your order has been recorded. Direct communication and updates are handled via WhatsApp."
+                    : "تم تسجيل وتوثيق طلبك بنجاح. يتم التواصل ومتابعة التجهيز مباشرة عبر واتساب الفرع."}
+                </p>
+              </div>
+            </div>
+            {order.whatsappUrl && (
+              <a
+                href={order.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "10px 18px",
+                  background: "#25D366",
+                  color: "#fff",
+                  borderRadius: "10px",
+                  textDecoration: "none",
+                  fontWeight: 700,
+                  fontSize: "14px",
+                }}
+              >
+                <span>💬</span>
+                <span>{locale === "en" ? "Chat on WhatsApp" : "مراسلة الفرع واتساب"}</span>
+              </a>
+            )}
+          </div>
+        )}
 
         {/* Tier 1 vs Tier 2 Status Banner */}
         {isConfirmed ? (

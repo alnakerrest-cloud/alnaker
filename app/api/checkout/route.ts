@@ -13,6 +13,7 @@ import {
   generateVerificationCode,
   getMenuSettings,
   getMenuSettingsAsync,
+  normalizeOrderingMode,
   REASON_PRESETS,
   type OrderType, 
   type PaymentMethod,
@@ -173,16 +174,18 @@ export async function POST(request: NextRequest) {
       idempotencyKey,
     } = body;
 
-    // 1. Check Menu Operating Mode
-    const menuSettings = await getMenuSettingsAsync();
-    if (menuSettings.mode === "VIEW_ONLY") {
+    // 1. Check Menu Operating Mode (always force fresh on checkout evaluation)
+    const menuSettings = await getMenuSettingsAsync(true);
+    const activeMode = normalizeOrderingMode(menuSettings.mode);
+
+    if (activeMode === "DISPLAY_ONLY") {
       const isEn = locale === "en";
       const title = isEn
         ? menuSettings.noticeTitleEn || "Ordering is temporarily unavailable"
         : menuSettings.noticeTitleAr || "الطلبات متوقفة مؤقتًا";
       const msg = isEn
-        ? menuSettings.noticeMessageEn || menuSettings.closureMessageEn
-        : menuSettings.noticeMessageAr || menuSettings.closureMessageAr;
+        ? menuSettings.noticeMessageEn || menuSettings.closureMessageEn || "You can browse our menu, but orders are not being accepted right now."
+        : menuSettings.noticeMessageAr || menuSettings.closureMessageAr || "يمكنك تصفح المنيو والأسعار، لكن استقبال الطلبات غير متاح حاليًا.";
       const reasonLabel =
         menuSettings.reasonCode && REASON_PRESETS[menuSettings.reasonCode]
           ? isEn
@@ -198,11 +201,12 @@ export async function POST(request: NextRequest) {
           reason: reasonLabel,
           expectedResumeAt: menuSettings.expectedResumeAt || undefined,
           code: "VIEW_ONLY",
+          mode: activeMode,
         },
         { status: 403 }
       );
     }
-    if (menuSettings.mode === "TEMPORARILY_CLOSED") {
+    if (activeMode === "TEMPORARILY_CLOSED") {
       const isEn = locale === "en";
       const title = isEn
         ? menuSettings.noticeTitleEn || "Restaurant Temporarily Closed"
@@ -225,6 +229,7 @@ export async function POST(request: NextRequest) {
           reason: reasonLabel,
           expectedResumeAt: menuSettings.expectedResumeAt || undefined,
           code: "MENU_CLOSED",
+          mode: activeMode,
         },
         { status: 403 }
       );
@@ -532,6 +537,7 @@ export async function POST(request: NextRequest) {
       orderNumber: generatedOrderNumber,
       verificationToken: generatedToken,
       verificationCode: generatedCode,
+      orderingMode: activeMode,
       type: orderType,
       paymentMethod,
       customerName: customerName ? customerName.slice(0, 100).trim() : undefined,
@@ -658,6 +664,7 @@ export async function POST(request: NextRequest) {
 
     const response = NextResponse.json({
       success: true,
+      mode: activeMode,
       orderId: order.id,
       orderNumber: order.orderNumber,
       verificationToken: order.verificationToken,

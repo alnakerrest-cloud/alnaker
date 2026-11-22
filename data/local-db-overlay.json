@@ -1156,6 +1156,1919 @@
         "id": "c7f97ca8-2cec-4634-ad4b-333af1a2c31b",
         "createdAt": "2026-11-20T23:51:48.346Z",
         "updatedAt": "2026-11-20T23:51:48.346Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "logout",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل خروج: إبراهيم شعيب (مدير عام المطعم)",
+        "id": "fd8171e4-dad7-4b8b-a652-b42a30286f31",
+        "createdAt": "2026-11-21T12:42:44.005Z",
+        "updatedAt": "2026-11-21T12:42:44.005Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "create",
+        "entityType": "Offer",
+        "entityId": "5a29cc61-8069-4f9e-aa21-81a56975fbd9",
+        "summary": "إنشاء عرض جديد: عرض تجريبي E2E 1795265145500 (PERCENTAGE)",
+        "changes": {
+          "after": {
+            "titleAr": "عرض تجريبي E2E 1795265145500",
+            "offerType": "PERCENTAGE",
+            "discountValue": 25,
+            "promoPrice": null,
+            "isActive": false
+          }
+        },
+        "id": "05b04c81-98fc-46b6-a595-032745c3850a",
+        "createdAt": "2026-11-21T12:45:46.920Z",
+        "updatedAt": "2026-11-21T12:45:46.920Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "create",
+        "entityType": "Offer",
+        "entityId": "b10de06c-fb93-48e8-bd3d-d3e7cc94b4a9",
+        "summary": "إنشاء عرض جديد: عرض تجريبي E2E 1795265376942 (PERCENTAGE)",
+        "changes": {
+          "after": {
+            "titleAr": "عرض تجريبي E2E 1795265376942",
+            "offerType": "PERCENTAGE",
+            "discountValue": 25,
+            "promoPrice": null,
+            "isActive": false
+          }
+        },
+        "id": "be97a58e-a40b-4c3c-968d-b35df1d1880a",
+        "createdAt": "2026-11-21T12:49:38.166Z",
+        "updatedAt": "2026-11-21T12:49:38.166Z"
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "create",
+        "entityType": "Offer",
+        "entityId": "412c818c-20b8-4d0c-b715-ed98c32cd23c",
+        "summary": "إنشاء عرض جديد: عرض تجريبي E2E 1795265566337 (PERCENTAGE)",
+        "changes": {
+          "after": {
+            "titleAr": "عرض تجريبي E2E 1795265566337",
+            "offerType": "PERCENTAGE",
+            "discountValue": 25,
+            "promoPrice": null,
+            "isActive": false
+          }
+        },
+        "id": "7728ae29-c416-45fa-a1d3-a6e5493b714b",
+        "createdAt": "2026-11-21T12:52:47.220Z",
+        "updatedAt": "2026-11-21T12:52:47.220Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [نظام الطلبات المتكامل] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T13:32:08.710Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "b7c42169-5605-445e-ac77-4f56a6c7c82f",
+        "createdAt": "2026-11-21T13:32:10.115Z",
+        "updatedAt": "2026-11-21T13:32:10.115Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم) (الوضع الحالي: نظام الطلبات المتكامل)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "FULL_ORDERING",
+            "updatedAt": "2026-11-21T13:36:33.716Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "b94867d3-5e99-4ba9-9198-083f89c496aa",
+        "createdAt": "2026-11-21T13:36:33.863Z",
+        "updatedAt": "2026-11-21T13:36:33.863Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [نظام الطلبات المتكامل] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T13:36:39.844Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "21212f86-030b-4014-9efc-e27dbb0c8f03",
+        "createdAt": "2026-11-21T13:36:40.551Z",
+        "updatedAt": "2026-11-21T13:36:40.551Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [نظام الطلبات المتكامل] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "FULL_ORDERING",
+            "updatedAt": "2026-11-21T13:36:53.083Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "f0be2b93-f8ff-4f66-9f78-f22dc2b08471",
+        "createdAt": "2026-11-21T13:36:53.240Z",
+        "updatedAt": "2026-11-21T13:36:53.240Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [نظام الطلبات المتكامل] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T13:38:48.171Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "6dfbb09c-ec72-4cd9-aa06-e09d70812d5f",
+        "createdAt": "2026-11-21T13:38:48.376Z",
+        "updatedAt": "2026-11-21T13:38:48.376Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [نظام الطلبات المتكامل] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "FULL_ORDERING",
+            "updatedAt": "2026-11-21T13:38:58.910Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "6d6774cd-1669-4287-a708-7fe70dd5731a",
+        "createdAt": "2026-11-21T13:38:59.063Z",
+        "updatedAt": "2026-11-21T13:38:59.063Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [نظام الطلبات المتكامل] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T14:59:52.093Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "e6ae6c92-c23b-438d-a257-71d27bf1d644",
+        "createdAt": "2026-11-21T14:59:52.535Z",
+        "updatedAt": "2026-11-21T14:59:52.535Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم) (الوضع الحالي: طلبات واتساب وقاعدة البيانات)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T15:01:31.115Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "4f7709b1-3737-4f72-89ab-d01992b494a3",
+        "createdAt": "2026-11-21T15:01:31.265Z",
+        "updatedAt": "2026-11-21T15:01:31.265Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تحديث إعدادات الطلبات بواسطة إبراهيم شعيب (مدير عام المطعم) (الوضع الحالي: طلبات واتساب وقاعدة البيانات)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T16:07:20.046Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "9e03a7be-0d6d-47e4-96ae-11c2cc2596a2",
+        "createdAt": "2026-11-21T16:07:20.219Z",
+        "updatedAt": "2026-11-21T16:07:20.219Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "1098cf25-9e1c-4d6c-be07-4b367919f8eb",
+        "summary": "تغيير حالة الطلب ORD-20261121-21B33C من RECEIVED إلى RECEIVED",
+        "changes": {
+          "before": {
+            "status": "RECEIVED"
+          },
+          "after": {
+            "status": "RECEIVED"
+          }
+        },
+        "id": "5e5722e8-6625-4cf9-85f1-0ea291a4dacf",
+        "createdAt": "2026-11-21T17:50:59.141Z",
+        "updatedAt": "2026-11-21T17:50:59.141Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [نظام الطلبات المتكامل] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "FULL_ORDERING",
+            "updatedAt": "2026-11-21T17:58:59.102Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "27b236bd-2622-4488-9f2f-7080f39cee15",
+        "createdAt": "2026-11-21T17:58:59.253Z",
+        "updatedAt": "2026-11-21T17:58:59.253Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [نظام الطلبات المتكامل] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T18:00:02.343Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "cd8a9e93-c88a-4a29-80fc-65bf5e34a257",
+        "createdAt": "2026-11-21T18:00:02.493Z",
+        "updatedAt": "2026-11-21T18:00:02.493Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [نظام الطلبات المتكامل] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "FULL_ORDERING",
+            "updatedAt": "2026-11-21T20:21:21.135Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "0cd36c8a-662e-4e36-9970-69256a4dfebe",
+        "createdAt": "2026-11-21T20:21:21.154Z",
+        "updatedAt": "2026-11-21T20:21:21.154Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "b5262667-aeaf-49ef-aa73-287cf6125674",
+        "createdAt": "2026-11-21T23:01:01.986Z",
+        "updatedAt": "2026-11-21T23:01:01.986Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [نظام الطلبات المتكامل] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "FULL_ORDERING",
+            "updatedAt": "2026-11-21T23:01:52.412Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "a731be81-7864-4fad-82ca-63df5b06b4b2",
+        "createdAt": "2026-11-21T23:01:52.576Z",
+        "updatedAt": "2026-11-21T23:01:52.576Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [نظام الطلبات المتكامل] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T23:02:55.498Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "adb57cbf-c6a6-4d71-9b01-33e5a5319fbf",
+        "createdAt": "2026-11-21T23:02:55.657Z",
+        "updatedAt": "2026-11-21T23:02:55.657Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [إغلاق مؤقت للمطعم] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "TEMPORARILY_CLOSED",
+            "updatedAt": "2026-11-21T23:03:10.272Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "28c3f818-2f47-4841-a61f-875825675ce2",
+        "createdAt": "2026-11-21T23:03:10.434Z",
+        "updatedAt": "2026-11-21T23:03:10.434Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [إغلاق مؤقت للمطعم] إلى [عرض المنيو فقط] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "TEMPORARILY_CLOSED"
+          },
+          "after": {
+            "mode": "DISPLAY_ONLY",
+            "updatedAt": "2026-11-21T23:03:39.742Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "14f34ff7-58e5-408a-ab96-239632a8423e",
+        "createdAt": "2026-11-21T23:03:39.910Z",
+        "updatedAt": "2026-11-21T23:03:39.910Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "22e6216d-f344-49ac-ac7e-a42850eeef97",
+        "createdAt": "2026-11-21T23:07:46.395Z",
+        "updatedAt": "2026-11-21T23:07:46.395Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [عرض المنيو فقط] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "DISPLAY_ONLY"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T23:07:53.348Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "031fdb18-5da5-4037-be76-5cb921f75ec7",
+        "createdAt": "2026-11-21T23:07:53.507Z",
+        "updatedAt": "2026-11-21T23:07:53.507Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [نظام الطلبات المتكامل] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "FULL_ORDERING",
+            "updatedAt": "2026-11-21T23:09:04.997Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "f0a7e630-522d-47ba-8444-8be20ccb4462",
+        "createdAt": "2026-11-21T23:09:05.174Z",
+        "updatedAt": "2026-11-21T23:09:05.174Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [نظام الطلبات المتكامل] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T23:09:30.167Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "824f072b-4cc2-4c73-8b64-7aab515dc0c0",
+        "createdAt": "2026-11-21T23:09:30.332Z",
+        "updatedAt": "2026-11-21T23:09:30.332Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [إغلاق مؤقت للمطعم] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "TEMPORARILY_CLOSED",
+            "updatedAt": "2026-11-21T23:09:53.842Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "bc13c7e9-dfdc-437e-b83c-9d1e90f58e6c",
+        "createdAt": "2026-11-21T23:09:54.000Z",
+        "updatedAt": "2026-11-21T23:09:54.000Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [إغلاق مؤقت للمطعم] إلى [عرض المنيو فقط] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "TEMPORARILY_CLOSED"
+          },
+          "after": {
+            "mode": "DISPLAY_ONLY",
+            "updatedAt": "2026-11-21T23:10:34.595Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "23e06c7f-0cfe-427e-8821-37db17d0ec01",
+        "createdAt": "2026-11-21T23:10:34.769Z",
+        "updatedAt": "2026-11-21T23:10:34.769Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [عرض المنيو فقط] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "DISPLAY_ONLY"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T23:11:08.984Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "e4d5457c-c6ba-4e1a-bbce-50b2c590b8c6",
+        "createdAt": "2026-11-21T23:11:09.148Z",
+        "updatedAt": "2026-11-21T23:11:09.148Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "e264e51c-7639-491f-aa2b-4760441279ff",
+        "createdAt": "2026-11-21T23:18:52.934Z",
+        "updatedAt": "2026-11-21T23:18:52.934Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [نظام الطلبات المتكامل] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "FULL_ORDERING",
+            "updatedAt": "2026-11-21T23:19:47.922Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "d696215c-67aa-4481-8d70-fc51a014fe05",
+        "createdAt": "2026-11-21T23:19:48.076Z",
+        "updatedAt": "2026-11-21T23:19:48.076Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [نظام الطلبات المتكامل] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T23:20:52.261Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "e36a9616-705a-42db-9d3c-f333bfd203e6",
+        "createdAt": "2026-11-21T23:20:52.419Z",
+        "updatedAt": "2026-11-21T23:20:52.419Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [إغلاق مؤقت للمطعم] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "TEMPORARILY_CLOSED",
+            "updatedAt": "2026-11-21T23:21:02.145Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "e912cf0c-6bb0-49f7-9195-008e477e7296",
+        "createdAt": "2026-11-21T23:21:02.313Z",
+        "updatedAt": "2026-11-21T23:21:02.313Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [إغلاق مؤقت للمطعم] إلى [عرض المنيو فقط] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "TEMPORARILY_CLOSED"
+          },
+          "after": {
+            "mode": "DISPLAY_ONLY",
+            "updatedAt": "2026-11-21T23:21:25.188Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "47fe728a-dcec-4ae3-acb2-55bf509cb200",
+        "createdAt": "2026-11-21T23:21:25.349Z",
+        "updatedAt": "2026-11-21T23:21:25.349Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [عرض المنيو فقط] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "DISPLAY_ONLY"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T23:21:42.520Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "50781438-de9f-49fe-a51f-a24772bd8444",
+        "createdAt": "2026-11-21T23:21:42.680Z",
+        "updatedAt": "2026-11-21T23:21:42.680Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "c8bd5eba-5bd0-40d2-8d8d-3a871fee7bc2",
+        "createdAt": "2026-11-21T23:24:11.574Z",
+        "updatedAt": "2026-11-21T23:24:11.574Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [نظام الطلبات المتكامل] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "FULL_ORDERING",
+            "updatedAt": "2026-11-21T23:25:45.102Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "23706060-7cda-4446-aac9-382056d8723c",
+        "createdAt": "2026-11-21T23:25:45.259Z",
+        "updatedAt": "2026-11-21T23:25:45.259Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "d2b8797c-b74a-4b1b-ace6-c6f781445331",
+        "summary": "تغيير حالة الطلب ORD-20261122-140C84 من CONFIRMED إلى CONFIRMED",
+        "changes": {
+          "before": {
+            "status": "CONFIRMED"
+          },
+          "after": {
+            "status": "CONFIRMED"
+          }
+        },
+        "id": "1cf6aa5f-32fc-4ee1-8e16-20af37619a9f",
+        "createdAt": "2026-11-21T23:26:41.112Z",
+        "updatedAt": "2026-11-21T23:26:41.112Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [نظام الطلبات المتكامل] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T23:26:47.883Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "4950777a-4978-4513-95bf-4bf4b9c6f38f",
+        "createdAt": "2026-11-21T23:26:48.048Z",
+        "updatedAt": "2026-11-21T23:26:48.048Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [إغلاق مؤقت للمطعم] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "TEMPORARILY_CLOSED",
+            "updatedAt": "2026-11-21T23:26:58.142Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "2f013222-59d6-4cdf-848f-62f2f209e16d",
+        "createdAt": "2026-11-21T23:26:58.313Z",
+        "updatedAt": "2026-11-21T23:26:58.313Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [إغلاق مؤقت للمطعم] إلى [عرض المنيو فقط] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "TEMPORARILY_CLOSED"
+          },
+          "after": {
+            "mode": "DISPLAY_ONLY",
+            "updatedAt": "2026-11-21T23:27:25.741Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "62da2e2b-fdb5-4c5f-8d62-9ca6e78d2a90",
+        "createdAt": "2026-11-21T23:27:25.900Z",
+        "updatedAt": "2026-11-21T23:27:25.900Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [عرض المنيو فقط] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "DISPLAY_ONLY"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T23:27:42.820Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "18eed773-71fc-49e0-aec9-85c02a198735",
+        "createdAt": "2026-11-21T23:27:42.979Z",
+        "updatedAt": "2026-11-21T23:27:42.979Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "46793bc2-6ac3-489e-8905-c0d5738b2594",
+        "createdAt": "2026-11-21T23:34:33.860Z",
+        "updatedAt": "2026-11-21T23:34:33.860Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "login",
+        "entityType": "AdminUser",
+        "entityId": "usr-admin-owner-001",
+        "summary": "تسجيل دخول: إبراهيم شعيب (مدير عام المطعم) (OWNER)",
+        "id": "d8578c10-f921-4ebb-a99e-2130f99da8ff",
+        "createdAt": "2026-11-21T23:38:02.390Z",
+        "updatedAt": "2026-11-21T23:38:02.390Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [نظام الطلبات المتكامل] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "FULL_ORDERING",
+            "updatedAt": "2026-11-21T23:44:01.471Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "2a50618a-7c35-4657-a157-9b42dc4818d2",
+        "createdAt": "2026-11-21T23:44:01.636Z",
+        "updatedAt": "2026-11-21T23:44:01.636Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "Order",
+        "entityId": "369f5b66-1ddc-4bc3-85d2-1690720fccc0",
+        "summary": "تغيير حالة الطلب ORD-20261122-489CCC من CONFIRMED إلى CONFIRMED",
+        "changes": {
+          "before": {
+            "status": "CONFIRMED"
+          },
+          "after": {
+            "status": "CONFIRMED"
+          }
+        },
+        "id": "aa9abd32-c894-4c2c-9afb-00d982c018d0",
+        "createdAt": "2026-11-21T23:44:30.948Z",
+        "updatedAt": "2026-11-21T23:44:30.948Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [نظام الطلبات المتكامل] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "FULL_ORDERING"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T23:44:36.270Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "e09fb891-f241-4b2d-a2bc-530de5d4bf36",
+        "createdAt": "2026-11-21T23:44:36.423Z",
+        "updatedAt": "2026-11-21T23:44:36.423Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [طلبات واتساب وقاعدة البيانات] إلى [إغلاق مؤقت للمطعم] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "WHATSAPP_DATABASE"
+          },
+          "after": {
+            "mode": "TEMPORARILY_CLOSED",
+            "updatedAt": "2026-11-21T23:44:45.280Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "78500b3c-8f49-4a87-bffb-2ad2d9d24658",
+        "createdAt": "2026-11-21T23:44:45.506Z",
+        "updatedAt": "2026-11-21T23:44:45.506Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [إغلاق مؤقت للمطعم] إلى [عرض المنيو فقط] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "TEMPORARILY_CLOSED"
+          },
+          "after": {
+            "mode": "DISPLAY_ONLY",
+            "updatedAt": "2026-11-21T23:44:58.214Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "aef9eef0-68c0-41da-b892-3e7a45b87f0f",
+        "createdAt": "2026-11-21T23:44:58.373Z",
+        "updatedAt": "2026-11-21T23:44:58.373Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "adminId": "usr-admin-owner-001",
+        "action": "update",
+        "entityType": "OrderSettings",
+        "entityId": "global-orders-settings",
+        "summary": "تبديل وضع تشغيل المنيو من [عرض المنيو فقط] إلى [طلبات واتساب وقاعدة البيانات] بواسطة إبراهيم شعيب (مدير عام المطعم)",
+        "changes": {
+          "before": {
+            "mode": "DISPLAY_ONLY"
+          },
+          "after": {
+            "mode": "WHATSAPP_DATABASE",
+            "updatedAt": "2026-11-21T23:45:11.773Z",
+            "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
+            "reasonCode": "HIGH_ORDER_VOLUME",
+            "enableNotice": true,
+            "allowDelivery": true,
+            "allowTakeaway": true,
+            "noticeTitleAr": "نعتذر، ضغط طلبات حالياً",
+            "noticeTitleEn": "Ordering is temporarily unavailable",
+            "branchOverrides": {
+              "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+                "isOpen": true,
+                "isOrderable": true
+              },
+              "7fa2be20-67bd-4060-a83a-81ded2550018": {
+                "isOpen": true,
+                "isOrderable": true
+              }
+            },
+            "displayPosition": "TOP_BANNER",
+            "noticeMessageAr": "الطلبات متوقفة مؤقتاً لتجهيز الطلبات الحالية",
+            "noticeMessageEn": "You can browse our menu and prices, but orders are not being accepted right now due to high order volume.",
+            "orderTtlMinutes": 30,
+            "closureMessageAr": "المطعم في فترة استراحة مسائية وسنعاود العمل قريباً.",
+            "closureMessageEn": "We accept orders daily. Working hours: 12:00 PM to 02:00 AM.",
+            "expectedResumeAt": "الساعة 7:00 مساءً"
+          }
+        },
+        "id": "0e845b2d-c7d1-4c68-b1e6-237ce53adb22",
+        "createdAt": "2026-11-21T23:45:11.930Z",
+        "updatedAt": "2026-11-21T23:45:11.930Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
       }
     ],
     "OptionGroup": [
@@ -3141,8 +5054,653 @@
         },
         "createdAt": "2026-11-20T23:49:21.724Z",
         "updatedAt": "2026-11-20T23:49:21.724Z"
+      },
+      {
+        "id": "6e2022b0-ba76-4fe5-b19d-7f527d0a0db5",
+        "orderNumber": "ORD-20261121-B5BC0A",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل نظام كامل",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2100,
+        "items": {
+          "create": [
+            {
+              "id": "6e2022b0-ba76-4fe5-b19d-7f527d0a0db5:item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T13:23:12.626Z",
+        "updatedAt": "2026-11-21T13:23:12.626Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "25d581ba-428c-4eb3-ad31-2872b196c14a",
+        "orderNumber": "ORD-20261121-3A27D7",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل واتساب داتابيز",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2100,
+        "items": {
+          "create": [
+            {
+              "id": "25d581ba-428c-4eb3-ad31-2872b196c14a:item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T13:23:12.652Z",
+        "updatedAt": "2026-11-21T13:23:12.652Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "b4b2617f-feb1-49cd-a472-478166c6b0ed",
+        "orderNumber": "ORD-20261121-874486",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل نظام كامل",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2100,
+        "items": {
+          "create": [
+            {
+              "id": "b4b2617f-feb1-49cd-a472-478166c6b0ed:item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T13:42:24.745Z",
+        "updatedAt": "2026-11-21T13:42:24.745Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "061f3281-7da4-42e0-9efe-b8667d074687",
+        "orderNumber": "ORD-20261121-487966",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل واتساب داتابيز",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2100,
+        "items": {
+          "create": [
+            {
+              "id": "061f3281-7da4-42e0-9efe-b8667d074687:item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T13:42:24.776Z",
+        "updatedAt": "2026-11-21T13:42:24.776Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "7a96545a-517f-4deb-ba90-a0f6249d563e",
+        "orderNumber": "ORD-20261121-B99E4D",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "فحص واتساب 16.4.5",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "ss",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1950,
+        "totalDiscount": 0,
+        "total": 1980,
+        "idempotencyKey": "checkout-1795273268572-0u0qzezi",
+        "items": {
+          "create": [
+            {
+              "id": "7a96545a-517f-4deb-ba90-a0f6249d563e:item-c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0-0-0",
+              "productId": "c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0",
+              "productName": "صينية الصحاب",
+              "baseUnitPrice": 1950,
+              "selectedOptions": [],
+              "unitPrice": 1950,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T15:01:16.564Z",
+        "updatedAt": "2026-11-21T15:01:16.564Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "2baf65bc-4866-4f95-82f9-70f97e64b607",
+        "orderNumber": "ORD-20261121-686232",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "فحص واتساب 16.4.5",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "ss",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 2100,
+        "totalDiscount": 0,
+        "total": 2130,
+        "idempotencyKey": "checkout-1795277280699-sig2x5kp",
+        "items": {
+          "create": [
+            {
+              "id": "2baf65bc-4866-4f95-82f9-70f97e64b607:item-5580e943-c91a-41b4-9a62-b8591af1fc3e-0-0",
+              "productId": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+              "productName": "صينية الملوك",
+              "baseUnitPrice": 2100,
+              "selectedOptions": [],
+              "unitPrice": 2100,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T16:08:01.616Z",
+        "updatedAt": "2026-11-21T16:08:01.616Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "1098cf25-9e1c-4d6c-be07-4b367919f8eb",
+        "orderNumber": "ORD-20261121-21B33C",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "test",
+        "customerPhone": "201010247981",
+        "deliveryAddress": "kk",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1950,
+        "totalDiscount": 0,
+        "total": 1980,
+        "idempotencyKey": "checkout-1795283380261-4pur0aq4",
+        "items": {
+          "create": [
+            {
+              "id": "1098cf25-9e1c-4d6c-be07-4b367919f8eb:item-c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0-0-0",
+              "productId": "c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0",
+              "productName": "صينية الصحاب",
+              "baseUnitPrice": 1950,
+              "selectedOptions": [],
+              "unitPrice": 1950,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T17:49:43.313Z",
+        "updatedAt": "2026-11-21T17:49:43.313Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "a322f755-6049-4a98-9052-d486ddf0eb85",
+        "orderNumber": "ORD-20261122-CEEB17",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل فحص الواتساب الشامل",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1820,
+        "idempotencyKey": "checkout-1795302080473-qabgvtsi",
+        "items": {
+          "create": [
+            {
+              "id": "a322f755-6049-4a98-9052-d486ddf0eb85:item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T23:01:23.570Z",
+        "updatedAt": "2026-11-21T23:01:23.570Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "50ac9d2b-8507-484a-80f6-f4f0a54c1ff4",
+        "orderNumber": "ORD-20261122-FD2C73",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل التتبع الكامل اللحظي",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1820,
+        "idempotencyKey": "checkout-1795302157388-iwr8pust",
+        "items": {
+          "create": [
+            {
+              "id": "50ac9d2b-8507-484a-80f6-f4f0a54c1ff4:item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T23:02:38.475Z",
+        "updatedAt": "2026-11-21T23:02:38.475Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "08439e04-c4ca-4044-b137-b8e20c425b6a",
+        "orderNumber": "ORD-20261122-87B823",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل فحص الواتساب الشامل",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1820,
+        "idempotencyKey": "checkout-1795302497406-tynehz89",
+        "items": {
+          "create": [
+            {
+              "id": "08439e04-c4ca-4044-b137-b8e20c425b6a:item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T23:08:19.364Z",
+        "updatedAt": "2026-11-21T23:08:19.364Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "4fd6ea53-d5d0-46d5-bb8c-a46f78b3a7f7",
+        "orderNumber": "ORD-20261122-FF0E43",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل فحص الواتساب الشامل",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1820,
+        "idempotencyKey": "checkout-1795303150672-mshwqp4l",
+        "items": {
+          "create": [
+            {
+              "id": "4fd6ea53-d5d0-46d5-bb8c-a46f78b3a7f7:item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T23:19:12.317Z",
+        "updatedAt": "2026-11-21T23:19:12.317Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "69ff95ae-e053-42c6-a07a-1eb2322570a5",
+        "orderNumber": "ORD-20261122-EE5D2B",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل التتبع الكامل اللحظي",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1820,
+        "idempotencyKey": "checkout-1795303228170-9pgl04rf",
+        "items": {
+          "create": [
+            {
+              "id": "69ff95ae-e053-42c6-a07a-1eb2322570a5:item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T23:20:29.008Z",
+        "updatedAt": "2026-11-21T23:20:29.008Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "6ad0b973-9517-4796-a133-486cf7a94d71",
+        "orderNumber": "ORD-20261122-FE0BB0",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل فحص الواتساب الشامل",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1820,
+        "idempotencyKey": "checkout-1795303471256-0axt51ju",
+        "items": {
+          "create": [
+            {
+              "id": "6ad0b973-9517-4796-a133-486cf7a94d71:item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T23:24:33.048Z",
+        "updatedAt": "2026-11-21T23:24:33.048Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "d2b8797c-b74a-4b1b-ace6-c6f781445331",
+        "orderNumber": "ORD-20261122-140C84",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل التتبع الكامل اللحظي",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1820,
+        "idempotencyKey": "checkout-1795303584356-u79k2ny7",
+        "items": {
+          "create": [
+            {
+              "id": "d2b8797c-b74a-4b1b-ace6-c6f781445331:item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T23:26:25.176Z",
+        "updatedAt": "2026-11-21T23:26:25.176Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "6a463275-cecb-4937-a49c-c463f4ee185a",
+        "orderNumber": "ORD-20261122-71B166",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل فحص الواتساب الشامل",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1820,
+        "idempotencyKey": "checkout-1795304091106-bsd7864o",
+        "items": {
+          "create": [
+            {
+              "id": "6a463275-cecb-4937-a49c-c463f4ee185a:item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T23:34:52.894Z",
+        "updatedAt": "2026-11-21T23:34:52.894Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "97ca1a61-cde5-4b93-9f54-d9077687a04b",
+        "orderNumber": "ORD-20261122-2093EC",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل فحص الواتساب الشامل",
+        "customerPhone": "201032414452",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1820,
+        "idempotencyKey": "checkout-1795304303154-rj24cl7b",
+        "items": {
+          "create": [
+            {
+              "id": "97ca1a61-cde5-4b93-9f54-d9077687a04b:item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T23:38:24.961Z",
+        "updatedAt": "2026-11-21T23:38:24.961Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
+      },
+      {
+        "id": "369f5b66-1ddc-4bc3-85d2-1690720fccc0",
+        "orderNumber": "ORD-20261122-489CCC",
+        "type": "TAKEAWAY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "عميل التتبع الكامل اللحظي",
+        "customerPhone": "201024994092",
+        "deliveryFee": 0,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1820,
+        "totalDiscount": 0,
+        "total": 1820,
+        "idempotencyKey": "checkout-1795304655580-f0hond82",
+        "items": {
+          "create": [
+            {
+              "id": "369f5b66-1ddc-4bc3-85d2-1690720fccc0:item-0a67d363-e9fa-4854-981b-89d3b214260f-0-0",
+              "productId": "0a67d363-e9fa-4854-981b-89d3b214260f",
+              "productName": "صينية الوحوش",
+              "baseUnitPrice": 1820,
+              "selectedOptions": [
+                {
+                  "id": "opt-tray-grape-leaves",
+                  "groupId": "grp-tray-monsters-side",
+                  "groupName": "اختيار الصنف الجانبي",
+                  "name": "ورق عنب",
+                  "price": 0
+                }
+              ],
+              "unitPrice": 1820,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-21T23:44:16.455Z",
+        "updatedAt": "2026-11-21T23:44:16.455Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
       }
-    ]
+    ],
+    "Offer": []
   },
-  "deleted": {}
+  "deleted": {
+    "Offer": [
+      "412c818c-20b8-4d0c-b715-ed98c32cd23c"
+    ]
+  }
 }

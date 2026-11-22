@@ -115,6 +115,17 @@ export default function CustomerHubClient({
 
   // Active Tab
   const [activeTab, setActiveTab] = useState<CustomerHubTab>(initialTab);
+  const activeTabRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (activeTabRef.current) {
+      activeTabRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      });
+    }
+  }, [activeTab]);
 
   // Authentication & Customer
   const [authenticated, setAuthenticated] = useState<boolean>(initialAuthenticated);
@@ -793,8 +804,11 @@ export default function CustomerHubClient({
       </header>
 
       {/* Customer Hub Navigation Tabs */}
-      <nav aria-label="Customer Hub Navigation" className="hub-tabs-bar">
+      <nav aria-label="Customer Hub Navigation" role="tablist" className="hub-tabs-bar">
         <button
+          ref={activeTab === 'overview' ? activeTabRef : null}
+          role="tab"
+          aria-selected={activeTab === 'overview'}
           type="button"
           onClick={() => setActiveTab('overview')}
           className={`hub-tab-btn ${activeTab === 'overview' ? 'active' : ''}`}
@@ -804,6 +818,9 @@ export default function CustomerHubClient({
         </button>
 
         <button
+          ref={activeTab === 'orders' ? activeTabRef : null}
+          role="tab"
+          aria-selected={activeTab === 'orders'}
           type="button"
           onClick={() => setActiveTab('orders')}
           className={`hub-tab-btn ${activeTab === 'orders' ? 'active' : ''}`}
@@ -814,6 +831,9 @@ export default function CustomerHubClient({
         </button>
 
         <button
+          ref={activeTab === 'profile' ? activeTabRef : null}
+          role="tab"
+          aria-selected={activeTab === 'profile'}
           type="button"
           onClick={() => setActiveTab('profile')}
           className={`hub-tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
@@ -823,6 +843,9 @@ export default function CustomerHubClient({
         </button>
 
         <button
+          ref={activeTab === 'addresses' ? activeTabRef : null}
+          role="tab"
+          aria-selected={activeTab === 'addresses'}
           type="button"
           onClick={() => setActiveTab('addresses')}
           className={`hub-tab-btn ${activeTab === 'addresses' ? 'active' : ''}`}
@@ -833,6 +856,9 @@ export default function CustomerHubClient({
         </button>
 
         <button
+          ref={activeTab === 'favorites' ? activeTabRef : null}
+          role="tab"
+          aria-selected={activeTab === 'favorites'}
           type="button"
           onClick={() => setActiveTab('favorites')}
           className={`hub-tab-btn ${activeTab === 'favorites' ? 'active' : ''}`}
@@ -843,6 +869,9 @@ export default function CustomerHubClient({
         </button>
 
         <button
+          ref={activeTab === 'notifications' ? activeTabRef : null}
+          role="tab"
+          aria-selected={activeTab === 'notifications'}
           type="button"
           onClick={() => setActiveTab('notifications')}
           className={`hub-tab-btn ${activeTab === 'notifications' ? 'active' : ''}`}
@@ -853,6 +882,9 @@ export default function CustomerHubClient({
         </button>
 
         <button
+          ref={activeTab === 'wallet' ? activeTabRef : null}
+          role="tab"
+          aria-selected={activeTab === 'wallet'}
           type="button"
           onClick={() => setActiveTab('wallet')}
           className={`hub-tab-btn ${activeTab === 'wallet' ? 'active' : ''}`}
@@ -862,6 +894,9 @@ export default function CustomerHubClient({
         </button>
 
         <button
+          ref={activeTab === 'install' ? activeTabRef : null}
+          role="tab"
+          aria-selected={activeTab === 'install'}
           type="button"
           onClick={() => setActiveTab('install')}
           className={`hub-tab-btn ${activeTab === 'install' ? 'active' : ''}`}
@@ -925,14 +960,16 @@ export default function CustomerHubClient({
                   </div>
                 </div>
 
-                <div className="spotlight-timeline-wrap">
-                  <OrderTrackingTimeline
-                    orderNumber={latestActiveOrder.orderNumber}
-                    token={latestActiveOrder.verificationToken}
-                    initialStatus={latestActiveOrder.status}
-                    locale={locale}
-                  />
-                </div>
+                {latestActiveOrder.orderingMode === 'FULL_ORDERING' && (
+                  <div className="spotlight-timeline-wrap">
+                    <OrderTrackingTimeline
+                      orderNumber={latestActiveOrder.orderNumber}
+                      token={latestActiveOrder.verificationToken}
+                      initialStatus={latestActiveOrder.status}
+                      locale={locale}
+                    />
+                  </div>
+                )}
 
                 <div className="spotlight-actions">
                   <button
@@ -1071,14 +1108,16 @@ export default function CustomerHubClient({
                         </div>
                       </div>
 
-                      <div className="card-timeline-box">
-                        <OrderTrackingTimeline
-                          orderNumber={ord.orderNumber}
-                          token={ord.verificationToken}
-                          initialStatus={ord.status}
-                          locale={locale}
-                        />
-                      </div>
+                      {ord.orderingMode === 'FULL_ORDERING' && (
+                        <div className="card-timeline-box">
+                          <OrderTrackingTimeline
+                            orderNumber={ord.orderNumber}
+                            token={ord.verificationToken}
+                            initialStatus={ord.status}
+                            locale={locale}
+                          />
+                        </div>
+                      )}
 
                       <div className="card-details-box">
                         <div className="row">
@@ -1091,7 +1130,7 @@ export default function CustomerHubClient({
                         </div>
                         <div className="row">
                           <span className="lbl">{isAr ? 'الأصناف:' : 'Items:'}</span>
-                          <span className="val items">{ord.items.map((i) => `${i.productName} (${i.quantity})`).join('، ')}</span>
+                          <span className="val items">{(ord.items || []).map((i) => `${i.productName} (${i.quantity})`).join('، ')}</span>
                         </div>
                         <div className="row total-row">
                           <span className="lbl">{isAr ? 'المجموع الإجمالي:' : 'Total:'}</span>
@@ -1155,8 +1194,8 @@ export default function CustomerHubClient({
                         <div className="prev-summary-line">
                           <span className="badge-tag">{itemCount} {isAr ? 'أصناف' : 'items'}</span>
                           <span className="items-list">
-                            {ord.items.slice(0, 3).map((it) => it.productName).join('، ')}
-                            {ord.items.length > 3 && (isAr ? ' ...وغيرها' : ' ...')}
+                            {(ord.items || []).slice(0, 3).map((it) => it.productName).join('، ')}
+                            {(ord.items || []).length > 3 && (isAr ? ' ...وغيرها' : ' ...')}
                           </span>
                         </div>
 

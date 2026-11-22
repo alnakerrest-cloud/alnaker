@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { prisma, withDbRetry } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import OfferRowActions from "./row-actions";
 import AdminFilterBar from "../admin-filter-bar";
@@ -31,26 +31,28 @@ export default async function OffersPage({
 }: {
   searchParams?: Promise<{ q?: string; status?: string; type?: string }>;
 }) {
-  const admin = await requireAdmin(["OWNER", "EDITOR"]);
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const canDelete = admin.role === "OWNER";
   const { q, status, type } = (await searchParams) ?? {};
 
   const now = new Date();
 
-  const offers = await prisma.offer.findMany({
-    where: {
-      AND: [
-        q ? { titleAr: { contains: q, mode: "insensitive" } } : {},
-        status === "active" ? { isActive: true } : status === "inactive" ? { isActive: false } : {},
-        type && VALID_OFFER_TYPES.includes(type as ValidOfferType) ? { offerType: type as ValidOfferType } : {},
-      ],
-    },
-    orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
-    include: {
-      productTargets: { select: { productId: true } },
-      categoryTargets: { select: { categoryId: true } },
-      locationTargets: { select: { targetLocationId: true } },
-    },
+  const offers = await withDbRetry(async () => {
+    return prisma.offer.findMany({
+      where: {
+        AND: [
+          q ? { titleAr: { contains: q, mode: "insensitive" } } : {},
+          status === "active" ? { isActive: true } : status === "inactive" ? { isActive: false } : {},
+          type && VALID_OFFER_TYPES.includes(type as ValidOfferType) ? { offerType: type as ValidOfferType } : {},
+        ],
+      },
+      orderBy: [{ sortOrder: "asc" }, { createdAt: "desc" }],
+      include: {
+        productTargets: { select: { productId: true } },
+        categoryTargets: { select: { categoryId: true } },
+        locationTargets: { select: { targetLocationId: true } },
+      },
+    });
   });
 
   const totalCount = offers.length;

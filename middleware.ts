@@ -8,10 +8,7 @@ function pickLocale(req: NextRequest): string {
   const saved = req.cookies.get('NEXT_LOCALE')?.value;
   if (saved && LOCALES.includes(saved)) return saved;
 
-  // 2) browser preference: English only if it is the *first* language, Arabic otherwise
-  const accept = (req.headers.get('accept-language') ?? '').toLowerCase();
-  const first = accept.split(',')[0]?.trim() ?? '';
-  if (first.startsWith('en')) return 'en';
+  // 2) First-time visitor default is Arabic (ar)
   return DEFAULT_LOCALE;
 }
 

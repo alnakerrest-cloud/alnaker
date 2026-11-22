@@ -13,6 +13,7 @@ import {
   CartIcon,
 } from './Icons';
 import { calculateCartTotals } from '@/lib/cart';
+import { normalizeOrderingMode } from '@/lib/order-settings-types';
 import CheckoutModal from './CheckoutModal';
 
 export default function CartDrawer({
@@ -504,7 +505,7 @@ export default function CartDrawer({
         {/* Drawer Footer with WhatsApp Action */}
         {cart.length > 0 && (
           <div className="cart-footer">
-            {menuModeData?.mode === 'VIEW_ONLY' || menuModeData?.mode === 'TEMPORARILY_CLOSED' ? (
+            {normalizeOrderingMode(menuModeData?.mode) === 'DISPLAY_ONLY' || normalizeOrderingMode(menuModeData?.mode) === 'TEMPORARILY_CLOSED' ? (
               <div
                 style={{
                   background: '#fef3c7',

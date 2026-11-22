@@ -1,13 +1,31 @@
 import { NextResponse } from "next/server";
 import { getMenuSettingsAsync } from "@/lib/orders-store";
+import {
+  normalizeOrderingMode,
+  ORDERING_MODE_FEATURES,
+  ORDERING_MODES_META,
+} from "@/lib/order-settings-types";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
     const settings = await getMenuSettingsAsync();
+    const normalizedMode = normalizeOrderingMode(settings.mode);
+    const features = ORDERING_MODE_FEATURES[normalizedMode];
+    const meta = ORDERING_MODES_META[normalizedMode];
+
     return NextResponse.json({
       mode: settings.mode,
+      normalizedMode,
+      features,
+      isOrderable: features.allowOrderCreation,
+      meta: {
+        titleAr: meta.titleAr,
+        titleEn: meta.titleEn,
+        badgeAr: meta.badgeAr,
+        badgeEn: meta.badgeEn,
+      },
       closureMessageAr: settings.closureMessageAr,
       closureMessageEn: settings.closureMessageEn,
       allowDelivery: settings.allowDelivery,
@@ -26,7 +44,10 @@ export async function GET() {
     console.error("[menu-mode] Error:", error);
     return NextResponse.json(
       {
-        mode: "VIEW_AND_ORDER",
+        mode: "WHATSAPP_DATABASE",
+        normalizedMode: "WHATSAPP_DATABASE",
+        features: ORDERING_MODE_FEATURES.WHATSAPP_DATABASE,
+        isOrderable: true,
         closureMessageAr: "",
         closureMessageEn: "",
         allowDelivery: true,

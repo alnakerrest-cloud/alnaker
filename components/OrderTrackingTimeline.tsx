@@ -16,6 +16,12 @@ import {
 interface OrderStatusResponse {
   orderNumber: string;
   status: OrderStatus;
+  mode?: string;
+  trackingDisabled?: boolean;
+  messageAr?: string;
+  messageEn?: string;
+  whatsappUrl?: string;
+  branchPhone?: string;
   confirmedAt?: string;
   confirmedBy?: string;
   rejectionReason?: string;
@@ -75,7 +81,7 @@ export default function OrderTrackingTimeline({
       setLastUpdated(new Date());
       setFetchCount((c) => c + 1);
 
-      if (TERMINAL_STATUSES.includes(json.status)) {
+      if (json.trackingDisabled || TERMINAL_STATUSES.includes(json.status)) {
         setIsPolling(false);
       }
     } catch {
@@ -247,7 +253,9 @@ export default function OrderTrackingTimeline({
             color: isPolling ? 'var(--brand-deep, #43201d)' : 'var(--muted, #7c6a5f)',
           }}
         >
-          {isPolling ? (
+          {data?.trackingDisabled ? (
+            <span style={{ color: '#0369a1', fontWeight: 800 }}>{isAr ? '💬 متابعة عبر واتساب' : '💬 Branch WhatsApp'}</span>
+          ) : isPolling ? (
             <>
               <span
                 style={{
@@ -275,6 +283,57 @@ export default function OrderTrackingTimeline({
           </span>
         </div>
       </div>
+
+      {/* WhatsApp Mode Follow-up Banner if tracking is handled via WhatsApp */}
+      {data?.trackingDisabled && (
+        <div
+          style={{
+            background: '#f0f9ff',
+            border: '1.5px solid #7dd3fc',
+            borderRadius: '12px',
+            padding: '16px',
+            marginBottom: '18px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '12px',
+          }}
+        >
+          <span style={{ fontSize: '24px' }}>💬</span>
+          <div style={{ flex: 1 }}>
+            <h4 style={{ margin: '0 0 4px', fontSize: '15px', fontWeight: 800, color: '#0369a1' }}>
+              {isAr ? 'متابعة وتأكيد الطلب عبر واتساب الفرع' : 'Order Handled via Branch WhatsApp'}
+            </h4>
+            <p style={{ margin: '0 0 10px', fontSize: '13px', color: '#0c4a6e', lineHeight: '1.5' }}>
+              {isAr
+                ? 'تم تسجيل طلبك وحفظه بنجاح في قاعدة بيانات المطعم. يتم تأكيد وتحضير ومتابعة حالة الطلب مباشرة عبر محادثة واتساب الفرع دون الحاجة لتحديث الصفحة.'
+                : 'Your order is recorded in the system. Confirmation, preparation and updates are coordinated directly via branch WhatsApp.'}
+            </p>
+            {data.whatsappUrl && (
+              <a
+                href={data.whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: '#25D366',
+                  color: '#ffffff',
+                  padding: '8px 16px',
+                  borderRadius: '8px',
+                  fontWeight: 700,
+                  fontSize: '13px',
+                  textDecoration: 'none',
+                  boxShadow: '0 2px 6px rgba(37, 211, 102, 0.25)',
+                }}
+              >
+                <span>💬</span>
+                <span>{isAr ? 'فتح محادثة واتساب الفرع' : 'Open Branch WhatsApp Chat'}</span>
+              </a>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Terminal / Failed Alert Banner if applicable */}
       {isFailed && (

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { MenuModeSettings } from "@/lib/order-settings-types";
-import { REASON_PRESETS } from "@/lib/order-settings-types";
+import { REASON_PRESETS, normalizeOrderingMode } from "@/lib/order-settings-types";
 
 interface ViewOnlyNoticeBannerProps {
   locale: Locale;
@@ -16,7 +16,8 @@ export default function ViewOnlyNoticeBanner({
 }: ViewOnlyNoticeBannerProps) {
   const [isMinimized, setIsMinimized] = useState(false);
 
-  if (!settings || settings.mode !== "VIEW_ONLY" || settings.enableNotice === false) {
+  const activeMode = normalizeOrderingMode(settings?.mode);
+  if (!settings || activeMode !== "DISPLAY_ONLY" || settings.enableNotice === false) {
     return null;
   }
 

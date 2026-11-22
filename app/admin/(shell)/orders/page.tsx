@@ -6,6 +6,9 @@ import {
   getOrdersStats,
   getOrdersStatsAsync,
   getMenuSettings,
+  getMenuSettingsAsync,
+  normalizeOrderingMode,
+  ORDERING_MODES_META,
   type OrderStatus,
 } from "@/lib/orders-store";
 import { getSiteData } from "@/lib/site-db";
@@ -109,7 +112,9 @@ export default async function AdminOrdersPage({
   });
 
   const stats = await getOrdersStatsAsync();
-  const menuSettings = getMenuSettings();
+  const menuSettings = await getMenuSettingsAsync();
+  const normalizedMode = normalizeOrderingMode(menuSettings.mode);
+  const modeMeta = ORDERING_MODES_META[normalizedMode];
   const siteData = await getSiteData("ar");
 
   return (
@@ -135,25 +140,20 @@ export default async function AdminOrdersPage({
                 display: "inline-flex",
                 alignItems: "center",
                 gap: "6px",
-                padding: "4px 10px",
+                padding: "4px 12px",
                 borderRadius: "20px",
                 fontSize: "12px",
-                fontWeight: 600,
-                background: "#f0fdf4",
-                color: "#166534",
-                border: "1px solid #bbf7d0",
+                fontWeight: 700,
+                background: modeMeta.bgColor,
+                color: modeMeta.color,
+                border: `1px solid ${modeMeta.borderColor}`,
               }}
             >
-              <span
-                style={{
-                  width: "8px",
-                  height: "8px",
-                  borderRadius: "50%",
-                  background: "#22c55e",
-                  display: "inline-block",
-                }}
-              />
-              تحديث مباشر
+              <span>{modeMeta.icon}</span>
+              <span>{modeMeta.titleAr}</span>
+              <span style={{ opacity: 0.65, fontSize: "11px" }}>
+                ({normalizedMode === "FULL_ORDERING" ? "تحديث مباشر" : normalizedMode === "WHATSAPP_DATABASE" ? "تحديث يدوي" : "غير نشط"})
+              </span>
             </span>
           </div>
           <p style={{ margin: "6px 0 0", color: "#64748b", fontSize: "14px" }}>

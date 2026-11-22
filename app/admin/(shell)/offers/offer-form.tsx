@@ -96,10 +96,9 @@ export default function OfferForm({
   const filteredProducts = products.filter((p) => {
     if (!productSearch.trim()) return true;
     const term = productSearch.toLowerCase();
-    return (
-      p.nameAr.toLowerCase().includes(term) ||
-      (p.categoryNameAr && p.categoryNameAr.toLowerCase().includes(term))
-    );
+    const nameMatch = p.nameAr ? p.nameAr.toLowerCase().includes(term) : false;
+    const catMatch = p.categoryNameAr ? p.categoryNameAr.toLowerCase().includes(term) : false;
+    return nameMatch || catMatch;
   });
 
   const toggleProduct = (id: string) => {
@@ -454,7 +453,7 @@ export default function OfferForm({
                 style={{ borderRadius: 999 }}
               >
                 {isChecked ? "✓ " : "+ "}
-                {b.nameAr} ({b.cityAr})
+                {b.nameAr} {b.cityAr ? `(${b.cityAr})` : ""}
               </button>
             );
           })}

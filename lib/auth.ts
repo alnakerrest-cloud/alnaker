@@ -233,7 +233,7 @@ export async function requireAdmin(
     if (admin.role === "ORDERS_STAFF") {
       redirect("/admin/orders");
     }
-    throw new Error("FORBIDDEN");
+    redirect("/admin/dashboard");
   }
 
   if (admin.mustChangePassword && !opts?.allowPendingPasswordChange) {

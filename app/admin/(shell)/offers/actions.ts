@@ -71,7 +71,7 @@ function read(fd: FormData) {
 }
 
 export async function createOffer(_prev: OfferActionState, fd: FormData): Promise<OfferActionState> {
-  const admin = await requireAdmin(["OWNER", "EDITOR"]);
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const parsed = offerSchema.safeParse(read(fd));
   if (!parsed.success) return { error: firstIssue(parsed.error) };
   const d = parsed.data;
@@ -145,7 +145,7 @@ export async function createOffer(_prev: OfferActionState, fd: FormData): Promis
 }
 
 export async function updateOffer(_prev: OfferActionState, fd: FormData): Promise<OfferActionState> {
-  const admin = await requireAdmin(["OWNER", "EDITOR"]);
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const id = String(fd.get("id") ?? "");
   if (!id) return { error: "معرّف العرض مفقود" };
 
@@ -302,7 +302,7 @@ export async function deleteOffer(fd: FormData): Promise<{ ok?: boolean; error?:
 }
 
 export async function toggleOfferActive(id: string, currentState: boolean): Promise<{ ok: boolean }> {
-  const admin = await requireAdmin(["OWNER", "EDITOR"]);
+  const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const updated = await prisma.offer.update({
     where: { id },
     data: { isActive: !currentState },

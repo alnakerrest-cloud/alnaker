@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { prisma, withDbRetry } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import OfferForm, { type OfferFormValues } from "../offer-form";
 import { updateOffer } from "../actions";
@@ -11,44 +11,57 @@ export default async function EditOfferPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAdmin(["OWNER", "EDITOR"]);
+  await requireAdmin(["OWNER", "ADMIN", "EDITOR"]);
   const { id } = await params;
 
-  const [offer, productsRaw, categories, branches] = await Promise.all([
-    prisma.offer.findUnique({
-      where: { id },
-      include: {
-        productTargets: { select: { productId: true } },
-        categoryTargets: { select: { categoryId: true } },
-        locationTargets: { select: { targetLocationId: true } },
-      },
-    }),
-    prisma.product.findMany({
-      orderBy: { sortOrder: "asc" },
-      select: {
-        id: true,
-        nameAr: true,
-        section: { select: { category: { select: { nameAr: true } } } },
-      },
-    }),
-    prisma.category.findMany({
-      orderBy: { sortOrder: "asc" },
-      select: { id: true, nameAr: true },
-    }),
-    prisma.branch.findMany({
-      where: { isActive: true },
-      orderBy: { sortOrder: "asc" },
-      select: { id: true, nameAr: true, cityAr: true },
-    }),
-  ]);
+  const [offer, productsRaw, categories, branches] = await withDbRetry(async () => {
+    return Promise.all([
+      prisma.offer.findUnique({
+        where: { id },
+        include: {
+          productTargets: { select: { productId: true } },
+          categoryTargets: { select: { categoryId: true } },
+          locationTargets: { select: { targetLocationId: true } },
+        },
+      }),
+      prisma.product.findMany({
+        orderBy: { sortOrder: "asc" },
+        select: {
+          id: true,
+          nameAr: true,
+          section: { select: { category: { select: { nameAr: true } } } },
+        },
+      }),
+      prisma.category.findMany({
+        orderBy: { sortOrder: "asc" },
+        select: { id: true, nameAr: true },
+      }),
+      prisma.branch.findMany({
+        where: { isActive: true },
+        orderBy: { sortOrder: "asc" },
+        select: { id: true, nameAr: true, cityAr: true },
+      }),
+    ]);
+  });
 
   if (!offer) notFound();
 
-  const products = productsRaw.map((p) => ({
-    id: p.id,
-    nameAr: p.nameAr,
-    categoryNameAr: p.section?.category?.nameAr,
-  }));
+  const products = (productsRaw ?? [])
+    .filter((p) => p && p.id && p.nameAr)
+    .map((p) => ({
+      id: p.id,
+      nameAr: p.nameAr,
+      categoryNameAr: p.section?.category?.nameAr ?? undefined,
+    }));
+
+  const safeCategories = (categories ?? []).filter((c) => c && c.id && c.nameAr);
+  const safeBranches = (branches ?? [])
+    .filter((b) => b && b.id && b.nameAr)
+    .map((b) => ({
+      id: b.id,
+      nameAr: b.nameAr,
+      cityAr: b.cityAr ?? "",
+    }));
 
   const initial: OfferFormValues = {
     id: offer.id,
@@ -71,9 +84,9 @@ export default async function EditOfferPage({
     imagePublicId: offer.imagePublicId,
     badgeAr: offer.badgeAr,
     badgeEn: offer.badgeEn,
-    productIds: offer.productTargets.map((pt) => pt.productId),
-    categoryIds: offer.categoryTargets.map((ct) => ct.categoryId),
-    locationIds: offer.locationTargets.map((lt) => lt.targetLocationId),
+    productIds: (offer.productTargets ?? []).map((pt) => pt.productId),
+    categoryIds: (offer.categoryTargets ?? []).map((ct) => ct.categoryId),
+    locationIds: (offer.locationTargets ?? []).map((lt) => lt.targetLocationId),
   };
 
   return (
@@ -88,11 +101,10 @@ export default async function EditOfferPage({
         action={updateOffer}
         initial={initial}
         products={products}
-        categories={categories}
-        branches={branches}
+        categories={safeCategories}
+        branches={safeBranches}
         submitLabel="حفظ التعديلات"
       />
     </div>
   );
 }
-
