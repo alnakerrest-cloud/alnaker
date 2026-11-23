@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { branches as staticBranches, mapsUrl, PHONE_DISPLAY, PHONE_INTL } from "@/lib/site";
 import { ui, type Locale } from "@/lib/i18n";
 import { getBackupSiteData } from "@/lib/backup-menu-db";
+import { shouldUseLocalBackup } from "@/lib/persistence-mode";
 
 export type VBranch = {
   id: string;
@@ -75,8 +76,8 @@ export function getStaticSiteData(locale: Locale): SiteData {
 }
 
 export async function getSiteData(locale: Locale): Promise<SiteData> {
-  // Primary original preview: read from the verified backup to serve original settings & branches
-  if (process.env.USE_BACKUP_DATA !== "false") {
+  // Primary original preview: read from the verified backup to serve original settings & branches (offline/dev only)
+  if (shouldUseLocalBackup()) {
     return getBackupSiteData(locale);
   }
 

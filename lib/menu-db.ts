@@ -15,6 +15,7 @@ import { normalize } from "./search";
 import type { Locale } from "./i18n";
 import { localizeMenu, categoryKind, type VCategory, type VItem, type VPrice, type VSection, type VOptionGroup } from "./menu-view";
 import { getBackupMenuForLocale } from "@/lib/backup-menu-db";
+import { shouldUseLocalBackup } from "@/lib/persistence-mode";
 
 type ItemEn = {
   name?: string;
@@ -63,8 +64,8 @@ function priceValue(price: number, maxPrice: number | null): number | string {
 
 /** Reads the menu from Neon and maps it to the public view model, falling back to menu.ts. */
 export async function getMenuForLocale(locale: Locale): Promise<VCategory[]> {
-  // Primary original preview: read from the verified backup to serve all 151 original products and images
-  if (process.env.USE_BACKUP_DATA !== "false") {
+  // Primary original preview: read from the verified backup to serve all 151 original products and images (offline/dev only)
+  if (shouldUseLocalBackup()) {
     return getBackupMenuForLocale(locale);
   }
 

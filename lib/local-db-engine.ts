@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import { assertNotProduction } from "./persistence-mode";
 
 export interface LocalOverlayData {
   updated: Record<string, Record<string, any>>;
@@ -100,6 +101,7 @@ class LocalDbEngine {
   }
 
   private saveOverlay(): void {
+    assertNotProduction("LocalDbEngine.saveOverlay");
     this.ensureDir();
     const tmp = `${OVERLAY_FILE}.${Date.now()}.${Math.random().toString(36).slice(2, 6)}.tmp`;
     fs.writeFileSync(tmp, JSON.stringify(this.overlay, null, 2), "utf8");
@@ -185,6 +187,7 @@ class LocalDbEngine {
 
   // Record mutation helpers
   public recordUpdate(tableName: string, id: string, patch: any): void {
+    assertNotProduction(`LocalDbEngine.recordUpdate(${tableName})`);
     if (!this.overlay.updated[tableName]) {
       this.overlay.updated[tableName] = {};
     }
@@ -196,6 +199,7 @@ class LocalDbEngine {
   }
 
   public recordCreate(tableName: string, record: any): void {
+    assertNotProduction(`LocalDbEngine.recordCreate(${tableName})`);
     if (!this.overlay.created[tableName]) {
       this.overlay.created[tableName] = [];
     }
@@ -204,6 +208,7 @@ class LocalDbEngine {
   }
 
   public recordDelete(tableName: string, id: string): void {
+    assertNotProduction(`LocalDbEngine.recordDelete(${tableName})`);
     if (!this.overlay.deleted[tableName]) {
       this.overlay.deleted[tableName] = [];
     }

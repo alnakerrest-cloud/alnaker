@@ -3,6 +3,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { shouldUseLocalBackup } from "@/lib/persistence-mode";
 
 export type AdminRole = "OWNER" | "ADMIN" | "EDITOR" | "ORDERS_STAFF";
 
@@ -83,6 +84,10 @@ function loadUsers(): StoredUser[] {
 }
 
 function saveUsers(users: StoredUser[]): void {
+  if (!shouldUseLocalBackup()) {
+    // In production, users are exclusively saved in Neon PostgreSQL; never write local files
+    return;
+  }
   writeJsonFile(USERS_FILE, users);
 }
 
@@ -93,6 +98,10 @@ function loadSessions(): StoredSession[] {
 }
 
 function saveSessions(sessions: StoredSession[]): void {
+  if (!shouldUseLocalBackup()) {
+    // In production, sessions are exclusively managed in Neon PostgreSQL; never write local files
+    return;
+  }
   writeJsonFile(SESSIONS_FILE, sessions);
 }
 

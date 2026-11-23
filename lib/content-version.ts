@@ -4,9 +4,10 @@
 import { createHash } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { getBackupContentVersion } from "@/lib/backup-menu-db";
+import { shouldUseLocalBackup } from "@/lib/persistence-mode";
 
 export async function getContentVersion(): Promise<string> {
-  if (process.env.USE_BACKUP_DATA !== "false") {
+  if (shouldUseLocalBackup()) {
     return getBackupContentVersion();
   }
 

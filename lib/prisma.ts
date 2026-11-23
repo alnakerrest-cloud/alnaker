@@ -11,6 +11,7 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import pg from "pg";
 import { getLocalDbEngine } from "./local-db-engine";
 import { resolveDatabaseUrl, pgSslConfig } from "./database-url";
+import { shouldUseLocalBackup } from "./persistence-mode";
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient; pool?: pg.Pool };
 
@@ -72,9 +73,10 @@ export const prisma: PrismaClient = new Proxy({} as PrismaClient, {
   get(_target, prop) {
     if (prop === "then") return undefined;
 
-    // Unified Local Mode: if USE_BACKUP_DATA is active (default in local development),
-    // delegate all queries and mutations to the LocalDbEngine
-    const useLocal = process.env.USE_BACKUP_DATA !== "false";
+    // Unified Local Mode: ONLY active in development when offline mode is requested.
+    // In production or on Vercel, shouldUseLocalBackup() is ALWAYS false, ensuring
+    // Prisma communicates exclusively with Neon PostgreSQL.
+    const useLocal = shouldUseLocalBackup();
     if (useLocal) {
       if (prop === "$transaction") {
         return async (arg: any) => {
