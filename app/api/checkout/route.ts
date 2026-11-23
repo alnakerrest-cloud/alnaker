@@ -144,7 +144,7 @@ function formatWhatsAppOrderMessage(params: {
 
   if (params.verificationToken) {
     lines.push("────────────────────");
-    lines.push(`🔍 *${isAr ? "رابط المتابعة المباشر" : "Live Tracking"}:* ${process.env.NEXT_PUBLIC_SITE_URL || "http://127.0.0.1:3000"}/${params.locale}/receipt/${params.orderNumber}?token=${params.verificationToken}`);
+    lines.push(`🔍 *${isAr ? "رابط المتابعة المباشر" : "Live Tracking"}:* ${process.env.NEXT_PUBLIC_SITE_URL || "https://alnaker.vercel.app"}/${params.locale}/receipt/${params.orderNumber}?token=${params.verificationToken}`);
   }
 
   lines.push("────────────────────");

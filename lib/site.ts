@@ -1,4 +1,4 @@
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://naqer-menu.vercel.app').replace(/\/$/, '');
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://alnaker.vercel.app').replace(/\/$/, '');
 
 export const PHONE_DISPLAY = '01094965222';
 export const PHONE_INTL = '+201094965222';

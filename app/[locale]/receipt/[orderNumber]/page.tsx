@@ -128,7 +128,7 @@ export default async function ReceiptPage({ params, searchParams }: ReceiptPageP
   const isExpired = order.status === "EXPIRED";
 
   // Verification URL for QR code
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://127.0.0.1:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://alnaker.vercel.app";
   const verificationUrl = `${baseUrl}/api/orders/${order.orderNumber}/verify?token=${order.verificationToken}`;
   const qrSvg = isConfirmed ? await generateQrSvg(verificationUrl) : "";
 

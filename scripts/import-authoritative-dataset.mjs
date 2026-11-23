@@ -11,9 +11,13 @@ const FORBIDDEN_TARGETS = [
 ];
 
 async function main() {
-  const envPath = process.env.ENV_FILE || ".env.staging.local";
-  if (fs.existsSync(envPath)) {
-    dotenv.config({ path: envPath, override: true });
+  if (process.env.DATABASE_URL) {
+    // Keep explicitly provided DATABASE_URL
+  } else {
+    const envPath = process.env.ENV_FILE || ".env.staging.local";
+    if (fs.existsSync(envPath)) {
+      dotenv.config({ path: envPath, override: true });
+    }
   }
 
   const dbUrl = process.env.DATABASE_URL || "";

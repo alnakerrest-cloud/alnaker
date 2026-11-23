@@ -22,5 +22,38 @@
     "createdAt": "2026-11-18T18:43:54.679Z",
     "updatedAt": "2026-11-19T00:47:45.109Z",
     "lastLoginAt": "2026-11-18T19:44:04.348Z"
+  },
+  {
+    "id": "usr-staff-d8e676ab-61cc-445b-a74f-a37c2b4ffc3f",
+    "email": "manager@naqer.com",
+    "passwordHash": "$2b$12$WcltA4tZrEYl81svjAIfiuF1oAFR3dBDVwsCGl0xqnUKl7wO8a5wy",
+    "displayName": "مشرف العمليات والتشغيل",
+    "role": "ADMIN",
+    "isActive": true,
+    "mustChangePassword": true,
+    "createdAt": "2026-11-23T13:48:48.887Z",
+    "updatedAt": "2026-11-23T13:48:48.887Z"
+  },
+  {
+    "id": "usr-staff-564420c8-5dd7-49d3-85f5-a80b4817f24e",
+    "email": "orders@naqer.com",
+    "passwordHash": "$2b$12$Zi6avm9MB2jruNHf1Y4pHuToOm5W.yedUVi/aQArg7JF62/BOUjQ.",
+    "displayName": "إدارة وتجهيز الطلبات",
+    "role": "ORDERS_STAFF",
+    "isActive": true,
+    "mustChangePassword": true,
+    "createdAt": "2026-11-23T13:48:48.887Z",
+    "updatedAt": "2026-11-23T13:48:48.887Z"
+  },
+  {
+    "id": "usr-staff-1a770a21-19f2-4422-ac22-667f99a4c7e1",
+    "email": "cashier@naqer.com",
+    "passwordHash": "$2b$12$sKVQE.IW4zg9/XscUS9QFubx09uRQM7BBR7jhCj31Uec2jarD0tMy",
+    "displayName": "أمين الصندوق (الكاشير)",
+    "role": "ORDERS_STAFF",
+    "isActive": true,
+    "mustChangePassword": true,
+    "createdAt": "2026-11-23T13:48:48.887Z",
+    "updatedAt": "2026-11-23T13:48:48.887Z"
   }
 ]

@@ -21,6 +21,7 @@ lib/generated/prisma
 
 # Local backups & archives
 .phase1-backup/
+credentials/
 *.rar
 *.zip
 *.tar.gz
@@ -30,6 +31,7 @@ pdf-images/
 # Database dumps (keep migrations)
 *.dump
 *.backup
+*handover*.json
 !prisma/migrations/**/*.sql
 
 # Logs & temp files
