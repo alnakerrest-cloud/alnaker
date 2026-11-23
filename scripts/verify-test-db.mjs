@@ -1,4 +1,4 @@
-﻿import dotenv from "dotenv";
+import dotenv from "dotenv";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import pg from "pg";
@@ -19,10 +19,15 @@ if (!db) {
 const EXPECTED_HOST = "ep-sparkling-glitter-bdwqquhi-pooler.c-8.us-east-2.aws.neon.tech";
 const EXPECTED_PROJECT_ID = "royal-silence-22995540";
 const EXPECTED_BRANCH_NAME = "naqer-menu-local-testing";
-if (!db.includes("ep-sparkling-glitter-bdwqquhi")) {
-  console.error("[verify-test-db] SAFETY STOP: DATABASE_URL does not point to the expected testing branch host. Refuse.");
-  process.exit(2);
+const FORBIDDEN_TARGETS = ['ep-soft-dawn-bdu5de43', 'ep-withered-bread-bemwq8ns'];
+for (const forbidden of FORBIDDEN_TARGETS) {
+  if (db.includes(forbidden)) {
+    console.error(`[verify-test-db] CRITICAL REFUSAL: DATABASE_URL in .env.test.local points to forbidden/production host: ${forbidden}`);
+    process.exit(2);
+  }
 }
+console.error("[verify-test-db] SAFETY STOP: .env.test.local is currently DISABLED for database testing until an isolated test branch is verified.");
+process.exit(2);
 if (!db.includes("sslmode=")) {
   console.warn("[verify-test-db] Warning: expected sslmode in URL (still continuing only for host check).");
 }

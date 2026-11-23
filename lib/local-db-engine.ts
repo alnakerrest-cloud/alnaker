@@ -685,12 +685,32 @@ class LocalDbEngine {
           }
         }
 
+        if (cObj.gt !== undefined) {
+          const dVal = val instanceof Date ? val.getTime() : new Date(val).getTime();
+          const dTarget = cObj.gt instanceof Date ? cObj.gt.getTime() : new Date(cObj.gt).getTime();
+          if (Number.isFinite(dVal) && Number.isFinite(dTarget)) {
+            if (dVal <= dTarget) return false;
+          } else if (Number(val) <= Number(cObj.gt)) {
+            return false;
+          }
+        }
+
         if (cObj.lte !== undefined) {
           const dVal = val instanceof Date ? val.getTime() : new Date(val).getTime();
           const dTarget = cObj.lte instanceof Date ? cObj.lte.getTime() : new Date(cObj.lte).getTime();
           if (Number.isFinite(dVal) && Number.isFinite(dTarget)) {
             if (dVal > dTarget) return false;
           } else if (Number(val) > Number(cObj.lte)) {
+            return false;
+          }
+        }
+
+        if (cObj.lt !== undefined) {
+          const dVal = val instanceof Date ? val.getTime() : new Date(val).getTime();
+          const dTarget = cObj.lt instanceof Date ? cObj.lt.getTime() : new Date(cObj.lt).getTime();
+          if (Number.isFinite(dVal) && Number.isFinite(dTarget)) {
+            if (dVal >= dTarget) return false;
+          } else if (Number(val) >= Number(cObj.lt)) {
             return false;
           }
         }

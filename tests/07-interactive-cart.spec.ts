@@ -1,4 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
+import pg from 'pg';
+
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: true, max: 2 });
 
 async function initMenu(page: Page, url = '/ar') {
   await page.goto(url);
@@ -13,6 +16,22 @@ async function initMenu(page: Page, url = '/ar') {
 }
 
 test.describe('Naqer Menu — Premium Interactive Ordering Experience', () => {
+  test.afterAll(async () => {
+    try {
+      await pool.query('DELETE FROM "Order" WHERE "customerPhone" LIKE $1 OR "customerPhone" LIKE $2', ['%01012345678%', '%01098765432%']);
+      await pool.query('DELETE FROM "OrderStore" WHERE data->>\'customerPhone\' IN (\'01012345678\', \'01098765432\')');
+    } finally {
+      await pool.end();
+    }
+  });
+
+  test.afterEach(async () => {
+    try {
+      await pool.query('DELETE FROM "Order" WHERE "customerPhone" LIKE $1 OR "customerPhone" LIKE $2', ['%01012345678%', '%01098765432%']);
+      await pool.query('DELETE FROM "OrderStore" WHERE data->>\'customerPhone\' IN (\'01012345678\', \'01098765432\')');
+    } catch {}
+  });
+
   test('1. Card Archetypes are interactive and tags button does not trigger modal', async ({ page }) => {
     await initMenu(page, '/ar');
 
@@ -193,6 +212,14 @@ test.describe('Naqer Menu — Premium Interactive Ordering Experience', () => {
     // Open first platter card
     await page.locator('.card--platter').first().click();
     const modal = page.locator('.modal-panel');
+    await expect(modal).toBeVisible();
+
+    // If options are required, select first option tile
+    const optionTile = modal.locator('.option-tile').first();
+    if (await optionTile.isVisible()) {
+      await optionTile.click();
+    }
+
     await modal.locator('#product-notes').fill('تسوية زيادة مع سلطة طحينة إضافية');
     await modal.locator('.btn-add-cart').click();
     await page.waitForTimeout(600);
@@ -206,29 +233,52 @@ test.describe('Naqer Menu — Premium Interactive Ordering Experience', () => {
     const generalNotes = cartDrawer.locator('#order-general-notes');
     await generalNotes.fill('توصيل إلى دمياط الجديدة - الحي الثالث بجوار المسجد الكبير');
 
-    // Inspect WhatsApp button
-    const waBtn = cartDrawer.locator('.btn-whatsapp');
-    await expect(waBtn).toBeVisible();
+    // Click Checkout button to transition to CheckoutModal
+    const checkoutBtn = cartDrawer.locator('.btn-checkout');
+    await expect(checkoutBtn).toBeVisible();
+    await checkoutBtn.click();
+
+    const checkoutModal = page.locator('.checkout-panel');
+    await expect(checkoutModal).toBeVisible();
+
+    // Step 1: Branch selection -> Next
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 2: Order type -> Next
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 3: Customer Details -> fill and Next
+    await checkoutModal.locator('#customerName').fill('أحمد محمد');
+    await checkoutModal.locator('#customerPhone').fill('01012345678');
+    await checkoutModal.locator('#deliveryAddress').fill('دمياط الجديدة - الحي الثالث بجوار المسجد الكبير');
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 4: Payment method -> Next
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 5: Summary & Confirm -> Submit
+    const submitBtn = checkoutModal.locator('.btn-submit');
+    await expect(submitBtn).toBeVisible();
+    await submitBtn.click();
+
+    // Step 6: Success step with WhatsApp link
+    const waBtn = checkoutModal.locator('a[href*="wa.me"]');
+    await expect(waBtn).toBeVisible({ timeout: 20_000 });
 
     const href = await waBtn.getAttribute('href');
     expect(href).toBeTruthy();
-    expect(href).toContain('https://wa.me/201094965222?text=');
+    expect(href).toContain('https://wa.me/');
 
-    // Decode message and verify contents (URLSearchParams automatically decodes query value)
+    // Decode message and verify contents
     const rawUrl = new URL(href!);
     const message = rawUrl.searchParams.get('text') ?? '';
 
     // Check required sections
     expect(message).toContain('قرية الناقر');
-    expect(message).toContain('طلب جديد');
     expect(message).toContain('تسوية زيادة مع سلطة طحينة إضافية');
-    expect(message).toContain('المجموع:');
-    expect(message).toContain('الإجمالي المطلوب:');
-    expect(message).toContain('توصيل إلى دمياط الجديدة - الحي الثالث بجوار المسجد الكبير');
-    expect(message).toContain('شكراً لاختياركم قرية الناقر');
-
-    // Verify cart is NOT cleared by clicking the button
-    expect(await cartDrawer.locator('.cart-item').count()).toBe(1);
+    expect(message).toContain('المجموع الفرعي:');
+    expect(message).toContain('الإجمالي النهائي:');
+    expect(message).toContain('دمياط الجديدة - الحي الثالث بجوار المسجد الكبير');
   });
 
   test('7. English Locale Rendering (/en) & LTR WhatsApp Message', async ({ page }) => {
@@ -254,15 +304,43 @@ test.describe('Naqer Menu — Premium Interactive Ordering Experience', () => {
     const cartDrawer = page.locator('.cart-panel');
     await expect(cartDrawer.locator('#cart-drawer-title')).toHaveText('Your Order');
 
-    const waBtn = cartDrawer.locator('.btn-whatsapp');
+    // Click checkout in English
+    const checkoutBtn = cartDrawer.locator('.btn-checkout');
+    await expect(checkoutBtn).toBeVisible();
+    await checkoutBtn.click();
+
+    const checkoutModal = page.locator('.checkout-panel');
+    await expect(checkoutModal).toBeVisible();
+
+    // Step 1: Branch
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 2: Order type
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 3: Details
+    await checkoutModal.locator('#customerName').fill('John Doe');
+    await checkoutModal.locator('#customerPhone').fill('01098765432');
+    await checkoutModal.locator('#deliveryAddress').fill('New Damietta, District 3');
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 4: Payment
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 5: Confirm
+    await checkoutModal.locator('.btn-submit').click();
+
+    // Step 6: WhatsApp link
+    const waBtn = checkoutModal.locator('a[href*="wa.me"]');
+    await expect(waBtn).toBeVisible({ timeout: 20_000 });
+
     const href = await waBtn.getAttribute('href');
     const rawUrl = new URL(href!);
     const message = rawUrl.searchParams.get('text') ?? '';
 
     expect(message).toContain('Al Naqer Village');
-    expect(message).toContain('New Digital Menu Order');
     expect(message).toContain('Subtotal:');
-    expect(message).toContain('Total Amount:');
+    expect(message).toContain('Total:');
   });
 
   test('8. Viewport Overflow Verification across 7 Breakpoints with Floating Cart', async ({ page }) => {

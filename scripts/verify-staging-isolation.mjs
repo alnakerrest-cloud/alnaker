@@ -43,6 +43,12 @@ const prodHost = prodParsed ? prodParsed.hostname : '';
 const stagingProject = stagingHost.split('.')[0] || '';
 const prodProject = prodHost.split('.')[0] || '';
 
+const APPROVED_STAGING_PREFIX = 'ep-ancient-hill-beec491j';
+const FORBIDDEN_TARGETS = [
+  'ep-soft-dawn-bdu5de43',     // Production menu data
+  'ep-withered-bread-bemwq8ns' // Retired/suspended cluster
+];
+
 // Hard refusal rules:
 if (prodHost && stagingHost === prodHost) {
   console.error('CRITICAL ISOLATION REFUSAL: Staging host matches production host exactly!');
@@ -54,13 +60,15 @@ if (prodProject && stagingProject === prodProject) {
   process.exit(1);
 }
 
-if (stagingHost.includes('ep-withered-bread-bemwq8ns')) {
-  console.error('CRITICAL ISOLATION REFUSAL: Staging host contains production Neon project identifier!');
-  process.exit(1);
+for (const forbidden of FORBIDDEN_TARGETS) {
+  if (stagingHost.includes(forbidden)) {
+    console.error(`CRITICAL ISOLATION REFUSAL: Staging host matches forbidden production target: ${forbidden}`);
+    process.exit(1);
+  }
 }
 
-if (!stagingHost.includes('ep-soft-dawn-bdu5de43')) {
-  console.error('CRITICAL ISOLATION REFUSAL: Staging host is not the approved staging project!');
+if (!stagingHost.endsWith('.neon.tech') || (!stagingHost.startsWith(`${APPROVED_STAGING_PREFIX}-`) && !stagingHost.startsWith(APPROVED_STAGING_PREFIX))) {
+  console.error(`CRITICAL ISOLATION REFUSAL: Staging host is not the approved staging project (${APPROVED_STAGING_PREFIX})!`);
   process.exit(1);
 }
 

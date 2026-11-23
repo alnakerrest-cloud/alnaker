@@ -82,8 +82,42 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
 
       <ProductOptionGroupsManager
         productId={p.id}
-        assignedGroups={p.optionGroups || []}
-        availableGroups={allOptionGroups}
+        assignedGroups={(p.optionGroups || []).map((pog) => ({
+          id: pog.id,
+          groupId: pog.groupId,
+          group: pog.group
+            ? {
+                id: pog.group.id,
+                nameAr: pog.group.nameAr,
+                nameEn: pog.group.nameEn,
+                isRequired: pog.group.isRequired,
+                isMulti: pog.group.isMulti,
+                minSelect: pog.group.minSelect,
+                maxSelect: pog.group.maxSelect,
+                options: pog.group.options.map((o) => ({
+                  id: o.id,
+                  nameAr: o.nameAr,
+                  nameEn: o.nameEn,
+                  price: Number(o.price),
+                })),
+              }
+            : null,
+        }))}
+        availableGroups={allOptionGroups.map((g) => ({
+          id: g.id,
+          nameAr: g.nameAr,
+          nameEn: g.nameEn,
+          isRequired: g.isRequired,
+          isMulti: g.isMulti,
+          minSelect: g.minSelect,
+          maxSelect: g.maxSelect,
+          options: g.options.map((o) => ({
+            id: o.id,
+            nameAr: o.nameAr,
+            nameEn: o.nameEn,
+            price: Number(o.price),
+          })),
+        }))}
       />
 
       <ProductImageManager productId={p.id} images={p.images} />

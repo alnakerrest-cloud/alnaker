@@ -73,6 +73,56 @@ export interface BranchOverrideSettings {
   customMessageEn?: string;
 }
 
+/**
+ * Unifies the effective availability and operations state for a branch.
+ * Respects Dashboard branchOverrides when present, with clean fallback to the underlying branch record.
+ *
+ * Safety & Separation Invariants:
+ * 1. Administrative State (`isActive`): Reflects the master business record (branch.isActive) and CANNOT be altered by operational overrides.
+ * 2. Operational State (`isOpen`): Reflects whether the branch is currently open for business today (override.isOpen ?? branch.isOpen ?? true).
+ * 3. Orderability State (`isOrderable`): A branch is orderable ONLY when:
+ *    - it is administratively active (`isActive === true`)
+ *    - it is operationally open (`isOpen === true`)
+ *    - its master config permits orders (`branch.isOrderable === true`)
+ *    - operational override does not block orders (`override.isOrderable !== false`)
+ */
+export function resolveEffectiveBranch<T extends { id: string; isOrderable: boolean; isActive: boolean; isOpen?: boolean }>(
+  branch: T,
+  override?: BranchOverrideSettings
+): T & { isOpen: boolean } {
+  // 1. Administrative state strictly preserved from base record
+  const effectiveIsActive = Boolean(branch.isActive);
+
+  // 2. Operational open state (from override if specified, otherwise from branch base/default)
+  const baseIsOpen = typeof (branch as any).isOpen === "boolean" ? (branch as any).isOpen : true;
+  const effectiveIsOpen = typeof override?.isOpen === "boolean" ? override.isOpen : baseIsOpen;
+
+  // 3. Orderability: ONLY true when active, open, orderable in base, and not blocked by override
+  const baseIsOrderable = Boolean(branch.isOrderable);
+  const overrideIsOrderable = typeof override?.isOrderable === "boolean" ? override.isOrderable : true;
+  const effectiveIsOrderable = effectiveIsActive && effectiveIsOpen && baseIsOrderable && overrideIsOrderable;
+
+  return {
+    ...branch,
+    isActive: effectiveIsActive,
+    isOpen: effectiveIsOpen,
+    isOrderable: effectiveIsOrderable,
+    ...(typeof override?.allowDelivery === "boolean" ? { allowDelivery: override.allowDelivery } : {}),
+    ...(typeof override?.allowTakeaway === "boolean" ? { allowTakeaway: override.allowTakeaway } : {}),
+  };
+}
+
+/**
+ * Resolves an array of branches with their corresponding overrides.
+ */
+export function resolveEffectiveBranches<T extends { id: string; isOrderable: boolean; isActive: boolean; isOpen?: boolean }>(
+  branches: T[],
+  branchOverrides?: Record<string, BranchOverrideSettings>
+): (T & { isOpen: boolean })[] {
+  if (!branches || branches.length === 0) return [];
+  return branches.map((b) => resolveEffectiveBranch(b, branchOverrides?.[b.id]));
+}
+
 export type OrderingMode =
   | "FULL_ORDERING"
   | "WHATSAPP_DATABASE"

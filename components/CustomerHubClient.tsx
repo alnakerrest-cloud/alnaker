@@ -266,12 +266,6 @@ export default function CustomerHubClient({
     } catch {}
   }, []);
 
-  useEffect(() => {
-    if (activeOrders.length === 0) return;
-    const interval = setInterval(refreshHubData, 5000);
-    return () => clearInterval(interval);
-  }, [activeOrders.length, refreshHubData]);
-
   // Guest Login OTP
   const handleRequestLoginOtp = async (e: React.FormEvent) => {
     e.preventDefault();

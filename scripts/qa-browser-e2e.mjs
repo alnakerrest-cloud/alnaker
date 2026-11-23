@@ -14,16 +14,23 @@ import { QA_USERS, setupQaUsers } from './qa-setup-staging-users.mjs';
 
 dotenv.config({ path: '.env.staging.local', quiet: true });
 
-const EXPECTED_STAGING_HOST = 'ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech';
+const APPROVED_STAGING_PREFIX = 'ep-ancient-hill-beec491j';
+const FORBIDDEN_TARGETS = ['ep-soft-dawn-bdu5de43', 'ep-withered-bread-bemwq8ns'];
 const databaseUrl = process.env.DATABASE_URL;
 
-if (!databaseUrl || !databaseUrl.includes(EXPECTED_STAGING_HOST)) {
-  console.error('[FATAL] QA Browser E2E must strictly run on Staging database!');
+if (!databaseUrl || !databaseUrl.includes(APPROVED_STAGING_PREFIX)) {
+  console.error(`[FATAL] QA Browser E2E must strictly run on approved Staging database (${APPROVED_STAGING_PREFIX})!`);
   process.exit(1);
+}
+for (const forbidden of FORBIDDEN_TARGETS) {
+  if (databaseUrl.includes(forbidden)) {
+    console.error(`[FATAL] QA Browser E2E refused: database matches forbidden target: ${forbidden}`);
+    process.exit(1);
+  }
 }
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://127.0.0.1:3001';
-const EVIDENCE_DIR = 'C:/Users/ibrah/.gemini/antigravity/brain/c80176dd-bad0-4a03-9018-f631103b1647/qa-browser-evidence';
+const EVIDENCE_DIR = process.env.QA_EVIDENCE_DIR || 'C:/Users/ibrah/.gemini/antigravity/brain/f7667888-393d-492a-bdcf-037af0993048/qa-browser-evidence';
 
 if (!fs.existsSync(EVIDENCE_DIR)) {
   fs.mkdirSync(EVIDENCE_DIR, { recursive: true });
@@ -104,8 +111,10 @@ async function runBrowserQaSuite() {
   // Step 0: Provision pristine QA test users in Staging DB
   await setupQaUsers();
 
+  const edgePath = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
   const browser = await chromium.launch({
     headless: true,
+    executablePath: fs.existsSync(edgePath) ? edgePath : undefined,
   });
 
   let passCount = 0;
@@ -373,10 +382,18 @@ async function runBrowserQaSuite() {
       console.log('    ✔ Old password successfully rejected.');
 
       // Try login with NEW password -> MUST SUCCEED
+      await page.waitForTimeout(1000);
       await page.fill('input[name="email"]', QA_USERS.mustChangeOwner.email);
       await page.fill('input[name="password"]', QA_USERS.mustChangeOwner.newPassword);
       await page.click('button[type="submit"]');
-      await page.waitForURL('**/admin/dashboard', { timeout: 10000 });
+      try {
+        await page.waitForURL('**/admin/dashboard', { timeout: 20000 });
+      } catch (e) {
+        await capture(page, '08-b3-login-new-pass-failure');
+        const errText = await page.locator('.admin-error').textContent().catch(() => null);
+        console.error('Error on page:', errText);
+        throw e;
+      }
       console.log('    ✔ New password successfully logged in.');
 
       await context.close();

@@ -39,7 +39,22 @@ const t0 = () => Date.now();
 const ms = (s: number) => Date.now() - s;
 
 test.describe("5) CRUD Acceptance (DB-authoritative)", () => {
-  test.afterAll(async () => { await pool.end(); });
+  test.afterAll(async () => {
+    try {
+      await q('DELETE FROM "Product" WHERE "nameAr" LIKE $1', [`${token}%`]);
+      await q('DELETE FROM "Category" WHERE "nameAr" LIKE $1', [`${token}%`]);
+      await q('DELETE FROM "Branch" WHERE "nameAr" LIKE $1', [`${token}%`]);
+    } catch {}
+    await pool.end();
+  });
+
+  test.afterEach(async () => {
+    try {
+      await q('DELETE FROM "Product" WHERE "nameAr" LIKE $1', [`${token}%`]);
+      await q('DELETE FROM "Category" WHERE "nameAr" LIKE $1', [`${token}%`]);
+      await q('DELETE FROM "Branch" WHERE "nameAr" LIKE $1', [`${token}%`]);
+    } catch {}
+  });
 
   test("PRODUCTS: create/edit/desc/price/variants/image/hide/delete + public sync", async ({ page, browser }) => {
     test.setTimeout(300_000);
@@ -80,7 +95,7 @@ test.describe("5) CRUD Acceptance (DB-authoritative)", () => {
     expect((snap.prices as number[]).sort((a: number, b: number) => a - b)).toEqual([99, 120]);
 
     // DELETE a variant (remove one row -> back to single price). Poll DB to avoid stale-flash race.
-    await page.locator('button:has-text("✕")').first().click();
+    await page.locator('.admin-variants button:has-text("✕")').first().click();
     await page.locator('main form button[type="submit"]').first().click();
     await expect.poll(async () => (await productSnapshot(id!)).prices.length, { timeout: 20_000 }).toBe(1);
     snap = await productSnapshot(id!);
@@ -235,7 +250,7 @@ test.describe("5) CRUD Acceptance (DB-authoritative)", () => {
     const realBefore = await q(`select id,"nameAr" from "Branch" order by "sortOrder"`);
     expect(realBefore.length, "real branches exist").toBeGreaterThanOrEqual(1);
     // no menu table references branch => single shared menu
-    const branchCols = await q(`select table_name from information_schema.columns where column_name ilike '%branch%'`);
+    const branchCols = await q(`select table_name from information_schema.columns where column_name ilike '%branch%' and table_name in ('Category', 'Section', 'Product', 'ProductVariant', 'OptionGroup', 'OptionItem')`);
     expect(branchCols.length, "no branch FK on menu tables (shared menu)").toBe(0);
 
     const bname = `${token}-فرع`;

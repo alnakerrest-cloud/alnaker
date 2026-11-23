@@ -39,26 +39,63 @@ test.describe('12) Final Release Gate Browser Smoke Test', () => {
     await firstCard.click();
 
     // Verify detail modal opens
-    const modal = page.locator('.prod-modal-overlay, [role="dialog"], .prod-modal-content').first();
+    const modal = page.locator('.prod-modal-overlay, [role="dialog"], .prod-modal-content, .modal-panel').first();
     await expect(modal).toBeVisible();
 
+    // If options are required, select first option tile
+    const optionTile = modal.locator('.option-tile').first();
+    if (await optionTile.isVisible()) {
+      await optionTile.click();
+    }
+
     // Click Add to Cart / Order button inside modal
-    const addBtn = modal.locator('button.btn-primary, button:has-text("إضافة"), button:has-text("أضف")').first();
+    const addBtn = modal.locator('.btn-add-cart, button.btn-primary, button:has-text("إضافة"), button:has-text("أضف")').first();
     await expect(addBtn).toBeVisible();
     await addBtn.click();
 
     // Modal closes or floating cart indicator appears
-    const cartTrigger = page.locator('[data-testid="cart-trigger"], .cart-pill, .floating-cart-bar, button:has-text("الطلب")').first();
-    await expect(cartTrigger).toBeVisible();
+    const cartTrigger = page.locator('.floating-cart-btn, [data-testid="cart-trigger"], .cart-pill, .floating-cart-bar, button:has-text("الطلب")').first();
+    await expect(cartTrigger).toBeVisible({ timeout: 10_000 });
     await cartTrigger.click();
 
     // Cart drawer is visible
-    const cartDrawer = page.locator('.cart-drawer, [role="dialog"]').first();
+    const cartDrawer = page.locator('.cart-panel, .cart-drawer, [role="dialog"]').first();
     await expect(cartDrawer).toBeVisible();
 
-    // Check WhatsApp checkout link presence
-    const waLink = page.locator('a[href*="wa.me"]').first();
-    await expect(waLink).toBeVisible();
+    // Click Checkout button to transition to CheckoutModal
+    const checkoutBtn = cartDrawer.locator('.btn-checkout');
+    await expect(checkoutBtn).toBeVisible();
+    await checkoutBtn.click();
+
+    const checkoutModal = page.locator('.checkout-panel');
+    await expect(checkoutModal).toBeVisible();
+
+    // Step 1: Branch selection -> Next
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 2: Order type -> Next
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 3: Customer Details -> fill and Next
+    await checkoutModal.locator('#customerName').fill('عميل تجريبي');
+    await checkoutModal.locator('#customerPhone').fill('01012345678');
+    const deliveryAddress = checkoutModal.locator('#deliveryAddress');
+    if (await deliveryAddress.isVisible()) {
+      await deliveryAddress.fill('دمياط الجديدة - الحي الثالث');
+    }
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 4: Payment method -> Next
+    await checkoutModal.locator('.btn-next').click();
+
+    // Step 5: Summary & Confirm -> Submit
+    const submitBtn = checkoutModal.locator('.btn-submit');
+    await expect(submitBtn).toBeVisible();
+    await submitBtn.click();
+
+    // Step 6: Success step with WhatsApp link
+    const waLink = checkoutModal.locator('a[href*="wa.me"]').first();
+    await expect(waLink).toBeVisible({ timeout: 20_000 });
     const href = await waLink.getAttribute('href');
     expect(href).toContain('wa.me');
     expect(href).toContain('text=');

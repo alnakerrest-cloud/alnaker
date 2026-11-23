@@ -1,4 +1,4 @@
-﻿import dotenv from "dotenv";
+import dotenv from "dotenv";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import pg from "pg";
@@ -11,10 +11,15 @@ if (!existsSync(envPath)) {
 }
 dotenv.config({ path: envPath, override: true });
 const db = process.env.DATABASE_URL || "";
-if (!db.includes("ep-sparkling-glitter-bdwqquhi")) {
-  console.error("[ro-inspect] SAFETY STOP: wrong host");
-  process.exit(2);
+const FORBIDDEN_TARGETS = ['ep-soft-dawn-bdu5de43', 'ep-withered-bread-bemwq8ns'];
+for (const forbidden of FORBIDDEN_TARGETS) {
+  if (db.includes(forbidden)) {
+    console.error(`[ro-inspect] CRITICAL REFUSAL: DATABASE_URL in .env.test.local points to forbidden/production host: ${forbidden}`);
+    process.exit(2);
+  }
 }
+console.error("[ro-inspect] SAFETY STOP: .env.test.local is currently DISABLED for database testing until an isolated test branch is verified.");
+process.exit(2);
 const pool = new pg.Pool({ connectionString: db, max: 1, connectionTimeoutMillis: 20000 });
 try {
   const t = await pool.query("select now() as server_time");

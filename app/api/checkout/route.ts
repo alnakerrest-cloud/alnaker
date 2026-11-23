@@ -23,6 +23,7 @@ import {
 } from "@/lib/orders-store";
 
 import { signCustomerSession, verifyCustomerSession, CUSTOMER_COOKIE_NAME, generateCustomerId } from "@/lib/customer-session";
+import { resolveEffectiveBranch } from "@/lib/order-settings-types";
 import { getOrCreateCustomerByPhoneAsync, getCustomerByIdAsync, updateCustomerNameAsync, normalizeEgyptianPhone } from "@/lib/customer-store";
 import { getCustomerAddressesAsync, createCustomerAddressAsync, createOrderNotificationAsync } from "@/lib/customer-hub-store";
 
@@ -293,11 +294,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "الفرع المحدد غير موجود." }, { status: 400 });
     }
 
-    const branchOverride = menuSettings.branchOverrides[branchId];
-    const isBranchOrderable = branchOverride ? branchOverride.isOrderable : branch.isOrderable;
-    const isBranchOpen = branchOverride ? branchOverride.isOpen : branch.isActive;
+    const branchOverride = menuSettings.branchOverrides?.[branchId];
+    const effectiveBranch = resolveEffectiveBranch(branch, branchOverride);
+    const isBranchOrderable = effectiveBranch.isOrderable;
+    const isBranchOpen = effectiveBranch.isOpen;
+    const isBranchActive = effectiveBranch.isActive;
 
-    if (!isBranchOpen || !isBranchOrderable) {
+    if (!isBranchActive || !isBranchOpen || !isBranchOrderable) {
       const msg =
         (locale === "en" ? branchOverride?.customMessageEn : branchOverride?.customMessageAr) ||
         branchOverride?.customMessageAr ||

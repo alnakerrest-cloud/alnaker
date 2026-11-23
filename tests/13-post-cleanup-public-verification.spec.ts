@@ -22,19 +22,28 @@ test.describe("13) Post-Cleanup Public UI Verification (Arabic & English)", () =
     // Verify branch selector options in Cart
     // Add item to cart via modal
     await page.locator('.card--meal, .card--platter, .card').first().click();
-    await page.locator('.btn-add-cart').click();
+    const modal = page.locator('.modal-panel');
+    await expect(modal).toBeVisible();
+    const optionTile = modal.locator('.option-tile').first();
+    if (await optionTile.isVisible()) {
+      await optionTile.click();
+    }
+    await modal.locator('.btn-add-cart').click();
+    await expect(modal).not.toBeVisible();
 
     // Open Cart Drawer
-    await page.locator('.floating-cart-btn').click();
+    await page.locator('.floating-cart-btn').first().click();
+    const cartPanel = page.locator('.cart-panel');
+    await expect(cartPanel).toBeVisible();
 
     // Inspect Branch selector options
-    const branchSelect = page.locator("select[name*='branch'], select").first();
-    if (await branchSelect.isVisible()) {
-      const options = await branchSelect.locator("option").allTextContents();
-      const nonZzOptions = options.filter(o => o.includes("جمصة") || o.includes("دمياط"));
-      const zzOptions = options.filter(o => o.includes("ZZ"));
-      expect(nonZzOptions.length).toBeGreaterThanOrEqual(1);
-      expect(zzOptions.length).toBe(0);
+    const branchCards = cartPanel.locator('.branch-option-card');
+    if (await branchCards.count() > 0) {
+      const texts = await branchCards.allTextContents();
+      const nonZz = texts.filter(o => o.includes("جمصة") || o.includes("دمياط"));
+      const zz = texts.filter(o => o.includes("ZZ"));
+      expect(nonZz.length).toBeGreaterThanOrEqual(1);
+      expect(zz.length).toBe(0);
     }
   });
 

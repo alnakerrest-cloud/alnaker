@@ -14,7 +14,7 @@ import type { VBranch } from '@/lib/site-db';
 import type { VOffer } from '@/lib/offers';
 import { calculateOfferDiscount } from '@/lib/offers';
 import type { Locale } from '@/lib/i18n';
-import { type MenuModeSettings, normalizeOrderingMode } from '@/lib/order-settings-types';
+import { type MenuModeSettings, normalizeOrderingMode, resolveEffectiveBranches } from '@/lib/order-settings-types';
 import {
   CART_STORAGE_KEY,
   type CartItem,
@@ -117,23 +117,29 @@ export function CartProvider({
   const [productModal, setProductModal] = useState<ProductModalState>(null);
   const [hasHydrated, setHasHydrated] = useState(false);
 
+  // Resolve effective branches with dashboard overrides (Unified Source of Truth)
+  const effectiveBranches = useMemo(
+    () => resolveEffectiveBranches(branches, menuSettings?.branchOverrides),
+    [branches, menuSettings?.branchOverrides]
+  );
+
   // Initialize selected branch to first orderable & active branch, or first branch
   const [selectedBranchId, setSelectedBranchId] = useState<string>(() => {
-    const defaultBranch = branches.find((b) => b.isOrderable) ?? branches[0];
+    const defaultBranch = effectiveBranches.find((b) => b.isOrderable) ?? effectiveBranches[0];
     return defaultBranch?.id ?? '';
   });
 
   // Keep branch in sync if branches change
   useEffect(() => {
-    if (branches.length > 0 && !branches.some((b) => b.id === selectedBranchId)) {
-      const defaultBranch = branches.find((b) => b.isOrderable) ?? branches[0];
+    if (effectiveBranches.length > 0 && !effectiveBranches.some((b) => b.id === selectedBranchId)) {
+      const defaultBranch = effectiveBranches.find((b) => b.isOrderable) ?? effectiveBranches[0];
       if (defaultBranch) setSelectedBranchId(defaultBranch.id);
     }
-  }, [branches, selectedBranchId]);
+  }, [effectiveBranches, selectedBranchId]);
 
   const selectedBranch = useMemo(
-    () => branches.find((b) => b.id === selectedBranchId) ?? branches[0],
-    [branches, selectedBranchId]
+    () => effectiveBranches.find((b) => b.id === selectedBranchId) ?? effectiveBranches[0],
+    [effectiveBranches, selectedBranchId]
   );
 
   // Restore and reconcile from localStorage on mount
@@ -497,7 +503,7 @@ export function CartProvider({
       selectedBranchId,
       setSelectedBranchId,
       selectedBranch,
-      branches,
+      branches: effectiveBranches,
       offers,
       addItem,
       updateCartItem,
@@ -528,7 +534,7 @@ export function CartProvider({
       customerNotes,
       selectedBranchId,
       selectedBranch,
-      branches,
+      effectiveBranches,
       offers,
       addItem,
       updateCartItem,

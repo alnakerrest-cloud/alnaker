@@ -3,8 +3,11 @@ import path from 'node:path';
 import dotenv from 'dotenv';
 
 const ROOT = process.cwd();
-const STAGING_PROJECT_ID = 'ep-soft-dawn-bdu5de43';
-const PROD_PROJECT_ID = 'ep-withered-bread-bemwq8ns';
+const STAGING_PROJECT_ID = 'ep-ancient-hill-beec491j';
+const FORBIDDEN_TARGETS = [
+  'ep-soft-dawn-bdu5de43',     // Production menu data
+  'ep-withered-bread-bemwq8ns' // Retired/suspended cluster
+];
 let loaded = false;
 let loadedDatabaseUrl = '';
 
@@ -47,8 +50,10 @@ export function loadStagingEnv(opts: { requireCloudinary?: boolean } = {}) {
   if (!host.endsWith('.neon.tech') || !host.startsWith(`${STAGING_PROJECT_ID}-`)) {
     throw new Error('STAGING GUARD REFUSAL: configured database host is not the approved staging Neon project');
   }
-  if (host.includes(PROD_PROJECT_ID)) {
-    throw new Error('STAGING GUARD REFUSAL: configured database host matches known production identifier');
+  for (const forbidden of FORBIDDEN_TARGETS) {
+    if (host.includes(forbidden)) {
+      throw new Error(`STAGING GUARD REFUSAL: configured database host matches forbidden target: ${forbidden}`);
+    }
   }
 
   const stagingUrl = new URL(dbUrl);
@@ -90,9 +95,10 @@ export function loadStagingEnv(opts: { requireCloudinary?: boolean } = {}) {
   }
 
   for (const [k, v] of Object.entries(staging)) process.env[k] = v;
-  for (const key of ['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET', 'CLOUDINARY_SECURE_FOLDER']) {
+  for (const key of ['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET']) {
     process.env[key] = staging[key] || '';
   }
+  process.env.CLOUDINARY_SECURE_FOLDER = staging.CLOUDINARY_SECURE_FOLDER || 'naqer-menu-staging';
   process.env.STAGING_CLOUDINARY_ENABLED = staging.STAGING_CLOUDINARY_ENABLED === '1' ? '1' : '0';
   process.env.DATABASE_URL = dbUrl;
   process.env.NAQER_TEST_ENV = 'staging';

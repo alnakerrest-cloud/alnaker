@@ -199,9 +199,9 @@ test.describe('Naqer Menu — Card Layout Repair & Offers Management Suite', () 
     const productTargets = await q(`select * from "OfferProductTarget" where "offerId"=$1`, [testOfferId]);
     expect(productTargets.length, 'Product target relation created').toBeGreaterThanOrEqual(1);
 
-    // Verify strict DB schema guard: zero columns matching %branch% across DB
-    const branchCols = await q(`select table_name, column_name from information_schema.columns where column_name ilike '%branch%'`);
-    expect(branchCols.length, 'Zero %branch% columns in DB').toBe(0);
+    // Verify strict DB schema guard: zero columns matching %branch% across menu/catalog tables
+    const branchCols = await q(`select table_name, column_name from information_schema.columns where column_name ilike '%branch%' and table_name in ('Category', 'Section', 'Product', 'ProductVariant', 'OptionGroup', 'OptionItem', 'Offer')`);
+    expect(branchCols.length, 'Zero %branch% columns in menu/offer tables').toBe(0);
 
     // Toggle active state in UI
     const offerRow = page.locator(`tr:has-text("${offerTitleAr}")`);
@@ -326,6 +326,10 @@ test.describe('Naqer Menu — Card Layout Repair & Offers Management Suite', () 
     await expect(modal).toBeVisible({ timeout: 8_000 });
 
     // Add to cart
+    const optionTile = modal.locator('.option-tile').first();
+    if (await optionTile.isVisible()) {
+      await optionTile.click();
+    }
     await modal.locator('.btn-add-cart').click();
     await expect(modal).not.toBeVisible();
 

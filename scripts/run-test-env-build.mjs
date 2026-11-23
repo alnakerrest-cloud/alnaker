@@ -1,4 +1,4 @@
-﻿import { spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import dotenv from "dotenv";
 import { existsSync } from "node:fs";
 import path from "node:path";
@@ -15,10 +15,15 @@ if (r.error) {
   process.exit(1);
 }
 const db = process.env.DATABASE_URL || "";
-if (!db.includes("ep-sparkling-glitter-bdwqquhi")) {
-  console.error("[build:test] SAFETY STOP: wrong DB host for test build.");
-  process.exit(2);
+const FORBIDDEN_TARGETS = ['ep-soft-dawn-bdu5de43', 'ep-withered-bread-bemwq8ns'];
+for (const forbidden of FORBIDDEN_TARGETS) {
+  if (db.includes(forbidden)) {
+    console.error(`[build:test] CRITICAL REFUSAL: DATABASE_URL in .env.test.local points to forbidden/production host: ${forbidden}`);
+    process.exit(2);
+  }
 }
+console.error("[build:test] SAFETY STOP: .env.test.local is currently DISABLED for database testing until an isolated test branch is verified.");
+process.exit(2);
 console.log("[build:test] Using .env.test.local (test branch host).");
 const child = spawn("npx", ["next", "build"], {
   stdio: "inherit",

@@ -139,13 +139,6 @@ export default function MyOrdersClient({
     } catch {}
   }, [isAr, statusMeta]);
 
-  // Polling loop
-  useEffect(() => {
-    if (activeOrders.length === 0) return;
-    const interval = setInterval(refreshOrders, 5000);
-    return () => clearInterval(interval);
-  }, [activeOrders.length, refreshOrders]);
-
   // OTP Request Code
   const handleRequestCode = async (e: React.FormEvent) => {
     e.preventDefault();

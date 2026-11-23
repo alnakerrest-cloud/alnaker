@@ -29,13 +29,23 @@ export default defineConfig({
     trace: "retain-on-failure",
     screenshot: "on",
     video: "off",
-    launchOptions: { slowMo: SLOWMO },
+    launchOptions: {
+      slowMo: SLOWMO,
+      executablePath: "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+    },
   },
   webServer: {
     command: "npx next dev --hostname 127.0.0.1 --port 3002",
     url: BASE_URL,
-    reuseExistingServer: false,
+    reuseExistingServer: true,
     timeout: 120_000,
+    env: {
+      ...process.env,
+      NAQER_TEST_ENV: "staging",
+      STAGING_MODE: "1",
+      STAGING_CLOUDINARY_ENABLED: "1",
+      USE_BACKUP_DATA: "false",
+    } as Record<string, string>,
   },
   projects: [{ name: "chromium", use: { browserName: "chromium" } }],
 });

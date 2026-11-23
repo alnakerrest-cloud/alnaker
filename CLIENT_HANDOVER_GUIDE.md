@@ -1,102 +1,107 @@
-# Naqer Menu — Client Handover & Operational Guide
-دليل تسليم وتشغيل منيو قرية النقر الإلكتروني
+# CLIENT HANDOVER & OPERATIONAL MANUAL
 
-مرحبًا بكم في دليل تشغيل وإدارة المنيو الرقمي الخاص بـ **قرية النقر (دمياط والمنصورة وجمصة)**.  
-تم تصميم النظام ليكون سهل الاستخدام وسريعًا على الهواتف وأجهزة الكمبيوتر، مع تحديث فوري مباشر دون الحاجة لإعادة تحميل الصفحة لدى الزبائن.
-
----
-
-## 1. الدخول إلى لوحة التحكم (Admin Dashboard)
-
-- **الرابط:** `https://menu.naqer.com/admin/login` (أو الرابط الخاص بنطاقكم).
-- **البريد الإلكتروني الأساسي (المالك / OWNER):** `admin@naqer.com`
-- **حساب المحرر (EDITOR):** `editor@naqer.com`
-- عند تسجيل الدخول، ستظهر لوحة القيادة التي تعرض إحصائيات المنيو، عدد المنتجات، الأقسام، والفروع.
+**Restaurant:** قرية الناقر (Naqer Village)  
+**System:** Naqer Menu — Digital Ordering & Admin Platform  
+**Target Release:** Release Candidate 1.0 (Production-Ready)  
 
 ---
 
-## 2. إدارة الأصناف والمنتجات (Products Management)
+## 1. System Overview
 
-من القائمة الجانبية، اختر **"المنتجات" (`/admin/products`)**:
-
-1. **تعديل سعر أو تفاصيل منتج:**
-   - اضغط على زر **تعديل (القلم)** بجانب أي منتج.
-   - يمكنك تعديل: اسم المنتج، الوصف، السعر، الأحجام/الأوزان (Variants)، والإضافات (Add-ons).
-   - اضغط **حفظ** -> سيتحدث السعر فورًا عند كل الزبائن المتصفحين للمنيو خلال 4 ثوانٍ.
-2. **إخفاء أو إظهار صنف مؤقتًا (غير متوفر اليوم):**
-   - اضغط على زر التبديل بجانب الصنف ليصبح **غير متوفر** دون حذفه من قاعدة البيانات.
-3. **إضافة صنف جديد:**
-   - اضغط على **"إضافة منتج جديد"**.
-   - حدد القسم التابع له، الاسم، والأسعار.
+Naqer Menu is a bilingual (Arabic & English), responsive digital menu and ordering platform tailored for **قرية الناقر**. It allows diners to explore categories, customize dish variants, select modifiers and sides, and construct an order that is instantly formatted and submitted directly to the branch's WhatsApp ordering dispatch line.
 
 ---
 
-## 3. إدارة صور الأطباق (Image Management)
+## 2. Restaurant Branches & Contact Numbers
 
-1. **الصور الحالية:**
-   - تم تزويد المنيو بـ **151 صورة حقيقية عالية الجودة** تغطي جميع أقسام المشويات، الطواجن، المأكولات البحرية، المقبلات، والحلويات، والمشروبات.
-2. **تغيير صورة طبق:**
-   - ادخل على تعديل المنتج، ثم اضغط على قسم الصورة.
-   - يمكنك رفع صورة جديدة مباشرة من الهاتف أو الكمبيوتر.
-   - يقوم النظام تلقائيًا بضغطها ورفعها على خدمة Cloudinary وتحديث المنيو.
+| Branch Name (Arabic) | Branch Name (English) | WhatsApp Ordering Number | Default Status |
+| :--- | :--- | :--- | :---: |
+| **فرع جمصة** | Gamasa Branch | `01094965222` | Active |
+| **فرع دمياط الجديدة** | New Damietta Branch | `01094965222` | Active |
 
 ---
 
-## 4. إدارة العروض والخصومات (Offers & Discounts)
+## 3. Public Customer Journey
 
-من القائمة الجانبية، اختر **"العروض" (`/admin/offers`)**:
+```
+[ Browse Categories & Sections ]
+              ↓
+[ Select Product & Customizations (Variants / Addons / Modifiers) ]
+              ↓
+[ Add to Cart & Choose Branch ]
+              ↓
+[ Review Cart & Enter Delivery Details (Name, Phone, Address) ]
+              ↓
+[ Submit Order -> Launches Branch WhatsApp with Structured Text ]
+```
 
-- **في حالة عدم وجود عروض نشطة:**
-  - قسم العروض يختفي تلقائيًا من واجهة المستخدم دون ترك أي فراغ.
-- **تفعيل عرض جديد:**
-  - اضغط **"إنشاء عرض جديد"**.
-  - حدد نوع العرض (خصم نسبة مئوية %، خصم مبلغ ثابت، أو سعر خاص).
-  - حدد المنتجات المشمولة في العرض وتاريخ البداية والنهاية.
-  - عند حفظ العرض وتفعيله، سيظهر فورًا في أعلى المنيو في قسم مميز يجذب الزبائن.
-- **إيقاف عرض:**
-  - بنقرة واحدة، قم بإلغاء التفعيل وسيختفي العرض فورًا.
-
----
-
-## 5. إدارة الفروع وأرقام الواتساب (Branches & WhatsApp)
-
-من القائمة الجانبية، اختر **"الفروع" (`/admin/branches`)**:
-
-- مسجل حاليًا فرعان:
-  1. **فرع دمياط الجديدة**
-  2. **فرع جمصة**
-- **لتحديث أرقام الواتساب المستلمة للطلبات:**
-  - ادخل على الفرع واكتب رقم الواتساب بالصيغة الدولية (مثال: `201094965222`).
-  - عندما يختار الزبون الفرع من أعلى المنيو ويضغط "إرسال الطلب عبر واتساب"، سيتحول الطلب إلى رقم هذا الفرع مباشرة برسالة منسقة تشمل تفاصيل الصنف والإضافات والإجمالي.
-
----
-
-## 6. إعدادات المطعم العامة (Restaurant Settings)
-
-من قسم **"الإعدادات" (`/admin/settings`)**:
-- تعديل اسم العلامة التجارية بالعربية والإنجليزية.
-- تحديث الشعار (Logo).
-- تعديل نسبة رسوم الخدمة أو ضريبة القيمة المضافة وملاحظات الفاتورة.
+### WhatsApp Order Message Format
+When a customer clicks **تأكيد الطلب عبر واتساب**, the application constructs an automated Arabic summary:
+```text
+طلب جديد من موقع قرية الناقر:
+- الاسم: إبراهيم محمد
+- الهاتف: 01012345678
+- الفرع: فرع دمياط الجديدة
+- العنوان: الحي الرابع - بجوار المسجد
+-------------------------
+الطلبات:
+• 1x كباب وريش ضاني (نصف كيلو) - [نوع اللحم: لحم بلدي طازج] (350 ج.م)
+• 2x سلطة طحينة (30 ج.م)
+-------------------------
+المجموع الفرعي: 380 ج.م
+خدمة التوصيل: 30 ج.م
+ضريبة القيمة المضافة: 45.6 ج.م
+الإجمالي المطلوب: 455.6 ج.م
+```
 
 ---
 
-## 7. صلاحيات المستخدمين (OWNER vs EDITOR)
+## 4. Admin Management Dashboard
 
-- **المالك (OWNER):** يمتلك كامل الصلاحيات بما فيها إدارة الفروع، الإعدادات العامة، والمستخدمين، وسجل العمليات.
-- **المحرر (EDITOR):** مخصص للموظفين أو مديري الصالة لتعديل أسعار الأطباق وإتاحتها أو إدارة العروض فقط، دون صلاحية تغيير إعدادات المطعم أو الفروع.
+### Accessing the Dashboard
+- **URL:** `https://[your-domain]/admin` (or `/login`)
+- **Authentication:** Email & Password with secure HTTP-only session cookies.
+- **Forced Password Change:** Any newly created staff account flagged with `mustChangePassword` is automatically prompted to update their password before gaining access to admin functions.
+
+### Available Admin Modules
+
+1. **قائمة المنتجات (Products):**
+   - Add, edit, or hide menu items.
+   - Assign categories, sub-sections, base prices, preparation times, and badges (e.g. الأكثر طلباً, جديد).
+   - Link modifier groups (e.g. نوع اللحم, مستوى التوابل).
+2. **التصنيفات والأقسام (Categories & Sections):**
+   - Reorder menu categories and section headers.
+   - Toggle visibility of seasonal categories.
+3. **الفروع (Branches):**
+   - Manage branch operating status, address details, and dedicated WhatsApp numbers.
+4. **المجموعات والخيارات (Options & Modifiers):**
+   - Configure single-choice or multi-choice options with price modifiers (e.g. +15 EGP for extra sauce).
+5. **إعدادات المطعم (Settings):**
+   - Update restaurant brand name, primary phone, delivery fee (currently 30 EGP), and VAT rate (currently 12%).
+6. **سجل العمليات (Audit Log):**
+   - View an audit trail of changes made by administrative users.
 
 ---
 
-## 8. متطلبات الإطلاق المتبقية من طرف إدارة المطعم (Client Actions)
+## 5. Staff Roles & Permissions
 
-لإتمام النشر النهائي على النطاق الرسمي للمطعم:
+- **OWNER:** Full platform authority (manage products, branches, settings, user accounts, and view audit logs).
+- **ADMIN:** Operational management (products, categories, options, branches, settings).
+- **EDITOR:** Menu updates only (product edits, prices, images, availability). Cannot modify system settings or users.
 
-1. **إنشاء حساب المالك (OWNER):**
-   - تحديد البريد الإلكتروني وكلمة المرور الخاصة بالإدارة لتشغيل أمر الإنشاء الآمن (`npm run db:provision-owner`).
-2. **أرقام الواتساب الرسمية:**
-   - الدخول إلى لوحة التحكم (`/admin/branches`) وإدخال أرقام الواتساب التي ستستقبل الطلبات لكل من فرع دمياط وفرع جمصة.
-3. **توجيه النطاق (DNS):**
-   - توجيه نطاق المطعم (مثل `menu.naqer.com`) عبر لوحة تحكم النطاقات الخاصة بكم إلى خوادم الاستضافة.
-4. **بيانات Cloudinary واستضافة قاعدة البيانات:**
-   - تزويد فريق النشر ببيانات الاعتماد للربط في بيئة الإنتاج المباشرة.
+---
 
+## 6. Image Management Best Practices
+
+1. **Format:** WebP is strongly recommended for optimal loading speeds. PNG or high-quality JPG are also accepted.
+2. **Aspect Ratio:** 4:3 or 1:1 square ratio with food centered.
+3. **Dimensions:** 800 x 600 or 1000 x 750 pixels. Keep file sizes under 200 KB.
+4. **Direct Uploads:** Images uploaded through the Admin dashboard are stored securely in your client Cloudinary account (`naqer-menu` folder).
+
+---
+
+## 7. Operational Support & Emergency Actions
+
+- **Change Branch Phone Number:** Go to **Admin $\to$ إعدادات المطعم (Settings)** or **الفروع (Branches)** and update the WhatsApp phone number. Changes take effect immediately.
+- **Mark an Item Out of Stock:** In **Admin $\to$ المنتجات (Products)**, toggle the product's availability switch to "غير متوفر" (Unavailable). The item remains listed on the menu with an "نفذت الكمية" badge, preventing customers from ordering it.
+- **Emergency Menu Pause:** If the kitchen is overloaded, branches can be temporarily marked inactive in the Branches tab.

@@ -12,6 +12,7 @@ import {
   ORDERING_MODES_META,
   ORDERING_MODE_FEATURES,
   normalizeOrderingMode,
+  resolveEffectiveBranch,
 } from "@/lib/order-settings-types";
 
 interface BranchInfo {
@@ -140,8 +141,8 @@ export default function OrderSettingsClient({
 
   const isOrderingAllowed = activeMode === "FULL_ORDERING" || activeMode === "WHATSAPP_DATABASE";
   const orderableBranchCount = branches.filter((b) => {
-    const o = settings.branchOverrides[b.id];
-    return o ? o.isOrderable && o.isOpen : b.isOrderable && b.isActive;
+    const effective = resolveEffectiveBranch(b, settings.branchOverrides?.[b.id]);
+    return effective.isOrderable && effective.isActive;
   }).length;
 
   const activePreset = settings.reasonCode && REASON_PRESETS[settings.reasonCode];

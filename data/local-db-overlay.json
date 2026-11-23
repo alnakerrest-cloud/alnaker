@@ -15,6 +15,20 @@
         "openingHoursEn": "Daily: 10:00 AM – 1:00 AM",
         "isActive": true,
         "sortOrder": 0
+      },
+      "6d6528bd-dbd4-4672-aa5f-953063d3a36e": {
+        "nameAr": "فرع دمياط الجديدة",
+        "nameEn": "New Damietta Branch",
+        "addressAr": "مول هادي الجديدة",
+        "addressEn": "Hady Mall, New Damietta",
+        "cityAr": "دمياط الجديدة، مصر",
+        "mapQuery": "Hady Mall New Damietta Egypt",
+        "whatsappNumber": "+201094965222",
+        "isOrderable": true,
+        "openingHoursAr": "يومياً: ١١:٠٠ ص – ٢:٠٠ ص",
+        "openingHoursEn": "Daily: 11:00 AM – 2:00 AM",
+        "isActive": true,
+        "sortOrder": 1
       }
     },
     "RestaurantSettings": {
@@ -27,7 +41,18 @@
         "serviceNoteAr": null,
         "serviceChargePct": null,
         "currencyAr": "ج.م",
-        "deliveryFee": 30
+        "deliveryFee": 30,
+        "logoUrl": null,
+        "logoPublicId": null
+      }
+    },
+    "Product": {},
+    "Category": {
+      "d3c2878e-9026-4fbc-b311-61e3bb118e70": {
+        "sortOrder": 9999
+      },
+      "7797a335-0b64-4991-963d-e225bf45e100": {
+        "sortOrder": 9999
       }
     }
   },
@@ -5694,13 +5719,55 @@
         "productTargets": [],
         "categoryTargets": [],
         "locationTargets": []
+      },
+      {
+        "id": "b225ef2a-dcba-4204-9934-0cc158e21899",
+        "orderNumber": "ORD-20261123-A26E09",
+        "type": "DELIVERY",
+        "status": "PENDING",
+        "paymentMethod": "CASH",
+        "customerName": "test1",
+        "customerPhone": "201024994092",
+        "deliveryAddress": "kk",
+        "deliveryFee": 30,
+        "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "subtotal": 1950,
+        "totalDiscount": 0,
+        "total": 1980,
+        "idempotencyKey": "checkout-1795437888473-cmsbss3b",
+        "items": {
+          "create": [
+            {
+              "id": "b225ef2a-dcba-4204-9934-0cc158e21899:item-c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0-0-0",
+              "productId": "c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0",
+              "productName": "صينية الصحاب",
+              "baseUnitPrice": 1950,
+              "selectedOptions": [],
+              "unitPrice": 1950,
+              "quantity": 1
+            }
+          ]
+        },
+        "createdAt": "2026-11-23T12:44:52.301Z",
+        "updatedAt": "2026-11-23T12:44:52.301Z",
+        "productTargets": [],
+        "categoryTargets": [],
+        "locationTargets": []
       }
     ],
-    "Offer": []
+    "Offer": [],
+    "Product": [],
+    "ProductVariant": [],
+    "Category": [],
+    "Branch": []
   },
   "deleted": {
     "Offer": [
       "412c818c-20b8-4d0c-b715-ed98c32cd23c"
-    ]
+    ],
+    "ProductVariant": [],
+    "Product": [],
+    "Branch": [],
+    "Category": []
   }
 }

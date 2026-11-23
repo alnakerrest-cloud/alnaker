@@ -9,8 +9,8 @@ import pg from "pg";
 const root = process.cwd();
 const stagingPath = path.join(root, ".env.staging.local");
 const productionPath = path.join(root, ".env.local");
-const stagingProjectId = "ep-soft-dawn-bdu5de43";
-const productionProjectId = "ep-withered-bread-bemwq8ns";
+const stagingProjectId = "ep-ancient-hill-beec491j";
+const forbiddenTargets = ["ep-soft-dawn-bdu5de43", "ep-withered-bread-bemwq8ns"];
 
 if (!fs.existsSync(stagingPath)) {
   throw new Error("STAGING ENV MISSING: .env.staging.local is required.");
@@ -26,9 +26,13 @@ if (!staging.DATABASE_URL || !staging.SESSION_SECRET) {
 }
 
 const stagingUrl = new URL(staging.DATABASE_URL);
-if (!stagingUrl.hostname.endsWith(".neon.tech") || !stagingUrl.hostname.startsWith(`${stagingProjectId}-`) ||
-    stagingUrl.hostname.includes(productionProjectId)) {
+if (!stagingUrl.hostname.endsWith(".neon.tech") || !stagingUrl.hostname.startsWith(`${stagingProjectId}-`)) {
   throw new Error("STAGING GUARD REFUSAL: database target is not the approved staging Neon project.");
+}
+for (const forbidden of forbiddenTargets) {
+  if (stagingUrl.hostname.includes(forbidden)) {
+    throw new Error(`STAGING GUARD REFUSAL: database target matches forbidden target: ${forbidden}`);
+  }
 }
 
 if (fs.existsSync(productionPath)) {

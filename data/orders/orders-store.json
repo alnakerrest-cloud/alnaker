@@ -1,5 +1,63 @@
 [
   {
+    "id": "b225ef2a-dcba-4204-9934-0cc158e21899",
+    "orderNumber": "ORD-20261123-A26E09",
+    "verificationToken": "ce74915e05663feb0247ca26c7873724",
+    "verificationCode": "NQR-1856",
+    "orderingMode": "WHATSAPP_DATABASE",
+    "createdAt": "2026-11-23T12:44:51.976Z",
+    "updatedAt": "2026-11-23T12:44:51.976Z",
+    "expiresAt": "2026-11-23T13:14:51.976Z",
+    "status": "PENDING_WHATSAPP",
+    "type": "DELIVERY",
+    "paymentMethod": "CASH",
+    "customerId": "cust_be05790bf32da365",
+    "customerName": "test1",
+    "customerPhone": "01024994092",
+    "customerPhoneNormalized": "201024994092",
+    "deliveryAddress": "kk",
+    "deliveryFee": 30,
+    "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
+    "branchNameAr": "فرع جمصة",
+    "branchNameEn": "Gamasa Branch",
+    "branchAddressAr": "الطريق الدولي الساحلي، أمام جامعة الدلتا",
+    "branchAddressEn": "International Coastal Road, opposite Delta University",
+    "branchPhoneIntl": "+201010814966",
+    "branchWhatsappNumber": "+201010814966",
+    "currency": "ج.م",
+    "items": [
+      {
+        "id": "item-c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0-0-0",
+        "productId": "c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0",
+        "productName": "صينية الصحاب",
+        "variantIndex": 0,
+        "baseUnitPrice": 1950,
+        "selectedOptions": [],
+        "unitPrice": 1950,
+        "quantity": 1,
+        "totalPrice": 1950
+      }
+    ],
+    "subtotal": 1950,
+    "totalDiscount": 0,
+    "serviceCharge": 0,
+    "vatNote": "الأسعار الموضحة تشمل ضريبة القيمة المضافة 12%",
+    "total": 1980,
+    "idempotencyKey": "checkout-1795437888473-cmsbss3b",
+    "clientIp": "127.0.0.1",
+    "whatsappMessage": "🍽️ *قرية الناقر — طلب جديد*\n📋 *رقم الطلب:* ORD-20261123-A26E09\n📦 *نوع الطلب:* توصيل للمنزل 🚚\n🏢 *الفرع:* فرع جمصة\n👤 *اسم العميل:* test1\n📞 *رقم الهاتف:* 201024994092\n📍 *عنوان التوصيل:* kk\n────────────────────\n*الأصناف المطلوبة:*\n1. *صينية الصحاب*\n   • الكمية: 1\n   • السعر: 1950 × 1 = 1950 ج.م\n────────────────────\n💰 *المجموع الفرعي:* 1950 ج.م\n🚚 *رسوم التوصيل:* 30 ج.م\n🧾 *الإجمالي النهائي:* 1980 ج.م\n💳 *طريقة الدفع:* نقداً عند الاستلام\n────────────────────\n🔍 *رابط المتابعة المباشر:* http://127.0.0.1:3000/ar/receipt/ORD-20261123-A26E09?token=ce74915e05663feb0247ca26c7873724\n────────────────────\n⏳ هذا الطلب قيد المراجعة ولا يعتبر مقبولاً نهائياً إلا بعد تأكيد إدارة المطعم.",
+    "whatsappUrl": "https://wa.me/201010814966?text=%F0%9F%8D%BD%EF%B8%8F%20*%D9%82%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D9%86%D8%A7%D9%82%D8%B1%20%E2%80%94%20%D8%B7%D9%84%D8%A8%20%D8%AC%D8%AF%D9%8A%D8%AF*%0A%F0%9F%93%8B%20*%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%3A*%20ORD-20261123-A26E09%0A%F0%9F%93%A6%20*%D9%86%D9%88%D8%B9%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%3A*%20%D8%AA%D9%88%D8%B5%D9%8A%D9%84%20%D9%84%D9%84%D9%85%D9%86%D8%B2%D9%84%20%F0%9F%9A%9A%0A%F0%9F%8F%A2%20*%D8%A7%D9%84%D9%81%D8%B1%D8%B9%3A*%20%D9%81%D8%B1%D8%B9%20%D8%AC%D9%85%D8%B5%D8%A9%0A%F0%9F%91%A4%20*%D8%A7%D8%B3%D9%85%20%D8%A7%D9%84%D8%B9%D9%85%D9%8A%D9%84%3A*%20test1%0A%F0%9F%93%9E%20*%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D9%87%D8%A7%D8%AA%D9%81%3A*%20201024994092%0A%F0%9F%93%8D%20*%D8%B9%D9%86%D9%88%D8%A7%D9%86%20%D8%A7%D9%84%D8%AA%D9%88%D8%B5%D9%8A%D9%84%3A*%20kk%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A*%D8%A7%D9%84%D8%A3%D8%B5%D9%86%D8%A7%D9%81%20%D8%A7%D9%84%D9%85%D8%B7%D9%84%D9%88%D8%A8%D8%A9%3A*%0A1.%20*%D8%B5%D9%8A%D9%86%D9%8A%D8%A9%20%D8%A7%D9%84%D8%B5%D8%AD%D8%A7%D8%A8*%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D9%83%D9%85%D9%8A%D8%A9%3A%201%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D8%B3%D8%B9%D8%B1%3A%201950%20%C3%97%201%20%3D%201950%20%D8%AC.%D9%85%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%92%B0%20*%D8%A7%D9%84%D9%85%D8%AC%D9%85%D9%88%D8%B9%20%D8%A7%D9%84%D9%81%D8%B1%D8%B9%D9%8A%3A*%201950%20%D8%AC.%D9%85%0A%F0%9F%9A%9A%20*%D8%B1%D8%B3%D9%88%D9%85%20%D8%A7%D9%84%D8%AA%D9%88%D8%B5%D9%8A%D9%84%3A*%2030%20%D8%AC.%D9%85%0A%F0%9F%A7%BE%20*%D8%A7%D9%84%D8%A5%D8%AC%D9%85%D8%A7%D9%84%D9%8A%20%D8%A7%D9%84%D9%86%D9%87%D8%A7%D8%A6%D9%8A%3A*%201980%20%D8%AC.%D9%85%0A%F0%9F%92%B3%20*%D8%B7%D8%B1%D9%8A%D9%82%D8%A9%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%3A*%20%D9%86%D9%82%D8%AF%D8%A7%D9%8B%20%D8%B9%D9%86%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%84%D8%A7%D9%85%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%94%8D%20*%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%20%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D8%B4%D8%B1%3A*%20http%3A%2F%2F127.0.0.1%3A3000%2Far%2Freceipt%2FORD-20261123-A26E09%3Ftoken%3Dce74915e05663feb0247ca26c7873724%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%E2%8F%B3%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%D9%82%D9%8A%D8%AF%20%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%AC%D8%B9%D8%A9%20%D9%88%D9%84%D8%A7%20%D9%8A%D8%B9%D8%AA%D8%A8%D8%B1%20%D9%85%D9%82%D8%A8%D9%88%D9%84%D8%A7%D9%8B%20%D9%86%D9%87%D8%A7%D8%A6%D9%8A%D8%A7%D9%8B%20%D8%A5%D9%84%D8%A7%20%D8%A8%D8%B9%D8%AF%20%D8%AA%D8%A3%D9%83%D9%8A%D8%AF%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%B7%D8%B9%D9%85.",
+    "timeline": [
+      {
+        "timestamp": "2026-11-23T12:44:51.976Z",
+        "actor": "customer",
+        "action": "created_order",
+        "toStatus": "PENDING_WHATSAPP",
+        "note": "Order created, waiting for customer to dispatch WhatsApp message"
+      }
+    ]
+  },
+  {
     "id": "369f5b66-1ddc-4bc3-85d2-1690720fccc0",
     "type": "TAKEAWAY",
     "items": [
@@ -39,17 +97,19 @@
         "timestamp": "2026-11-21T23:44:16.089Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:29.851Z",
         "actor": "المالك / المدير العام: إبراهيم شعيب (مدير عام المطعم)",
         "action": "status_change_to_confirmed",
-        "fromStatus": "PENDING_WHATSAPP",
-        "toStatus": "CONFIRMED"
+        "toStatus": "CONFIRMED",
+        "timestamp": "2026-11-21T23:44:29.851Z",
+        "fromStatus": "PENDING_WHATSAPP"
       }
     ],
     "createdAt": "2026-11-21T23:44:16.089Z",
     "expiresAt": "2026-11-22T00:14:16.089Z",
     "updatedAt": "2026-11-21T23:44:29.851Z",
     "customerId": "cust_be05790bf32da365",
+    "confirmedAt": "2026-11-21T23:44:29.851Z",
+    "confirmedBy": "المالك / المدير العام: إبراهيم شعيب (مدير عام المطعم)",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261122-489CCC",
     "whatsappUrl": "https://wa.me/201010814966?text=%F0%9F%8D%BD%EF%B8%8F%20*%D9%82%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D9%86%D8%A7%D9%82%D8%B1%20%E2%80%94%20%D8%B7%D9%84%D8%A8%20%D8%AC%D8%AF%D9%8A%D8%AF*%0A%F0%9F%93%8B%20*%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%3A*%20ORD-20261122-489CCC%0A%F0%9F%93%A6%20*%D9%86%D9%88%D8%B9%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%3A*%20%D8%A7%D8%B3%D8%AA%D9%84%D8%A7%D9%85%20%D9%85%D9%86%20%D8%A7%D9%84%D9%81%D8%B1%D8%B9%20%F0%9F%8F%A2%0A%F0%9F%8F%A2%20*%D8%A7%D9%84%D9%81%D8%B1%D8%B9%3A*%20%D9%81%D8%B1%D8%B9%20%D8%AC%D9%85%D8%B5%D8%A9%0A%F0%9F%91%A4%20*%D8%A7%D8%B3%D9%85%20%D8%A7%D9%84%D8%B9%D9%85%D9%8A%D9%84%3A*%20%D8%B9%D9%85%D9%8A%D9%84%20%D8%A7%D9%84%D8%AA%D8%AA%D8%A8%D8%B9%20%D8%A7%D9%84%D9%83%D8%A7%D9%85%D9%84%20%D8%A7%D9%84%D9%84%D8%AD%D8%B8%D9%8A%0A%F0%9F%93%9E%20*%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D9%87%D8%A7%D8%AA%D9%81%3A*%20201024994092%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A*%D8%A7%D9%84%D8%A3%D8%B5%D9%86%D8%A7%D9%81%20%D8%A7%D9%84%D9%85%D8%B7%D9%84%D9%88%D8%A8%D8%A9%3A*%0A1.%20*%D8%B5%D9%8A%D9%86%D9%8A%D8%A9%20%D8%A7%D9%84%D9%88%D8%AD%D9%88%D8%B4*%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D9%83%D9%85%D9%8A%D8%A9%3A%201%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D8%A5%D8%B6%D8%A7%D9%81%D8%A7%D8%AA%3A%20%D9%88%D8%B1%D9%82%20%D8%B9%D9%86%D8%A8%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D8%B3%D8%B9%D8%B1%3A%201820%20%C3%97%201%20%3D%201820%20%D8%AC.%D9%85%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%92%B0%20*%D8%A7%D9%84%D9%85%D8%AC%D9%85%D9%88%D8%B9%20%D8%A7%D9%84%D9%81%D8%B1%D8%B9%D9%8A%3A*%201820%20%D8%AC.%D9%85%0A%F0%9F%A7%BE%20*%D8%A7%D9%84%D8%A5%D8%AC%D9%85%D8%A7%D9%84%D9%8A%20%D8%A7%D9%84%D9%86%D9%87%D8%A7%D8%A6%D9%8A%3A*%201820%20%D8%AC.%D9%85%0A%F0%9F%92%B3%20*%D8%B7%D8%B1%D9%8A%D9%82%D8%A9%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%3A*%20%D9%86%D9%82%D8%AF%D8%A7%D9%8B%20%D8%B9%D9%86%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%84%D8%A7%D9%85%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%94%8D%20*%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%20%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D8%B4%D8%B1%3A*%20http%3A%2F%2F127.0.0.1%3A3000%2Far%2Freceipt%2FORD-20261122-489CCC%3Ftoken%3D0f3284ec259ec0bbee837b7980c77a94%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%E2%8F%B3%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%D9%82%D9%8A%D8%AF%20%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%AC%D8%B9%D8%A9%20%D9%88%D9%84%D8%A7%20%D9%8A%D8%B9%D8%AA%D8%A8%D8%B1%20%D9%85%D9%82%D8%A8%D9%88%D9%84%D8%A7%D9%8B%20%D9%86%D9%87%D8%A7%D8%A6%D9%8A%D8%A7%D9%8B%20%D8%A5%D9%84%D8%A7%20%D8%A8%D8%B9%D8%AF%20%D8%AA%D8%A3%D9%83%D9%8A%D8%AF%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%B7%D8%B9%D9%85.",
@@ -69,9 +129,7 @@
     "verificationCode": "NQR-9323",
     "verificationToken": "0f3284ec259ec0bbee837b7980c77a94",
     "branchWhatsappNumber": "+201010814966",
-    "customerPhoneNormalized": "201024994092",
-    "confirmedAt": "2026-11-21T23:44:29.851Z",
-    "confirmedBy": "المالك / المدير العام: إبراهيم شعيب (مدير عام المطعم)"
+    "customerPhoneNormalized": "201024994092"
   },
   {
     "id": "97ca1a61-cde5-4b93-9f54-d9077687a04b",
@@ -98,7 +156,7 @@
       }
     ],
     "total": 1820,
-    "status": "PENDING_WHATSAPP",
+    "status": "EXPIRED",
     "vatNote": "الأسعار الموضحة تشمل ضريبة القيمة المضافة 12%",
     "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
     "clientIp": "127.0.0.1",
@@ -111,11 +169,19 @@
         "action": "created_order",
         "toStatus": "PENDING_WHATSAPP",
         "timestamp": "2026-11-21T23:38:24.634Z"
+      },
+      {
+        "timestamp": "2026-11-23T10:18:53.017Z",
+        "actor": "system",
+        "action": "expire_unconfirmed_order",
+        "fromStatus": "PENDING_WHATSAPP",
+        "toStatus": "EXPIRED",
+        "note": "Order unconfirmed by customer within TTL period"
       }
     ],
     "createdAt": "2026-11-21T23:38:24.634Z",
     "expiresAt": "2026-11-22T00:08:24.634Z",
-    "updatedAt": "2026-11-21T23:38:24.634Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_9fa9176543221094",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261122-2093EC",
@@ -163,7 +229,7 @@
       }
     ],
     "total": 1820,
-    "status": "PENDING_WHATSAPP",
+    "status": "EXPIRED",
     "vatNote": "الأسعار الموضحة تشمل ضريبة القيمة المضافة 12%",
     "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
     "clientIp": "127.0.0.1",
@@ -176,11 +242,19 @@
         "action": "created_order",
         "toStatus": "PENDING_WHATSAPP",
         "timestamp": "2026-11-21T23:34:52.571Z"
+      },
+      {
+        "timestamp": "2026-11-23T10:18:53.017Z",
+        "actor": "system",
+        "action": "expire_unconfirmed_order",
+        "fromStatus": "PENDING_WHATSAPP",
+        "toStatus": "EXPIRED",
+        "note": "Order unconfirmed by customer within TTL period"
       }
     ],
     "createdAt": "2026-11-21T23:34:52.571Z",
     "expiresAt": "2026-11-22T00:04:52.571Z",
-    "updatedAt": "2026-11-21T23:34:52.571Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261122-71B166",
@@ -302,7 +376,7 @@
       }
     ],
     "total": 1820,
-    "status": "PENDING_WHATSAPP",
+    "status": "EXPIRED",
     "vatNote": "الأسعار الموضحة تشمل ضريبة القيمة المضافة 12%",
     "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
     "clientIp": "127.0.0.1",
@@ -315,11 +389,19 @@
         "action": "created_order",
         "toStatus": "PENDING_WHATSAPP",
         "timestamp": "2026-11-21T23:24:32.722Z"
+      },
+      {
+        "timestamp": "2026-11-23T10:18:53.017Z",
+        "actor": "system",
+        "action": "expire_unconfirmed_order",
+        "fromStatus": "PENDING_WHATSAPP",
+        "toStatus": "EXPIRED",
+        "note": "Order unconfirmed by customer within TTL period"
       }
     ],
     "createdAt": "2026-11-21T23:24:32.722Z",
     "expiresAt": "2026-11-21T23:54:32.722Z",
-    "updatedAt": "2026-11-21T23:24:32.722Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261122-FE0BB0",
@@ -367,7 +449,7 @@
       }
     ],
     "total": 1820,
-    "status": "PENDING_WHATSAPP",
+    "status": "EXPIRED",
     "vatNote": "الأسعار الموضحة تشمل ضريبة القيمة المضافة 12%",
     "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
     "clientIp": "127.0.0.1",
@@ -380,11 +462,19 @@
         "action": "created_order",
         "toStatus": "PENDING_WHATSAPP",
         "timestamp": "2026-11-21T23:20:28.689Z"
+      },
+      {
+        "timestamp": "2026-11-23T10:18:53.017Z",
+        "actor": "system",
+        "action": "expire_unconfirmed_order",
+        "fromStatus": "PENDING_WHATSAPP",
+        "toStatus": "EXPIRED",
+        "note": "Order unconfirmed by customer within TTL period"
       }
     ],
     "createdAt": "2026-11-21T23:20:28.689Z",
     "expiresAt": "2026-11-21T23:50:28.689Z",
-    "updatedAt": "2026-11-21T23:20:28.689Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261122-EE5D2B",
@@ -432,7 +522,7 @@
       }
     ],
     "total": 1820,
-    "status": "PENDING_WHATSAPP",
+    "status": "EXPIRED",
     "vatNote": "الأسعار الموضحة تشمل ضريبة القيمة المضافة 12%",
     "branchId": "7fa2be20-67bd-4060-a83a-81ded2550018",
     "clientIp": "127.0.0.1",
@@ -445,11 +535,19 @@
         "action": "created_order",
         "toStatus": "PENDING_WHATSAPP",
         "timestamp": "2026-11-21T23:19:11.988Z"
+      },
+      {
+        "timestamp": "2026-11-23T10:18:53.017Z",
+        "actor": "system",
+        "action": "expire_unconfirmed_order",
+        "fromStatus": "PENDING_WHATSAPP",
+        "toStatus": "EXPIRED",
+        "note": "Order unconfirmed by customer within TTL period"
       }
     ],
     "createdAt": "2026-11-21T23:19:11.988Z",
     "expiresAt": "2026-11-21T23:49:11.988Z",
-    "updatedAt": "2026-11-21T23:19:11.988Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261122-FF0E43",
@@ -512,7 +610,7 @@
         "timestamp": "2026-11-21T23:08:19.047Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -522,7 +620,7 @@
     ],
     "createdAt": "2026-11-21T23:08:19.047Z",
     "expiresAt": "2026-11-21T23:38:19.047Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261122-87B823",
@@ -585,7 +683,7 @@
         "timestamp": "2026-11-21T23:02:38.106Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -595,7 +693,7 @@
     ],
     "createdAt": "2026-11-21T23:02:38.106Z",
     "expiresAt": "2026-11-21T23:32:38.106Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261122-FD2C73",
@@ -658,7 +756,7 @@
         "timestamp": "2026-11-21T23:01:23.227Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -668,7 +766,7 @@
     ],
     "createdAt": "2026-11-21T23:01:23.227Z",
     "expiresAt": "2026-11-21T23:31:23.227Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261122-CEEB17",
@@ -732,7 +830,7 @@
         "timestamp": "2026-11-21T20:36:50.078Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -742,7 +840,7 @@
     ],
     "createdAt": "2026-11-21T20:36:50.078Z",
     "expiresAt": "2026-11-21T21:06:50.078Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-92127C",
@@ -1026,7 +1124,7 @@
         "timestamp": "2026-11-21T17:26:25.892Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -1036,7 +1134,7 @@
     ],
     "createdAt": "2026-11-21T17:26:25.892Z",
     "expiresAt": "2026-11-21T17:56:25.892Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-8E48A1",
@@ -1304,7 +1402,7 @@
         "timestamp": "2026-11-21T15:01:16.229Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -1314,7 +1412,7 @@
     ],
     "createdAt": "2026-11-21T15:01:16.229Z",
     "expiresAt": "2026-11-21T15:31:16.229Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 30,
     "orderNumber": "ORD-20261121-B99E4D",
@@ -1369,7 +1467,7 @@
         "timestamp": "2026-11-21T14:21:30.520Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -1379,7 +1477,7 @@
     ],
     "createdAt": "2026-11-21T14:21:30.520Z",
     "expiresAt": "2026-11-21T14:51:30.520Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-4D4790",
@@ -1432,7 +1530,7 @@
         "timestamp": "2026-11-21T14:21:27.599Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -1442,7 +1540,7 @@
     ],
     "createdAt": "2026-11-21T14:21:27.599Z",
     "expiresAt": "2026-11-21T14:51:27.599Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-45BD15",
@@ -1495,7 +1593,7 @@
         "timestamp": "2026-11-21T14:20:38.874Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -1505,7 +1603,7 @@
     ],
     "createdAt": "2026-11-21T14:20:38.874Z",
     "expiresAt": "2026-11-21T14:50:38.874Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-4DFBEA",
@@ -1558,7 +1656,7 @@
         "timestamp": "2026-11-21T14:20:37.498Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -1568,7 +1666,7 @@
     ],
     "createdAt": "2026-11-21T14:20:37.498Z",
     "expiresAt": "2026-11-21T14:50:37.498Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-791B15",
@@ -1621,7 +1719,7 @@
         "timestamp": "2026-11-21T14:18:01.153Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -1631,7 +1729,7 @@
     ],
     "createdAt": "2026-11-21T14:18:01.153Z",
     "expiresAt": "2026-11-21T14:48:01.153Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-1C6C5A",
@@ -1684,7 +1782,7 @@
         "timestamp": "2026-11-21T14:17:59.661Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -1694,7 +1792,7 @@
     ],
     "createdAt": "2026-11-21T14:17:59.661Z",
     "expiresAt": "2026-11-21T14:47:59.661Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-90FD9B",
@@ -2077,7 +2175,7 @@
         "timestamp": "2026-11-20T23:05:40.595Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -2087,7 +2185,7 @@
     ],
     "createdAt": "2026-11-20T23:05:40.595Z",
     "expiresAt": "2026-11-20T23:35:40.595Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 30,
     "orderNumber": "ORD-20261121-60A202",
@@ -2141,7 +2239,7 @@
         "timestamp": "2026-11-20T15:09:59.579Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -2151,7 +2249,7 @@
     ],
     "createdAt": "2026-11-20T15:09:59.579Z",
     "expiresAt": "2026-11-20T15:39:59.579Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 30,
     "orderNumber": "ORD-20261120-CE927E",
@@ -2206,7 +2304,7 @@
         "timestamp": "2026-11-20T11:34:44.125Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -2216,7 +2314,7 @@
     ],
     "createdAt": "2026-11-20T11:34:44.125Z",
     "expiresAt": "2026-11-20T12:04:44.125Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 30,
     "orderNumber": "ORD-20261120-32578C",
@@ -2344,7 +2442,7 @@
         "timestamp": "2026-11-19T20:18:30.546Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -2354,7 +2452,7 @@
     ],
     "createdAt": "2026-11-19T20:18:30.546Z",
     "expiresAt": "2026-11-19T20:48:30.546Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261119-2CF9AB",
     "whatsappUrl": "https://wa.me/201010814966?text=%F0%9F%8D%BD%EF%B8%8F%20*%D9%82%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D9%86%D8%A7%D9%82%D8%B1%20%E2%80%94%20%D8%B7%D9%84%D8%A8%20%D8%AC%D8%AF%D9%8A%D8%AF*%0A%F0%9F%93%8B%20*%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%3A*%20ORD-20261119-2CF9AB%0A%F0%9F%93%A6%20*%D9%86%D9%88%D8%B9%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%3A*%20%D8%A7%D8%B3%D8%AA%D9%84%D8%A7%D9%85%20%D9%85%D9%86%20%D8%A7%D9%84%D9%81%D8%B1%D8%B9%20%F0%9F%8F%A2%0A%F0%9F%8F%A2%20*%D8%A7%D9%84%D9%81%D8%B1%D8%B9%3A*%20%D9%81%D8%B1%D8%B9%20%D8%AC%D9%85%D8%B5%D8%A9%0A%F0%9F%91%A4%20*%D8%A7%D8%B3%D9%85%20%D8%A7%D9%84%D8%B9%D9%85%D9%8A%D9%84%3A*%20%D9%81%D8%AD%D8%B5%20%D8%AA%D8%AF%D9%82%D9%8A%D9%82%20%D8%A7%D9%84%D8%A5%D9%86%D8%AA%D8%A7%D8%AC%0A%F0%9F%93%9E%20*%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D9%87%D8%A7%D8%AA%D9%81%3A*%20201012345678%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A*%D8%A7%D9%84%D8%A3%D8%B5%D9%86%D8%A7%D9%81%20%D8%A7%D9%84%D9%85%D8%B7%D9%84%D9%88%D8%A8%D8%A9%3A*%0A1.%20*%D8%B5%D9%8A%D9%86%D9%8A%D8%A9%20%D8%A7%D9%84%D9%88%D8%AD%D9%88%D8%B4*%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D9%83%D9%85%D9%8A%D8%A9%3A%201%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D8%A5%D8%B6%D8%A7%D9%81%D8%A7%D8%AA%3A%20%D8%B5%D9%8A%D9%86%D9%8A%D8%A9%20%D8%A8%D8%B7%D8%A7%D8%B7%D8%B3%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D8%B3%D8%B9%D8%B1%3A%201820%20%C3%97%201%20%3D%201820%20%D8%AC.%D9%85%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%92%B0%20*%D8%A7%D9%84%D9%85%D8%AC%D9%85%D9%88%D8%B9%20%D8%A7%D9%84%D9%81%D8%B1%D8%B9%D9%8A%3A*%201820%20%D8%AC.%D9%85%0A%F0%9F%A7%BE%20*%D8%A7%D9%84%D8%A5%D8%AC%D9%85%D8%A7%D9%84%D9%8A%20%D8%A7%D9%84%D9%86%D9%87%D8%A7%D8%A6%D9%8A%3A*%201820%20%D8%AC.%D9%85%0A%F0%9F%92%B3%20*%D8%B7%D8%B1%D9%8A%D9%82%D8%A9%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%3A*%20%D9%86%D9%82%D8%AF%D8%A7%D9%8B%20%D8%B9%D9%86%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%84%D8%A7%D9%85%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%93%9D%20*%D9%85%D9%84%D8%A7%D8%AD%D8%B8%D8%A7%D8%AA%20%D8%A5%D8%B6%D8%A7%D9%81%D9%8A%D8%A9%3A*%20%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%20%D8%AF%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D9%84%D8%A5%D9%8A%D8%B5%D8%A7%D9%84%20%D8%A7%D9%84%D9%85%D8%A4%D9%83%D8%AF%D8%A9%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%94%8D%20*%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%20%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D8%B4%D8%B1%3A*%20http%3A%2F%2F127.0.0.1%3A3000%2Far%2Freceipt%2FORD-20261119-2CF9AB%3Ftoken%3D41180e1dc4c93e1764c6fcc8f333b028%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%E2%8F%B3%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%D9%82%D9%8A%D8%AF%20%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%AC%D8%B9%D8%A9%20%D9%88%D9%84%D8%A7%20%D9%8A%D8%B9%D8%AA%D8%A8%D8%B1%20%D9%85%D9%82%D8%A8%D9%88%D9%84%D8%A7%D9%8B%20%D9%86%D9%87%D8%A7%D8%A6%D9%8A%D8%A7%D9%8B%20%D8%A5%D9%84%D8%A7%20%D8%A8%D8%B9%D8%AF%20%D8%AA%D8%A3%D9%83%D9%8A%D8%AF%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%B7%D8%B9%D9%85.",
@@ -2416,7 +2514,7 @@
         "timestamp": "2026-11-19T19:22:49.199Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -2426,7 +2524,7 @@
     ],
     "createdAt": "2026-11-19T19:22:49.199Z",
     "expiresAt": "2026-11-19T19:52:49.199Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261119-9A644D",
     "whatsappUrl": "https://wa.me/201010814966?text=%F0%9F%8D%BD%EF%B8%8F%20*%D9%82%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D9%86%D8%A7%D9%82%D8%B1%20%E2%80%94%20%D8%B7%D9%84%D8%A8%20%D8%AC%D8%AF%D9%8A%D8%AF*%0A%F0%9F%93%8B%20*%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%3A*%20ORD-20261119-9A644D%0A%F0%9F%93%A6%20*%D9%86%D9%88%D8%B9%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%3A*%20%D8%A7%D8%B3%D8%AA%D9%84%D8%A7%D9%85%20%D9%85%D9%86%20%D8%A7%D9%84%D9%81%D8%B1%D8%B9%20%F0%9F%8F%A2%0A%F0%9F%8F%A2%20*%D8%A7%D9%84%D9%81%D8%B1%D8%B9%3A*%20%D9%81%D8%B1%D8%B9%20%D8%AC%D9%85%D8%B5%D8%A9%0A%F0%9F%91%A4%20*%D8%A7%D8%B3%D9%85%20%D8%A7%D9%84%D8%B9%D9%85%D9%8A%D9%84%3A*%20%D9%81%D8%AD%D8%B5%20%D8%AA%D8%AF%D9%82%D9%8A%D9%82%20%D8%A7%D9%84%D8%A5%D9%86%D8%AA%D8%A7%D8%AC%0A%F0%9F%93%9E%20*%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D9%87%D8%A7%D8%AA%D9%81%3A*%20201012345678%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A*%D8%A7%D9%84%D8%A3%D8%B5%D9%86%D8%A7%D9%81%20%D8%A7%D9%84%D9%85%D8%B7%D9%84%D9%88%D8%A8%D8%A9%3A*%0A1.%20*%D8%B5%D9%8A%D9%86%D9%8A%D8%A9%20%D8%A7%D9%84%D9%88%D8%AD%D9%88%D8%B4*%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D9%83%D9%85%D9%8A%D8%A9%3A%201%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D8%A5%D8%B6%D8%A7%D9%81%D8%A7%D8%AA%3A%20%D8%B5%D9%8A%D9%86%D9%8A%D8%A9%20%D8%A8%D8%B7%D8%A7%D8%B7%D8%B3%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D8%B3%D8%B9%D8%B1%3A%201820%20%C3%97%201%20%3D%201820%20%D8%AC.%D9%85%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%92%B0%20*%D8%A7%D9%84%D9%85%D8%AC%D9%85%D9%88%D8%B9%20%D8%A7%D9%84%D9%81%D8%B1%D8%B9%D9%8A%3A*%201820%20%D8%AC.%D9%85%0A%F0%9F%A7%BE%20*%D8%A7%D9%84%D8%A5%D8%AC%D9%85%D8%A7%D9%84%D9%8A%20%D8%A7%D9%84%D9%86%D9%87%D8%A7%D8%A6%D9%8A%3A*%201820%20%D8%AC.%D9%85%0A%F0%9F%92%B3%20*%D8%B7%D8%B1%D9%8A%D9%82%D8%A9%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%3A*%20%D9%86%D9%82%D8%AF%D8%A7%D9%8B%20%D8%B9%D9%86%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%84%D8%A7%D9%85%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%93%9D%20*%D9%85%D9%84%D8%A7%D8%AD%D8%B8%D8%A7%D8%AA%20%D8%A5%D8%B6%D8%A7%D9%81%D9%8A%D8%A9%3A*%20%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%20%D8%AF%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D9%84%D8%A5%D9%8A%D8%B5%D8%A7%D9%84%20%D8%A7%D9%84%D9%85%D8%A4%D9%83%D8%AF%D8%A9%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%94%8D%20*%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%20%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D8%B4%D8%B1%3A*%20http%3A%2F%2F127.0.0.1%3A3000%2Far%2Freceipt%2FORD-20261119-9A644D%3Ftoken%3D6be2da46dfa4f544eedb19d272bfbe35%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%E2%8F%B3%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%D9%82%D9%8A%D8%AF%20%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%AC%D8%B9%D8%A9%20%D9%88%D9%84%D8%A7%20%D9%8A%D8%B9%D8%AA%D8%A8%D8%B1%20%D9%85%D9%82%D8%A8%D9%88%D9%84%D8%A7%D9%8B%20%D9%86%D9%87%D8%A7%D8%A6%D9%8A%D8%A7%D9%8B%20%D8%A5%D9%84%D8%A7%20%D8%A8%D8%B9%D8%AF%20%D8%AA%D8%A3%D9%83%D9%8A%D8%AF%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%B7%D8%B9%D9%85.",
@@ -2488,7 +2586,7 @@
         "timestamp": "2026-11-19T19:12:05.558Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -2498,7 +2596,7 @@
     ],
     "createdAt": "2026-11-19T19:12:05.558Z",
     "expiresAt": "2026-11-19T19:42:05.558Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261119-5667A2",
     "whatsappUrl": "https://wa.me/201010814966?text=%F0%9F%8D%BD%EF%B8%8F%20*%D9%82%D8%B1%D9%8A%D8%A9%20%D8%A7%D9%84%D9%86%D8%A7%D9%82%D8%B1%20%E2%80%94%20%D8%B7%D9%84%D8%A8%20%D8%AC%D8%AF%D9%8A%D8%AF*%0A%F0%9F%93%8B%20*%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%3A*%20ORD-20261119-5667A2%0A%F0%9F%93%A6%20*%D9%86%D9%88%D8%B9%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%3A*%20%D8%A7%D8%B3%D8%AA%D9%84%D8%A7%D9%85%20%D9%85%D9%86%20%D8%A7%D9%84%D9%81%D8%B1%D8%B9%20%F0%9F%8F%A2%0A%F0%9F%8F%A2%20*%D8%A7%D9%84%D9%81%D8%B1%D8%B9%3A*%20%D9%81%D8%B1%D8%B9%20%D8%AC%D9%85%D8%B5%D8%A9%0A%F0%9F%91%A4%20*%D8%A7%D8%B3%D9%85%20%D8%A7%D9%84%D8%B9%D9%85%D9%8A%D9%84%3A*%20%D9%81%D8%AD%D8%B5%20%D8%AA%D8%AF%D9%82%D9%8A%D9%82%20%D8%A7%D9%84%D8%A5%D9%86%D8%AA%D8%A7%D8%AC%0A%F0%9F%93%9E%20*%D8%B1%D9%82%D9%85%20%D8%A7%D9%84%D9%87%D8%A7%D8%AA%D9%81%3A*%20201012345678%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A*%D8%A7%D9%84%D8%A3%D8%B5%D9%86%D8%A7%D9%81%20%D8%A7%D9%84%D9%85%D8%B7%D9%84%D9%88%D8%A8%D8%A9%3A*%0A1.%20*%D8%B5%D9%8A%D9%86%D9%8A%D8%A9%20%D8%A7%D9%84%D9%88%D8%AD%D9%88%D8%B4*%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D9%83%D9%85%D9%8A%D8%A9%3A%201%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D8%A5%D8%B6%D8%A7%D9%81%D8%A7%D8%AA%3A%20%D8%B5%D9%8A%D9%86%D9%8A%D8%A9%20%D8%A8%D8%B7%D8%A7%D8%B7%D8%B3%0A%20%20%20%E2%80%A2%20%D8%A7%D9%84%D8%B3%D8%B9%D8%B1%3A%201820%20%C3%97%201%20%3D%201820%20%D8%AC.%D9%85%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%92%B0%20*%D8%A7%D9%84%D9%85%D8%AC%D9%85%D9%88%D8%B9%20%D8%A7%D9%84%D9%81%D8%B1%D8%B9%D9%8A%3A*%201820%20%D8%AC.%D9%85%0A%F0%9F%A7%BE%20*%D8%A7%D9%84%D8%A5%D8%AC%D9%85%D8%A7%D9%84%D9%8A%20%D8%A7%D9%84%D9%86%D9%87%D8%A7%D8%A6%D9%8A%3A*%201820%20%D8%AC.%D9%85%0A%F0%9F%92%B3%20*%D8%B7%D8%B1%D9%8A%D9%82%D8%A9%20%D8%A7%D9%84%D8%AF%D9%81%D8%B9%3A*%20%D9%86%D9%82%D8%AF%D8%A7%D9%8B%20%D8%B9%D9%86%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%84%D8%A7%D9%85%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%93%9D%20*%D9%85%D9%84%D8%A7%D8%AD%D8%B8%D8%A7%D8%AA%20%D8%A5%D8%B6%D8%A7%D9%81%D9%8A%D8%A9%3A*%20%D8%A7%D8%AE%D8%AA%D8%A8%D8%A7%D8%B1%20%D8%AF%D9%88%D8%B1%D8%A9%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%D9%88%D8%A7%D9%84%D8%A5%D9%8A%D8%B5%D8%A7%D9%84%20%D8%A7%D9%84%D9%85%D8%A4%D9%83%D8%AF%D8%A9%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%F0%9F%94%8D%20*%D8%B1%D8%A7%D8%A8%D8%B7%20%D8%A7%D9%84%D9%85%D8%AA%D8%A7%D8%A8%D8%B9%D8%A9%20%D8%A7%D9%84%D9%85%D8%A8%D8%A7%D8%B4%D8%B1%3A*%20http%3A%2F%2F127.0.0.1%3A3000%2Far%2Freceipt%2FORD-20261119-5667A2%3Ftoken%3D357e2a74d5ebe11ced9ee826af72acdd%0A%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%E2%94%80%0A%E2%8F%B3%20%D9%87%D8%B0%D8%A7%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%20%D9%82%D9%8A%D8%AF%20%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%AC%D8%B9%D8%A9%20%D9%88%D9%84%D8%A7%20%D9%8A%D8%B9%D8%AA%D8%A8%D8%B1%20%D9%85%D9%82%D8%A8%D9%88%D9%84%D8%A7%D9%8B%20%D9%86%D9%87%D8%A7%D8%A6%D9%8A%D8%A7%D9%8B%20%D8%A5%D9%84%D8%A7%20%D8%A8%D8%B9%D8%AF%20%D8%AA%D8%A3%D9%83%D9%8A%D8%AF%20%D8%A5%D8%AF%D8%A7%D8%B1%D8%A9%20%D8%A7%D9%84%D9%85%D8%B7%D8%B9%D9%85.",
@@ -4882,8 +4980,8 @@
     "customerPhoneNormalized": "201024994092"
   },
   {
-    "mode": "FULL_ORDERING",
-    "updatedAt": "2026-11-21T23:44:01.471Z",
+    "mode": "WHATSAPP_DATABASE",
+    "updatedAt": "2026-11-21T23:45:11.773Z",
     "updatedBy": "إبراهيم شعيب (مدير عام المطعم)",
     "reasonCode": "HIGH_ORDER_VOLUME",
     "enableNotice": true,
@@ -5025,7 +5123,7 @@
         "timestamp": "2026-11-21T18:34:26.855Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -5035,7 +5133,7 @@
     ],
     "createdAt": "2026-11-21T18:34:26.855Z",
     "expiresAt": "2026-11-21T19:04:26.855Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-7A443D",
@@ -5175,7 +5273,7 @@
         "timestamp": "2026-11-21T18:20:19.939Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -5185,7 +5283,7 @@
     ],
     "createdAt": "2026-11-21T18:20:19.939Z",
     "expiresAt": "2026-11-21T18:50:19.939Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-1D1872",
@@ -5747,7 +5845,7 @@
         "timestamp": "2026-11-21T11:23:41.399Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -5757,7 +5855,7 @@
     ],
     "createdAt": "2026-11-21T11:23:41.399Z",
     "expiresAt": "2026-11-21T11:53:41.399Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_c3456af8ac7267b2",
     "deliveryFee": 30,
     "orderNumber": "ORD-20261121-3B35D3",
@@ -5827,7 +5925,7 @@
         "timestamp": "2026-11-21T11:06:24.682Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -5837,7 +5935,7 @@
     ],
     "createdAt": "2026-11-21T11:06:24.682Z",
     "expiresAt": "2026-11-21T11:36:24.682Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 0,
     "orderNumber": "ORD-20261121-AA7678",
@@ -5891,7 +5989,7 @@
         "timestamp": "2026-11-21T11:00:43.909Z"
       },
       {
-        "timestamp": "2026-11-21T23:44:25.795Z",
+        "timestamp": "2026-11-23T10:18:53.017Z",
         "actor": "system",
         "action": "expire_unconfirmed_order",
         "fromStatus": "PENDING_WHATSAPP",
@@ -5901,7 +5999,7 @@
     ],
     "createdAt": "2026-11-21T11:00:43.909Z",
     "expiresAt": "2026-11-21T11:30:43.909Z",
-    "updatedAt": "2026-11-21T23:44:25.795Z",
+    "updatedAt": "2026-11-23T10:18:53.017Z",
     "customerId": "cust_be05790bf32da365",
     "deliveryFee": 30,
     "orderNumber": "ORD-20261121-CF1015",

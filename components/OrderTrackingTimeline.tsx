@@ -53,7 +53,7 @@ export default function OrderTrackingTimeline({
   const [data, setData] = useState<OrderStatusResponse | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
   const [isMounted, setIsMounted] = useState(false);
-  const [isPolling, setIsPolling] = useState(!TERMINAL_STATUSES.includes(initialStatus));
+  const [isPolling, setIsPolling] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fetchCount, setFetchCount] = useState(0);
 
@@ -92,12 +92,6 @@ export default function OrderTrackingTimeline({
   useEffect(() => {
     fetchStatus();
   }, [fetchStatus]);
-
-  useEffect(() => {
-    if (!isPolling) return;
-    const interval = setInterval(fetchStatus, 5000);
-    return () => clearInterval(interval);
-  }, [isPolling, fetchStatus]);
 
   // Map status to 6-stage lifecycle step index (0-based)
   const getStepIndex = (st: OrderStatus): number => {

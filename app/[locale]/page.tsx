@@ -3,7 +3,6 @@ import Footer from '@/components/Footer';
 import Hero from '@/components/Hero';
 import JsonLd from '@/components/JsonLd';
 import MenuView from '@/components/MenuView';
-import LiveSync from '@/components/LiveSync';
 import ViewOnlyNoticeBanner from '@/components/ViewOnlyNoticeBanner';
 import MenuSuspendedView from '@/components/MenuSuspendedView';
 import { isLocale } from '@/lib/i18n';
@@ -11,6 +10,7 @@ import { getMenuForLocale } from '@/lib/menu-db';
 import { getSiteData } from '@/lib/site-db';
 import { getActiveOffers } from '@/lib/offers-db';
 import { getMenuSettingsAsync, getMostOrderedProductStats, normalizeOrderingMode } from '@/lib/orders-store';
+import { resolveEffectiveBranches } from '@/lib/order-settings-types';
 
 // The menu and the site chrome (hero/footer/branches/phone/settings) now come from Neon. Admin
 // writes call revalidatePath('/ar'|'/en') for instant updates; this timer is the safety net so the
@@ -29,42 +29,43 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
     Promise.resolve(getMostOrderedProductStats()),
   ]);
 
+  const effectiveBranches = resolveEffectiveBranches(site.branches, menuSettings?.branchOverrides);
+  const effectiveSite = { ...site, branches: effectiveBranches };
+
   const activeMode = normalizeOrderingMode(menuSettings.mode);
   if (activeMode === 'TEMPORARILY_CLOSED') {
     return (
       <>
-        <JsonLd locale={locale} site={site} />
-        <Hero locale={locale} site={site} />
-        <MenuSuspendedView locale={locale} site={site} settings={menuSettings} />
-        <Footer locale={locale} site={site} />
-        <LiveSync />
+        <JsonLd locale={locale} site={effectiveSite} />
+        <Hero locale={locale} site={effectiveSite} />
+        <MenuSuspendedView locale={locale} site={effectiveSite} settings={menuSettings} />
+        <Footer locale={locale} site={effectiveSite} />
       </>
     );
   }
 
   return (
     <>
-      <JsonLd locale={locale} site={site} />
-      <Hero locale={locale} site={site} />
+      <JsonLd locale={locale} site={effectiveSite} />
+      <Hero locale={locale} site={effectiveSite} />
       <ViewOnlyNoticeBanner locale={locale} settings={menuSettings} />
       <main>
         <div className="container">
           <p className="notice">
-            <span>{site.vat}</span>
+            <span>{effectiveSite.vat}</span>
           </p>
         </div>
         <MenuView
           locale={locale}
           categories={categories}
-          currency={site.currency}
-          site={site}
+          currency={effectiveSite.currency}
+          site={effectiveSite}
           offers={offers}
           menuSettings={menuSettings}
           mostOrderedStats={mostOrderedStats}
         />
       </main>
-      <Footer locale={locale} site={site} />
-      <LiveSync />
+      <Footer locale={locale} site={effectiveSite} />
     </>
   );
 }

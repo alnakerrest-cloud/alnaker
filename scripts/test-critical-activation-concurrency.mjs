@@ -25,13 +25,20 @@ import { executeActivationTransaction } from './activation-core.mjs';
 
 dotenv.config({ path: '.env.staging.local', quiet: true });
 
-const EXPECTED_STAGING_HOST = 'ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech';
+const APPROVED_STAGING_PREFIX = 'ep-ancient-hill-beec491j';
+const FORBIDDEN_TARGETS = ['ep-soft-dawn-bdu5de43', 'ep-withered-bread-bemwq8ns'];
 const STAGING_URL = process.env.DATABASE_URL;
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
-if (!STAGING_URL || !STAGING_URL.includes(EXPECTED_STAGING_HOST) || !SESSION_SECRET) {
-  console.error('[FATAL] Concurrency audit must strictly run on Staging database with valid environment variables!');
+if (!STAGING_URL || !STAGING_URL.includes(APPROVED_STAGING_PREFIX) || !SESSION_SECRET) {
+  console.error(`[FATAL] Concurrency audit must strictly run on approved Staging database (${APPROVED_STAGING_PREFIX}) with valid environment variables!`);
   process.exit(1);
+}
+for (const forbidden of FORBIDDEN_TARGETS) {
+  if (STAGING_URL.includes(forbidden)) {
+    console.error(`[FATAL] Concurrency audit refused: database matches forbidden target: ${forbidden}`);
+    process.exit(1);
+  }
 }
 
 function hashToken(raw) {

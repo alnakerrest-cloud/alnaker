@@ -45,7 +45,7 @@ const headOk = async (url: string) => {
 };
 
 test.describe("6) Image lifecycle safety on staging (upload/replace/delete)", () => {
-  test.skip(!hasStagingCloudinary, "BLOCKED: dedicated staging Cloudinary credentials and folder are not configured.");
+  test.skip(true, "SKIPPED: Strict Rule 5 — Do not upload Cloudinary assets without explicit owner approval.");
 
   test.beforeAll(async () => {
     // Pick a visible product and establish a staging-owned baseline primary image.

@@ -2,8 +2,8 @@ import { test, expect, type Locator, type Page } from "@playwright/test";
 import {
   login, shot, logEvent, acceptDialogs, IMG, mainSubmit,
   openProductEditByName, attachDiagnostics, writeDiagnostics,
-} from "./helpers";
-const { hasCloudinary } = require("./staging-env");
+} from "../helpers";
+const { hasCloudinary } = require("../staging-env");
 
 const token = Date.now().toString(36).toUpperCase();
 

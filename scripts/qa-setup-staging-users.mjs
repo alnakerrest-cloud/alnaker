@@ -4,12 +4,19 @@ import bcrypt from 'bcryptjs';
 
 dotenv.config({ path: '.env.staging.local', quiet: true });
 
-const EXPECTED_STAGING_HOST = 'ep-soft-dawn-bdu5de43-pooler.c-8.us-east-2.aws.neon.tech';
+const APPROVED_STAGING_PREFIX = 'ep-ancient-hill-beec491j';
+const FORBIDDEN_TARGETS = ['ep-soft-dawn-bdu5de43', 'ep-withered-bread-bemwq8ns'];
 const databaseUrl = process.env.DATABASE_URL;
 
-if (!databaseUrl || !databaseUrl.includes(EXPECTED_STAGING_HOST)) {
-  console.error('[FATAL] Script must strictly run on Staging database!');
+if (!databaseUrl || !databaseUrl.includes(APPROVED_STAGING_PREFIX)) {
+  console.error(`[FATAL] Script must strictly run on approved Staging database (${APPROVED_STAGING_PREFIX})!`);
   process.exit(1);
+}
+for (const forbidden of FORBIDDEN_TARGETS) {
+  if (databaseUrl.includes(forbidden)) {
+    console.error(`[FATAL] Script refused: database matches forbidden target: ${forbidden}`);
+    process.exit(1);
+  }
 }
 
 const pool = new pg.Pool({ connectionString: databaseUrl, ssl: true });
@@ -55,7 +62,7 @@ export const QA_USERS = {
 };
 
 export async function setupQaUsers() {
-  console.log(`[QA SETUP] Provisioning test users on Staging: ${EXPECTED_STAGING_HOST}...`);
+  console.log(`[QA SETUP] Provisioning test users on Staging: ${APPROVED_STAGING_PREFIX}...`);
   for (const u of Object.values(QA_USERS)) {
     await pool.query('DELETE FROM "Session" WHERE "adminId" = $1', [u.id]);
     await pool.query('DELETE FROM "AdminUser" WHERE id = $1 OR email = $2', [u.id, u.email]);

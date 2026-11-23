@@ -2,6 +2,8 @@
 // المجلدات ثابتة: naqer-menu/products | naqer-menu/categories | naqer-menu/branding
 import { v2 as cloudinary } from "cloudinary";
 
+export const RETIRED_CLOUDINARY_ACCOUNT = "damc35hfo";
+
 let configured = false;
 function ensureConfig() {
   if (configured) return;
@@ -14,21 +16,25 @@ function ensureConfig() {
   if (!cloud_name || !api_key || !api_secret) {
     throw new Error("CLOUDINARY_NOT_CONFIGURED");
   }
+  if (cloud_name === RETIRED_CLOUDINARY_ACCOUNT) {
+    throw new Error(
+      `RETIRED_CLOUDINARY_ACCOUNT: Account "${RETIRED_CLOUDINARY_ACCOUNT}" is retired. Please configure the client-owned Cloudinary account.`
+    );
+  }
   cloudinary.config({ cloud_name, api_key, api_secret, secure: true });
   configured = true;
 }
 
 export type UploadedImage = { url: string; publicId: string };
 
-const BASE_FOLDER = process.env.CLOUDINARY_SECURE_FOLDER || "naqer-menu";
+function getBaseFolder(): string {
+  return process.env.CLOUDINARY_SECURE_FOLDER || "naqer-menu";
+}
 
-const PREFIX: Record<string, string> = {
-  products: `${BASE_FOLDER}/products`,
-  categories: `${BASE_FOLDER}/categories`,
-  branding: `${BASE_FOLDER}/branding`,
-  offers: `${BASE_FOLDER}/offers`,
-};
-export type Bucket = keyof typeof PREFIX;
+function getPrefix(bucket: Bucket): string {
+  return `${getBaseFolder()}/${bucket}`;
+}
+export type Bucket = "products" | "categories" | "branding" | "offers";
 
 /* ---------- سياسة الأمان للرفع ---------- */
 // نرفض SVG وغيره من الملفات القابلة للتضمين/التنفيذ؛ نسمح بصور نقطية شائعة فقط.
@@ -79,7 +85,7 @@ export async function uploadImage(file: File, bucket: Bucket): Promise<UploadedI
   const dataUri = `data:${file.type};base64,${buffer.toString("base64")}`;
   try {
     const res = await cloudinary.uploader.upload(dataUri, {
-      folder: PREFIX[bucket],
+      folder: getPrefix(bucket),
       resource_type: "image",
       overwrite: true,
     });
@@ -92,6 +98,11 @@ export async function uploadImage(file: File, bucket: Bucket): Promise<UploadedI
 /** يحذف صورة بـ publicId. يُستدعى فقط بعد نجاح استبدال/تأكد. */
 export async function destroyImage(publicId: string): Promise<void> {
   if (!publicId) return;
+  const base = getBaseFolder();
+  if (process.env.NAQER_TEST_ENV === "staging" && !publicId.startsWith(`${base}/`)) {
+    console.warn(`[cloudinary] STAGING GUARD: Refusing to delete asset outside staging folder ("${base}/"): ${publicId}`);
+    return;
+  }
   ensureConfig();
   try {
     await cloudinary.uploader.destroy(publicId, { resource_type: "image", invalidate: true });
@@ -128,7 +139,7 @@ export async function verifyCloudinaryAccess(force = false): Promise<{ ok: boole
   try {
     ensureConfig();
     const up = await cloudinary.uploader.upload(PROBE_URI, {
-      folder: "naqer-menu/_connection-test",
+      folder: `${getBaseFolder()}/_connection-test`,
       resource_type: "image",
       overwrite: true,
     });

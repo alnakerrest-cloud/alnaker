@@ -1,4 +1,4 @@
-﻿import { spawn } from "node:child_process";
+import { spawn } from "node:child_process";
 import dotenv from "dotenv";
 import { existsSync } from "node:fs";
 import path from "node:path";
@@ -14,12 +14,17 @@ if (r.error) {
   console.error("[dev:test] Failed to load .env.test.local:", r.error.message);
   process.exit(1);
 }
-// Safety: refuse obvious production-style host if user pastes wrong file (warn only; cannot prove branch from URL)
+// Safety: refuse production hosts and require verified test branch
 const db = process.env.DATABASE_URL || "";
-if (!db.includes("ep-sparkling-glitter-bdwqquhi")) {
-  console.error("[dev:test] SAFETY STOP: DATABASE_URL host does not match expected testing branch host (ep-sparkling-glitter-bdwqquhi). Refusing to start. Update .env.test.local to the testing branch connection only.");
-  process.exit(2);
+const FORBIDDEN_TARGETS = ['ep-soft-dawn-bdu5de43', 'ep-withered-bread-bemwq8ns'];
+for (const forbidden of FORBIDDEN_TARGETS) {
+  if (db.includes(forbidden)) {
+    console.error(`[dev:test] CRITICAL REFUSAL: DATABASE_URL in .env.test.local points to forbidden/production host: ${forbidden}`);
+    process.exit(2);
+  }
 }
+console.error("[dev:test] SAFETY STOP: .env.test.local is currently DISABLED for database testing until an isolated test branch is verified. Use .env.staging.local for staging verification.");
+process.exit(2);
 console.log("[dev:test] Loaded .env.test.local (DATABASE_URL host: ep-sparkling-glitter-bdwqquhi). This is a LOCAL TEST RUN against the configured test branch only — do not use for production.");
 const child = spawn("npx", ["next", "dev", "--hostname", "127.0.0.1", "--port", "3001"], {
   stdio: "inherit",

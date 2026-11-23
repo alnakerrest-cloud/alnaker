@@ -252,6 +252,7 @@ export async function updateUser(
     isActive?: boolean;
     mustChangePassword?: boolean;
     newPassword?: string;
+    passwordHash?: string;
   }
 ): Promise<SanitizedUser> {
   const data: Record<string, any> = { updatedAt: new Date() };
@@ -259,7 +260,10 @@ export async function updateUser(
   if (params.role !== undefined) data.role = params.role as any;
   if (params.isActive !== undefined) data.isActive = params.isActive;
   if (params.mustChangePassword !== undefined) data.mustChangePassword = params.mustChangePassword;
-  if (params.newPassword) {
+  if (params.passwordHash) {
+    data.passwordHash = params.passwordHash;
+    data.mustChangePassword = false;
+  } else if (params.newPassword) {
     data.passwordHash = await bcrypt.hash(params.newPassword, 12);
     data.mustChangePassword = false;
   }
@@ -269,7 +273,7 @@ export async function updateUser(
     data,
   });
 
-  if (params.isActive === false || params.newPassword) {
+  if (params.isActive === false || params.newPassword || params.passwordHash) {
     await revokeAllUserSessions(id);
   }
 

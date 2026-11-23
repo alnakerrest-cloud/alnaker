@@ -148,7 +148,7 @@ export async function executeAtomicPasswordChange(
   }
 
   await updateUser(adminId, {
-    newPassword: newPasswordHash,
+    passwordHash: newPasswordHash,
     mustChangePassword: false,
   });
 
@@ -182,8 +182,10 @@ export async function getSessionAdmin(): Promise<SessionAdmin | null> {
         mustChangePassword: Boolean(result.user.mustChangePassword),
       };
     }
+    // Database query succeeded and verified session is absent, revoked, or expired.
+    return null;
   } catch (err) {
-    console.warn("[auth] Session hash lookup failed, checking signature fallback:", err);
+    console.warn("[auth] Session hash lookup failed due to DB error, checking signature fallback:", err);
   }
 
   // 2. Resilient cryptographic fallback (Serverless / Neon quota outage)
