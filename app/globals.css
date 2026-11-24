@@ -812,6 +812,15 @@ a { color: inherit; }
 .card--platter .badge.on-dark { position: absolute; inset-inline-end: 16px; top: 16px; z-index: 2; }
 .badge.on-media { position: absolute; inset-inline-start: 10px; top: 10px; z-index: 2; box-shadow: 0 4px 10px -4px rgba(0, 0, 0, 0.5); }
 
+.card-foot,
+.platter-foot,
+.side-foot,
+.drink-foot {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 .prices {
   display: flex;
   flex-wrap: wrap;
@@ -819,6 +828,8 @@ a { color: inherit; }
   gap: 6px;
   flex: none;
   margin-inline-start: auto;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .price {
   display: inline-flex;
@@ -829,6 +840,8 @@ a { color: inherit; }
   background: var(--brand);
   color: var(--gold-soft);
   white-space: nowrap;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .price b { font-size: 1.08rem; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; }
 .price i { font-style: normal; font-size: 0.68rem; opacity: 0.8; }
@@ -3143,6 +3156,18 @@ html[dir='ltr'] .cart-panel {
     -webkit-line-clamp: 2;
   }
   .card--meal .card-foot { padding: 6px 8px 8px; }
+  .card--meal .card-foot .prices,
+  .card--side .card-foot .prices,
+  .card--drink .card-foot .prices {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  [dir='rtl'] .card--meal .card-foot .prices,
+  [dir='rtl'] .card--side .card-foot .prices,
+  [dir='rtl'] .card--drink .card-foot .prices {
+    align-items: flex-start;
+  }
   .price { gap: 3px; padding: 3px 7px; border-radius: 8px; }
   .price b { font-size: 0.92rem; }
   .price i { font-size: 0.54rem; }
@@ -3834,6 +3859,9 @@ html[dir='ltr'] .cart-panel {
   text-transform: uppercase;
   letter-spacing: 0.02em;
   margin-bottom: 3px;
+  width: 100%;
+  text-align: inherit;
+  flex-basis: 100%;
 }
 
 .item-options-indicator {
