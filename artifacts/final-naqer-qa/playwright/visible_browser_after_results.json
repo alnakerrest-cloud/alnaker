@@ -1,0 +1,202 @@
+{
+  "timestamp": "2026-11-24T14:30:52.758Z",
+  "viewportsTested": 8,
+  "languages": [
+    "ar",
+    "en"
+  ],
+  "runs": [
+    {
+      "language": "ar",
+      "viewport": "320x740",
+      "width": 320,
+      "height": 740,
+      "description": "Small mobile (iPhone SE / old Android)",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-ar-320x740.png"
+    },
+    {
+      "language": "ar",
+      "viewport": "360x800",
+      "width": 360,
+      "height": 800,
+      "description": "Standard Android (Samsung Galaxy)",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-ar-360x800.png"
+    },
+    {
+      "language": "ar",
+      "viewport": "390x844",
+      "width": 390,
+      "height": 844,
+      "description": "Modern iPhone (iPhone 12/13/14)",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-ar-390x844.png"
+    },
+    {
+      "language": "ar",
+      "viewport": "430x932",
+      "width": 430,
+      "height": 932,
+      "description": "Large phone (iPhone 14/15 Pro Max)",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-ar-430x932.png"
+    },
+    {
+      "language": "ar",
+      "viewport": "768x1024",
+      "width": 768,
+      "height": 1024,
+      "description": "Tablet Portrait (iPad Mini / Air)",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-ar-768x1024.png"
+    },
+    {
+      "language": "ar",
+      "viewport": "1024x768",
+      "width": 1024,
+      "height": 768,
+      "description": "Tablet Landscape / Small Laptop",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-ar-1024x768.png"
+    },
+    {
+      "language": "ar",
+      "viewport": "1366x900",
+      "width": 1366,
+      "height": 900,
+      "description": "Standard Desktop / Laptop",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-ar-1366x900.png"
+    },
+    {
+      "language": "ar",
+      "viewport": "1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "description": "FHD Desktop Monitor",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-ar-1920x1080.png"
+    },
+    {
+      "language": "en",
+      "viewport": "320x740",
+      "width": 320,
+      "height": 740,
+      "description": "Small mobile (iPhone SE / old Android)",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-en-320x740.png"
+    },
+    {
+      "language": "en",
+      "viewport": "360x800",
+      "width": 360,
+      "height": 800,
+      "description": "Standard Android (Samsung Galaxy)",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-en-360x800.png"
+    },
+    {
+      "language": "en",
+      "viewport": "390x844",
+      "width": 390,
+      "height": 844,
+      "description": "Modern iPhone (iPhone 12/13/14)",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-en-390x844.png"
+    },
+    {
+      "language": "en",
+      "viewport": "430x932",
+      "width": 430,
+      "height": 932,
+      "description": "Large phone (iPhone 14/15 Pro Max)",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-en-430x932.png"
+    },
+    {
+      "language": "en",
+      "viewport": "768x1024",
+      "width": 768,
+      "height": 1024,
+      "description": "Tablet Portrait (iPad Mini / Air)",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-en-768x1024.png"
+    },
+    {
+      "language": "en",
+      "viewport": "1024x768",
+      "width": 1024,
+      "height": 768,
+      "description": "Tablet Landscape / Small Laptop",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-en-1024x768.png"
+    },
+    {
+      "language": "en",
+      "viewport": "1366x900",
+      "width": 1366,
+      "height": 900,
+      "description": "Standard Desktop / Laptop",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-en-1366x900.png"
+    },
+    {
+      "language": "en",
+      "viewport": "1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "description": "FHD Desktop Monitor",
+      "totalCards": 74,
+      "overflowIssuesCount": 0,
+      "issues": [],
+      "consoleErrorsCount": 1,
+      "screenshot": "E:\\real projects\\naqer-menu\\artifacts\\final-naqer-qa\\after\\menu-en-1920x1080.png"
+    }
+  ]
+}

@@ -1,0 +1,369 @@
+{
+  "timestamp": "2026-11-24T14:14:52.354Z",
+  "tables": {
+    "AdminUser": {
+      "srcCount": 6,
+      "stgCount": 7,
+      "countDiff": 1,
+      "sharedCount": 6,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 1,
+      "stagingOnlySample": [
+        "1373831b-8ae4-475a-a340-574d8aa25f53"
+      ],
+      "changedFieldsCount": 2,
+      "changedFieldsSample": [
+        {
+          "key": "usr-admin-owner-001",
+          "column": "updatedAt",
+          "src": "2026-11-24T11:39:11.332Z",
+          "stg": "2026-11-23T22:26:40.882Z"
+        },
+        {
+          "key": "usr-admin-owner-001",
+          "column": "lastLoginAt",
+          "src": "2026-11-24T11:39:11.325Z",
+          "stg": "2026-11-23T22:26:40.881Z"
+        }
+      ]
+    },
+    "AuditLog": {
+      "srcCount": 133,
+      "stgCount": 129,
+      "countDiff": -4,
+      "sharedCount": 128,
+      "sourceOnlyCount": 5,
+      "sourceOnlySample": [
+        "cmwuqqtgd000008kxdnzmb2bq",
+        "cmwuqqzpt000008l6tyev4aqw",
+        "cmwuqr1gv000008jp5q6goz2j",
+        "cmwuqrn3l000108kx4zisj5ox",
+        "cmwuqx8c0000008jn8fbz0fs1"
+      ],
+      "stagingOnlyCount": 1,
+      "stagingOnlySample": [
+        "audit-authoritative-import-1795441536"
+      ],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "Branch": {
+      "srcCount": 2,
+      "stgCount": 2,
+      "countDiff": 0,
+      "sharedCount": 2,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "Category": {
+      "srcCount": 17,
+      "stgCount": 17,
+      "countDiff": 0,
+      "sharedCount": 17,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "Customer": {
+      "srcCount": 9,
+      "stgCount": 9,
+      "countDiff": 0,
+      "sharedCount": 9,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "CustomerAddress": {
+      "srcCount": 22,
+      "stgCount": 22,
+      "countDiff": 0,
+      "sharedCount": 22,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "CustomerFavorite": {
+      "srcCount": 0,
+      "stgCount": 0,
+      "countDiff": 0,
+      "sharedCount": 0,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "CustomerNotification": {
+      "srcCount": 86,
+      "stgCount": 86,
+      "countDiff": 0,
+      "sharedCount": 86,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "ImportItem": {
+      "srcCount": 0,
+      "stgCount": 0,
+      "countDiff": 0,
+      "sharedCount": 0,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "ImportJob": {
+      "srcCount": 0,
+      "stgCount": 0,
+      "countDiff": 0,
+      "sharedCount": 0,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "Offer": {
+      "srcCount": 0,
+      "stgCount": 1,
+      "countDiff": 1,
+      "sharedCount": 0,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 1,
+      "stagingOnlySample": [
+        "cmwty41en000907imtbye8z34"
+      ],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "OfferCategoryTarget": {
+      "srcCount": 0,
+      "stgCount": 0,
+      "countDiff": 0,
+      "sharedCount": 0,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "OfferLocationTarget": {
+      "srcCount": 0,
+      "stgCount": 0,
+      "countDiff": 0,
+      "sharedCount": 0,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "OfferProductTarget": {
+      "srcCount": 0,
+      "stgCount": 1,
+      "countDiff": 1,
+      "sharedCount": 0,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 1,
+      "stagingOnlySample": [
+        "cmwtyglqr000g07jhmw3yxtjh"
+      ],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "OptionGroup": {
+      "srcCount": 9,
+      "stgCount": 9,
+      "countDiff": 0,
+      "sharedCount": 9,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "OptionItem": {
+      "srcCount": 20,
+      "stgCount": 20,
+      "countDiff": 0,
+      "sharedCount": 20,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "Order": {
+      "srcCount": 2,
+      "stgCount": 2,
+      "countDiff": 0,
+      "sharedCount": 2,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "OrderItem": {
+      "srcCount": 2,
+      "stgCount": 2,
+      "countDiff": 0,
+      "sharedCount": 2,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "OrderStore": {
+      "srcCount": 84,
+      "stgCount": 84,
+      "countDiff": 0,
+      "sharedCount": 84,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "Product": {
+      "srcCount": 150,
+      "stgCount": 151,
+      "countDiff": 1,
+      "sharedCount": 150,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 1,
+      "stagingOnlySample": [
+        "bb1e4825-af47-480b-b42f-260a29f0fd30"
+      ],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "ProductImage": {
+      "srcCount": 150,
+      "stgCount": 151,
+      "countDiff": 1,
+      "sharedCount": 150,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 1,
+      "stagingOnlySample": [
+        "img-local-93c87795558f024c"
+      ],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "ProductOptionGroup": {
+      "srcCount": 26,
+      "stgCount": 28,
+      "countDiff": 2,
+      "sharedCount": 26,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 2,
+      "stagingOnlySample": [
+        "pog-grp-bedouin-side-bb1e4825",
+        "pog-grp-naqer-sauces-bb1e4825"
+      ],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "ProductVariant": {
+      "srcCount": 166,
+      "stgCount": 167,
+      "countDiff": 1,
+      "sharedCount": 166,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 1,
+      "stagingOnlySample": [
+        "927ccbc4-56d2-4a79-8e36-3cf25c3d9dee"
+      ],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "RestaurantSettings": {
+      "srcCount": 1,
+      "stgCount": 1,
+      "countDiff": 0,
+      "sharedCount": 1,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "Section": {
+      "srcCount": 26,
+      "stgCount": 26,
+      "countDiff": 0,
+      "sharedCount": 26,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "Session": {
+      "srcCount": 10,
+      "stgCount": 9,
+      "countDiff": -1,
+      "sharedCount": 9,
+      "sourceOnlyCount": 1,
+      "sourceOnlySample": [
+        "sess-71c961bd-bfc7-4491-9ec7-5ac76906cb72"
+      ],
+      "stagingOnlyCount": 0,
+      "stagingOnlySample": [],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    },
+    "_prisma_migrations": {
+      "srcCount": 4,
+      "stgCount": 5,
+      "countDiff": 1,
+      "sharedCount": 4,
+      "sourceOnlyCount": 0,
+      "sourceOnlySample": [],
+      "stagingOnlyCount": 1,
+      "stagingOnlySample": [
+        "c8ef12d2-18ab-4b64-9421-0a913d577024"
+      ],
+      "changedFieldsCount": 0,
+      "changedFieldsSample": []
+    }
+  }
+}

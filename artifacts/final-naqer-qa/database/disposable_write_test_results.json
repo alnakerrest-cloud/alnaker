@@ -1,0 +1,62 @@
+{
+  "startedAt": "2026-11-24T14:42:40.037Z",
+  "disposableDbName": "naqer_disposable_write_test",
+  "tests": [
+    {
+      "name": "create_database",
+      "status": "PASS"
+    },
+    {
+      "name": "deploy_migrations",
+      "status": "PASS"
+    },
+    {
+      "name": "seed_master_data",
+      "status": "PASS",
+      "details": {
+        "branchId": "br-disp-1",
+        "prodId": "prod-disp-1",
+        "variantId": "var-disp-1"
+      }
+    },
+    {
+      "name": "customer_and_address_lifecycle",
+      "status": "PASS"
+    },
+    {
+      "name": "order_creation_and_financial_math",
+      "status": "PASS",
+      "verified": {
+        "subtotalNum": 1000,
+        "discountNum": 100,
+        "deliveryNum": 30,
+        "totalNum": 1030
+      }
+    },
+    {
+      "name": "idempotency_key_enforcement",
+      "status": "PASS"
+    },
+    {
+      "name": "offer_creation_and_update",
+      "status": "PASS"
+    },
+    {
+      "name": "relational_integrity_zero_orphans",
+      "status": "PASS",
+      "counts": {
+        "orphan_order_items": "0",
+        "orphan_addresses": "0",
+        "orphan_variants": "0"
+      }
+    },
+    {
+      "name": "drop_database",
+      "status": "PASS"
+    }
+  ],
+  "assertionsPassed": 9,
+  "assertionsFailed": 0,
+  "status": "ALL_TESTS_PASSED",
+  "completedAt": "2026-11-24T14:43:15.961Z"
+}

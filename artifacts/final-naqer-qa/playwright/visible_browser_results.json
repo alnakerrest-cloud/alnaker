@@ -1,0 +1,548 @@
+{
+  "timestamp": "2026-11-24T14:19:06.552Z",
+  "browser": "Chromium (Headed Mode, headless: false)",
+  "viewportsTested": [
+    {
+      "name": "small-mobile",
+      "width": 320,
+      "height": 740
+    },
+    {
+      "name": "mobile-360",
+      "width": 360,
+      "height": 800
+    },
+    {
+      "name": "mobile-390",
+      "width": 390,
+      "height": 844
+    },
+    {
+      "name": "large-mobile",
+      "width": 430,
+      "height": 932
+    },
+    {
+      "name": "tablet",
+      "width": 768,
+      "height": 1024
+    },
+    {
+      "name": "small-laptop",
+      "width": 1024,
+      "height": 768
+    },
+    {
+      "name": "desktop",
+      "width": 1366,
+      "height": 900
+    },
+    {
+      "name": "wide-desktop",
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "clippingIssues": [
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "وجبة الأطفال",
+      "cardWidth": 131.5,
+      "pricesRight": 365.265625,
+      "cardRight": 289,
+      "viewport": "small-mobile",
+      "locale": "ar"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "وجبة توفير",
+      "cardWidth": 131.5,
+      "pricesRight": 223.765625,
+      "cardRight": 147.5,
+      "viewport": "small-mobile",
+      "locale": "ar"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Kids Meal",
+      "cardWidth": 131.5,
+      "pricesRight": 138.5,
+      "cardRight": 147.5,
+      "viewport": "small-mobile",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Saver Meal",
+      "cardWidth": 131.5,
+      "pricesRight": 280,
+      "cardRight": 289,
+      "viewport": "small-mobile",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "وجبة الأطفال",
+      "cardWidth": 151.5,
+      "pricesRight": 385.265625,
+      "cardRight": 329,
+      "viewport": "mobile-360",
+      "locale": "ar"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "وجبة توفير",
+      "cardWidth": 151.5,
+      "pricesRight": 223.765625,
+      "cardRight": 167.5,
+      "viewport": "mobile-360",
+      "locale": "ar"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Kids Meal",
+      "cardWidth": 151.5,
+      "pricesRight": 158.5,
+      "cardRight": 167.5,
+      "viewport": "mobile-360",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Saver Meal",
+      "cardWidth": 151.5,
+      "pricesRight": 320,
+      "cardRight": 329,
+      "viewport": "mobile-360",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "وجبة الأطفال",
+      "cardWidth": 166.5,
+      "pricesRight": 400.265625,
+      "cardRight": 359,
+      "viewport": "mobile-390",
+      "locale": "ar"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "وجبة توفير",
+      "cardWidth": 166.5,
+      "pricesRight": 223.765625,
+      "cardRight": 182.5,
+      "viewport": "mobile-390",
+      "locale": "ar"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Kids Meal",
+      "cardWidth": 166.5,
+      "pricesRight": 173.5,
+      "cardRight": 182.5,
+      "viewport": "mobile-390",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Saver Meal",
+      "cardWidth": 166.5,
+      "pricesRight": 350,
+      "cardRight": 359,
+      "viewport": "mobile-390",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "وجبة الأطفال",
+      "cardWidth": 186.5,
+      "pricesRight": 420.265625,
+      "cardRight": 399,
+      "viewport": "large-mobile",
+      "locale": "ar"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "وجبة توفير",
+      "cardWidth": 186.5,
+      "pricesRight": 223.765625,
+      "cardRight": 202.5,
+      "viewport": "large-mobile",
+      "locale": "ar"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Kids Meal",
+      "cardWidth": 186.5,
+      "pricesRight": 193.5,
+      "cardRight": 202.5,
+      "viewport": "large-mobile",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Saver Meal",
+      "cardWidth": 186.5,
+      "pricesRight": 390,
+      "cardRight": 399,
+      "viewport": "large-mobile",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Kids Meal",
+      "cardWidth": 315,
+      "pricesRight": 316,
+      "cardRight": 331,
+      "viewport": "small-laptop",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Saver Meal",
+      "cardWidth": 315,
+      "pricesRight": 647,
+      "cardRight": 662,
+      "viewport": "small-laptop",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Kids Meal",
+      "cardWidth": 268,
+      "pricesRight": 368.5,
+      "cardRight": 383.5,
+      "viewport": "desktop",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Saver Meal",
+      "cardWidth": 268,
+      "pricesRight": 652.5,
+      "cardRight": 667.5,
+      "viewport": "desktop",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Kids Meal",
+      "cardWidth": 268,
+      "pricesRight": 645.5,
+      "cardRight": 660.5,
+      "viewport": "wide-desktop",
+      "locale": "en"
+    },
+    {
+      "type": "PRICE_OVERFLOW",
+      "cardTitle": "Saver Meal",
+      "cardWidth": 268,
+      "pricesRight": 929.5,
+      "cardRight": 944.5,
+      "viewport": "wide-desktop",
+      "locale": "en"
+    }
+  ],
+  "domAssertions": [
+    {
+      "viewport": "small-mobile",
+      "locale": "ar",
+      "docScrollWidth": 305,
+      "winWidth": 320,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "small-mobile",
+      "locale": "en",
+      "docScrollWidth": 305,
+      "winWidth": 320,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "mobile-360",
+      "locale": "ar",
+      "docScrollWidth": 345,
+      "winWidth": 360,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "mobile-360",
+      "locale": "en",
+      "docScrollWidth": 345,
+      "winWidth": 360,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "mobile-390",
+      "locale": "ar",
+      "docScrollWidth": 375,
+      "winWidth": 390,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "mobile-390",
+      "locale": "en",
+      "docScrollWidth": 375,
+      "winWidth": 390,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "large-mobile",
+      "locale": "ar",
+      "docScrollWidth": 415,
+      "winWidth": 430,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "large-mobile",
+      "locale": "en",
+      "docScrollWidth": 415,
+      "winWidth": 430,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "tablet",
+      "locale": "ar",
+      "docScrollWidth": 753,
+      "winWidth": 768,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "tablet",
+      "locale": "en",
+      "docScrollWidth": 753,
+      "winWidth": 768,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "small-laptop",
+      "locale": "ar",
+      "docScrollWidth": 1009,
+      "winWidth": 1024,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "small-laptop",
+      "locale": "en",
+      "docScrollWidth": 1009,
+      "winWidth": 1024,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "desktop",
+      "locale": "ar",
+      "docScrollWidth": 1351,
+      "winWidth": 1366,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "desktop",
+      "locale": "en",
+      "docScrollWidth": 1351,
+      "winWidth": 1366,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "wide-desktop",
+      "locale": "ar",
+      "docScrollWidth": 1905,
+      "winWidth": 1920,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    },
+    {
+      "viewport": "wide-desktop",
+      "locale": "en",
+      "docScrollWidth": 1905,
+      "winWidth": 1920,
+      "horizontalScrollDetected": false,
+      "cardsChecked": 15
+    }
+  ],
+  "consoleErrors": [
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=384&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=384&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=384&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=384&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=384&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=384&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=384&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=384&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=640&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=640&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=640&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=640&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=640&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=640&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=640&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=640&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "text": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "location": {
+        "url": "http://127.0.0.1:3009/_next/image?url=https%3A%2F%2Fres.cloudinary.com%2Ftifawhcs%2Fimage%2Fupload%2Fv1795479505%2Fnaqer-menu%2Foffers%2Fnoo7nrpz5vz9mtwrbfi3.jpg&w=640&q=75",
+        "line": 0,
+        "column": 0,
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    }
+  ]
+}

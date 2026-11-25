@@ -1,0 +1,404 @@
+{
+  "timestamp": "2026-11-24T14:13:58.386Z",
+  "database": "naqer_merged_staging",
+  "host": "ep-aged-feather-bej8rk3r.c-9.us-east-2.aws.neon.tech",
+  "schemaAndMigrations": {
+    "tables": [
+      "AdminUser",
+      "AuditLog",
+      "Branch",
+      "Category",
+      "Customer",
+      "CustomerAddress",
+      "CustomerFavorite",
+      "CustomerNotification",
+      "ImportItem",
+      "ImportJob",
+      "Offer",
+      "OfferCategoryTarget",
+      "OfferLocationTarget",
+      "OfferProductTarget",
+      "OptionGroup",
+      "OptionItem",
+      "Order",
+      "OrderItem",
+      "OrderStore",
+      "Product",
+      "ProductImage",
+      "ProductOptionGroup",
+      "ProductVariant",
+      "RestaurantSettings",
+      "Section",
+      "Session",
+      "_prisma_migrations"
+    ],
+    "tableCount": 27,
+    "migrations": [
+      {
+        "id": "54ee7bb1-79a6-4692-9f37-fb82e9416818",
+        "migration_name": "20261103172108_init_menu_cms",
+        "checksum": "29e331fb9e3dc262e522c82d31a4b75bc6f48d3accc3cd0442e7a14bcd2c1495",
+        "finished_at": "2026-11-16T20:40:14.082Z",
+        "applied_steps_count": 1
+      },
+      {
+        "id": "e201154f-590c-43be-9ccd-2bbaf7dd7985",
+        "migration_name": "20261103180206_add_admin_auth_cms",
+        "checksum": "e88afa3c3e13d424318251c89f1265b5cbb54f597d4d0019aacc7c9f6631fc76",
+        "finished_at": "2026-11-16T20:40:16.813Z",
+        "applied_steps_count": 1
+      },
+      {
+        "id": "c5c5b94f-bd40-4306-a5a1-90b1b654ce82",
+        "migration_name": "20261114163000_add_must_change_password",
+        "checksum": "b1560467916e690128536f95c6be63fb0c8c7c292ada3b0b77b896d2b307126a",
+        "finished_at": "2026-11-16T20:40:17.937Z",
+        "applied_steps_count": 1
+      },
+      {
+        "id": "df2caa92-d114-4c55-9e24-ac646ef1ba0a",
+        "migration_name": "20261116204106_add_order_models",
+        "checksum": "336dec6f1cbb73ab552a7c88a581cde4b164e76b32ae8989c7ca011c94133f02",
+        "finished_at": "2026-11-16T20:41:16.270Z",
+        "applied_steps_count": 1
+      },
+      {
+        "id": "c8ef12d2-18ab-4b64-9421-0a913d577024",
+        "migration_name": "20261123160000_add_admin_roles_enum",
+        "checksum": "fb6b442285f91d4e2198071cb785a05896d9ec41aa38be3670f3031d009d454d",
+        "finished_at": "2026-11-24T13:34:13.205Z",
+        "applied_steps_count": 1
+      }
+    ],
+    "enums": [
+      {
+        "enum_name": "AdminRole",
+        "enum_values": "{OWNER,EDITOR,ORDERS_STAFF,ADMIN}"
+      },
+      {
+        "enum_name": "CategoryLayout",
+        "enum_values": "{TRAYS,LIST}"
+      },
+      {
+        "enum_name": "ImportItemStatus",
+        "enum_values": "{OK,SKIPPED,FAILED}"
+      },
+      {
+        "enum_name": "ImportJobStatus",
+        "enum_values": "{PENDING,RUNNING,SUCCESS,PARTIAL,FAILED}"
+      },
+      {
+        "enum_name": "MenuGroup",
+        "enum_values": "{FOOD,DRINKS}"
+      },
+      {
+        "enum_name": "OfferType",
+        "enum_values": "{PERCENTAGE,FIXED_AMOUNT,SPECIAL_PRICE,BUNDLE,BUY_X_GET_Y}"
+      },
+      {
+        "enum_name": "OrderStatus",
+        "enum_values": "{PENDING,CONFIRMED,PREPARING,READY,COMPLETED,CANCELLED}"
+      },
+      {
+        "enum_name": "OrderType",
+        "enum_values": "{DELIVERY,TAKEAWAY}"
+      },
+      {
+        "enum_name": "PaymentMethod",
+        "enum_values": "{CASH,CARD}"
+      },
+      {
+        "enum_name": "ProductBadge",
+        "enum_values": "{SIGNATURE,OFFER}"
+      }
+    ],
+    "indexesCount": 80,
+    "foreignKeys": [
+      {
+        "table_name": "AuditLog",
+        "column_name": "adminId",
+        "foreign_table_name": "AdminUser",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "CustomerAddress",
+        "column_name": "customerId",
+        "foreign_table_name": "Customer",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "CustomerFavorite",
+        "column_name": "customerId",
+        "foreign_table_name": "Customer",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "CustomerFavorite",
+        "column_name": "productId",
+        "foreign_table_name": "Product",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "CustomerNotification",
+        "column_name": "customerId",
+        "foreign_table_name": "Customer",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "ImportItem",
+        "column_name": "jobId",
+        "foreign_table_name": "ImportJob",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "OfferCategoryTarget",
+        "column_name": "categoryId",
+        "foreign_table_name": "Category",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "OfferCategoryTarget",
+        "column_name": "offerId",
+        "foreign_table_name": "Offer",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "OfferLocationTarget",
+        "column_name": "offerId",
+        "foreign_table_name": "Offer",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "OfferProductTarget",
+        "column_name": "offerId",
+        "foreign_table_name": "Offer",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "OfferProductTarget",
+        "column_name": "productId",
+        "foreign_table_name": "Product",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "OptionItem",
+        "column_name": "groupId",
+        "foreign_table_name": "OptionGroup",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "OrderItem",
+        "column_name": "orderId",
+        "foreign_table_name": "Order",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Order",
+        "column_name": "branchId",
+        "foreign_table_name": "Branch",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "ProductImage",
+        "column_name": "productId",
+        "foreign_table_name": "Product",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "ProductOptionGroup",
+        "column_name": "groupId",
+        "foreign_table_name": "OptionGroup",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "ProductOptionGroup",
+        "column_name": "productId",
+        "foreign_table_name": "Product",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "ProductVariant",
+        "column_name": "productId",
+        "foreign_table_name": "Product",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Product",
+        "column_name": "sectionId",
+        "foreign_table_name": "Section",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Section",
+        "column_name": "categoryId",
+        "foreign_table_name": "Category",
+        "foreign_column_name": "id"
+      },
+      {
+        "table_name": "Session",
+        "column_name": "adminId",
+        "foreign_table_name": "AdminUser",
+        "foreign_column_name": "id"
+      }
+    ]
+  },
+  "productIntegrity": {
+    "totalProducts": 151,
+    "invalidNamesCount": 0,
+    "hiddenProductsCount": 4,
+    "unavailableProductsCount": 1,
+    "productsWithBadSectionCount": 0,
+    "duplicateProductsInSection": []
+  },
+  "productImages": {},
+  "variantsAndOptions": {
+    "totalVariants": 167,
+    "invalidPricesCount": 0,
+    "inconsistentPriceRangesCount": 0,
+    "productsWithoutVariantsCount": 0,
+    "totalOptionGroups": 9,
+    "totalOptionItems": 20,
+    "totalProductOptionGroups": 28,
+    "orphanVariantsCount": 0,
+    "orphanPogsCount": 0,
+    "orphanItemsCount": 0,
+    "invalidOptionPricesCount": 0
+  },
+  "financialIntegrity": {
+    "totalOrders": 2,
+    "totalOrderItems": 2,
+    "orderCalculations": [
+      {
+        "orderNumber": "ORD-20261123-EF168C",
+        "itemCount": 1,
+        "itemSum": 1785,
+        "subtotal": 1785,
+        "subtotalMatches": true,
+        "discount": 315,
+        "delivery": 30,
+        "total": 1815,
+        "expectedTotalIfDiscountSeparate": 1500,
+        "expectedTotalIfDiscountIncluded": 1815
+      },
+      {
+        "orderNumber": "ORD-20261124-46CCC8",
+        "itemCount": 1,
+        "itemSum": 380,
+        "subtotal": 380,
+        "subtotalMatches": true,
+        "discount": 0,
+        "delivery": 30,
+        "total": 410,
+        "expectedTotalIfDiscountSeparate": 410,
+        "expectedTotalIfDiscountIncluded": 410
+      }
+    ]
+  },
+  "entitiesAndRelations": {
+    "orphanChecks": {
+      "sectionsWithoutCat": 0,
+      "addressesWithoutCustomer": 0,
+      "notificationsWithoutCustomer": 0,
+      "favoritesWithoutCustomer": 0,
+      "sessionsWithoutAdmin": 0,
+      "ordersWithoutBranch": 0,
+      "offerTargetsWithoutOffer": 0
+    },
+    "adminUsers": [
+      {
+        "id": "usr-admin-owner-001",
+        "email": "admin@naqer-restaurant.local",
+        "role": "OWNER",
+        "isActive": true,
+        "mustChangePassword": false,
+        "displayName": "أحمد الناقر",
+        "createdAt": "2026-11-18T22:16:10.189Z"
+      },
+      {
+        "id": "usr-admin-staff-002",
+        "email": "orders-staff@naqer-restaurant.local",
+        "role": "ORDERS_STAFF",
+        "isActive": true,
+        "mustChangePassword": false,
+        "displayName": "موظف استقبال وتجهيز الطلبات",
+        "createdAt": "2026-11-18T22:16:10.916Z"
+      },
+      {
+        "id": "usr-staff-564420c8-5dd7-49d3-85f5-a80b4817f24e",
+        "email": "orders@naqer.com",
+        "role": "ORDERS_STAFF",
+        "isActive": true,
+        "mustChangePassword": true,
+        "displayName": "إدارة وتجهيز الطلبات",
+        "createdAt": "2026-11-23T11:48:53.789Z"
+      },
+      {
+        "id": "usr-staff-d8e676ab-61cc-445b-a74f-a37c2b4ffc3f",
+        "email": "manager@naqer.com",
+        "role": "ADMIN",
+        "isActive": true,
+        "mustChangePassword": false,
+        "displayName": "مشرف العمليات والتشغيل",
+        "createdAt": "2026-11-23T11:48:53.789Z"
+      },
+      {
+        "id": "usr-staff-1a770a21-19f2-4422-ac22-667f99a4c7e1",
+        "email": "cashier@naqer.com",
+        "role": "ORDERS_STAFF",
+        "isActive": true,
+        "mustChangePassword": true,
+        "displayName": "أمين الصندوق (الكاشير)",
+        "createdAt": "2026-11-23T11:48:53.789Z"
+      },
+      {
+        "id": "1373831b-8ae4-475a-a340-574d8aa25f53",
+        "email": "admin@naqer.com",
+        "role": "OWNER",
+        "isActive": true,
+        "mustChangePassword": true,
+        "displayName": "إبراهيم شعيب (مدير عام المطعم)",
+        "createdAt": "2026-11-23T11:49:56.080Z"
+      },
+      {
+        "id": "usr-3c6214fb-1f65-4156-b21a-b2b762aa22db",
+        "email": "ibrahimshoeib255@gmail.com",
+        "role": "OWNER",
+        "isActive": true,
+        "mustChangePassword": false,
+        "displayName": "shoeib",
+        "createdAt": "2026-11-23T16:41:48.628Z"
+      }
+    ],
+    "branches": [
+      {
+        "id": "6d6528bd-dbd4-4672-aa5f-953063d3a36e",
+        "nameAr": "فرع دمياط الجديدة",
+        "cityAr": "دمياط الجديدة، مصر",
+        "isOrderable": true
+      },
+      {
+        "id": "7fa2be20-67bd-4060-a83a-81ded2550018",
+        "nameAr": "فرع الطريق الدولي الساحلي",
+        "cityAr": "جمصة، مصر",
+        "isOrderable": true
+      }
+    ],
+    "settings": [
+      {
+        "id": "default",
+        "brandNameAr": "قرية الناقر",
+        "taglineAr": "أصالة المندي والمشويات والمأكولات البدوية",
+        "phoneDisplay": "01094965222",
+        "phoneIntl": "+201094965222",
+        "logoUrl": null,
+        "vatNoteAr": "الأسعار الموضحة تشمل ضريبة القيمة المضافة.",
+        "serviceNoteAr": null,
+        "serviceChargePct": null,
+        "currencyAr": "ج.م",
+        "updatedAt": "2026-11-23T19:39:54.955Z",
+        "logoPublicId": null,
+        "deliveryFee": "30.00"
+      }
+    ]
+  }
+}

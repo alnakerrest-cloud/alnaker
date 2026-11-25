@@ -1,0 +1,326 @@
+[
+  {
+    "term": "ديك بلدي",
+    "matches": [
+      {
+        "id": "bb1e4825-af47-480b-b42f-260a29f0fd30",
+        "nameAr": "ديك بلدي",
+        "descAr": "أرز أحمر أو مكرونة مبكبكة",
+        "isVisible": true,
+        "isAvailable": true,
+        "section": "٥٥٠ جم",
+        "category": "المأكولات البدوية",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 470
+          }
+        ],
+        "images": [
+          {
+            "url": "https://res.cloudinary.com/tifawhcs/image/upload/v1795527222/naqer-menu/products/baladi-rooster.webp",
+            "isPrimary": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "term": "مندي",
+    "matches": [
+      {
+        "id": "fafcb4c3-f23b-41f3-b1d5-c1bb0a95c92a",
+        "nameAr": "نفر لحم مندي (ضاني)",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "المندي",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 395
+          }
+        ],
+        "images": [
+          {
+            "url": "https://res.cloudinary.com/tifawhcs/image/upload/v1795471744/naqer-menu/products/tk5jsawwyxc0cwt2rqlc.jpg",
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "db28ea0f-5cce-44b0-b796-3e66417c8943",
+        "nameAr": "نفر لحم مندي (كندوز)",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "المندي",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 365
+          }
+        ],
+        "images": [
+          {
+            "url": "/images/products/mandi/mandi-beef.webp",
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "6bdd0f6e-a34f-4e9f-b669-802a2b66252b",
+        "nameAr": "موزة ضاني مندي",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "المندي",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 520
+          }
+        ],
+        "images": [
+          {
+            "url": "https://res.cloudinary.com/tifawhcs/image/upload/v1795478267/naqer-menu/products/hiufv2hybpmpl7j6d40p.jpg",
+            "isPrimary": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "term": "صينية",
+    "matches": [
+      {
+        "id": "5580e943-c91a-41b4-9a62-b8591af1fc3e",
+        "nameAr": "صينية الملوك",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "الصواني",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 2100
+          }
+        ],
+        "images": [
+          {
+            "url": "https://res.cloudinary.com/damc35hfo/image/upload/v1793815468/naqer-menu/products/pdf-tray-almolok.jpg",
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "c14570a8-5fb2-4b70-8e4c-e9e4d36c89a0",
+        "nameAr": "صينية الصحاب",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "الصواني",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 1950
+          }
+        ],
+        "images": [
+          {
+            "url": "https://res.cloudinary.com/damc35hfo/image/upload/v1793815466/naqer-menu/products/pdf-tray-alsahab.jpg",
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "70e810f5-41d5-464e-83b3-f34e76523f81",
+        "nameAr": "صينية العيلة",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "الصواني",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 1465
+          }
+        ],
+        "images": [
+          {
+            "url": "https://res.cloudinary.com/damc35hfo/image/upload/v1793815465/naqer-menu/products/pdf-tray-alaila.jpg",
+            "isPrimary": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "term": "كراميل",
+    "matches": [
+      {
+        "id": "558c4ac8-8519-415b-a72e-851e201b3f96",
+        "nameAr": "كراميل",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": "موكا ونسكافيه",
+        "category": "القهوة",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 78
+          }
+        ],
+        "images": [
+          {
+            "url": "/images/products/coffee/caramel-macchiato.webp",
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "4d8e7a7e-dfe8-40dd-92dc-6f4f8debfd61",
+        "nameAr": "كراميل",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": "مثلجات وحلويات باردة",
+        "category": "المثلجات",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 62
+          }
+        ],
+        "images": [
+          {
+            "url": "/images/products/coffee/caramel-macchiato.webp",
+            "isPrimary": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "term": "بطاطس",
+    "matches": [
+      {
+        "id": "32860d73-125c-4efa-9a18-24fc0d0f9c96",
+        "nameAr": "بطاطس",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "المقبلات الساخنة والطواجن",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 85
+          }
+        ],
+        "images": [
+          {
+            "url": "/images/products/appetizers/french-fries.webp",
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "1d957ae4-e57e-4dd8-8558-03200eb0f9b7",
+        "nameAr": "بطاطس بالفراخ",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "المقبلات الساخنة والطواجن",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 165
+          }
+        ],
+        "images": [
+          {
+            "url": "/images/products/homestyle/potato-chicken-tajine.webp",
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "6a58694d-4b4f-434e-b6f0-823a721097b9",
+        "nameAr": "بطاطس باللحم",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "المقبلات الساخنة والطواجن",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 280
+          }
+        ],
+        "images": [
+          {
+            "url": "https://res.cloudinary.com/damc35hfo/image/upload/v1793815474/naqer-menu/products/pdf-batatas-lahm.jpg",
+            "isPrimary": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "term": "كنافة",
+    "matches": [
+      {
+        "id": "2468d831-718c-4f28-b723-eda442d80637",
+        "nameAr": "ليمون + شاي زردة + كنافة",
+        "descAr": null,
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "الحلويات",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 140
+          }
+        ],
+        "images": [
+          {
+            "url": "/images/products/desserts/bedouin-tea-kunafa.webp",
+            "isPrimary": true
+          }
+        ]
+      },
+      {
+        "id": "64daf798-26f0-480c-a030-02db28c09fa9",
+        "nameAr": "كنافة نابلسية",
+        "descAr": "كريمة أو جبنة",
+        "isVisible": true,
+        "isAvailable": true,
+        "section": null,
+        "category": "الحلويات",
+        "variants": [
+          {
+            "labelAr": null,
+            "price": 60
+          }
+        ],
+        "images": [
+          {
+            "url": "/images/products/desserts/nabulsi-kunafa.webp",
+            "isPrimary": true
+          }
+        ]
+      }
+    ]
+  }
+]
