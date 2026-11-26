@@ -35,13 +35,13 @@ export default function CategoryRowActions({ id, nameAr, isVisible, canDelete = 
     });
 
   return (
-    <div className="row-actions">
-      <button type="button" className="admin-btn admin-btn-sm" disabled={pending} onClick={call(toggleCategoryVisible)}>
-        {isVisible ? "إخفاء" : "إظهار"}
+    <div className="row-actions row-actions-compact">
+      <button type="button" className="admin-icon-btn" disabled={pending} onClick={call(toggleCategoryVisible)} title={isVisible ? "إخفاء" : "إظهار"} aria-label={isVisible ? "إخفاء القسم" : "إظهار القسم"}>
+        {isVisible ? "👁" : "🙈"}
       </button>
-      <button type="button" className="admin-btn admin-btn-sm" disabled={pending} title="تحريك لأعلى" onClick={dir("up")}>↑</button>
-      <button type="button" className="admin-btn admin-btn-sm" disabled={pending} title="تحريك لأسفل" onClick={dir("down")}>↓</button>
-      {canDelete ? <button type="button" className="admin-btn admin-btn-sm admin-btn-danger" disabled={pending} onClick={doDelete}>حذف</button> : null}
+      <button type="button" className="admin-icon-btn" disabled={pending} title="تحريك لأعلى" aria-label="تحريك لأعلى" onClick={dir("up")}>↑</button>
+      <button type="button" className="admin-icon-btn" disabled={pending} title="تحريك لأسفل" aria-label="تحريك لأسفل" onClick={dir("down")}>↓</button>
+      {canDelete ? <button type="button" className="admin-icon-btn admin-icon-btn-danger" disabled={pending} title="حذف" aria-label="حذف القسم" onClick={doDelete}>🗑</button> : null}
     </div>
   );
 }

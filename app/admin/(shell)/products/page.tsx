@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/auth";
 import ProductRowActions from "./row-actions";
 import AdminFilterBar, { FilterFieldConfig, QuickChip } from "../admin-filter-bar";
+import TablePagination from "../components/table-pagination";
 
 export const dynamic = "force-dynamic";
 
@@ -21,32 +22,41 @@ function priceLabel(variants: { price: unknown; maxPrice: unknown }[]): string {
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; cat?: string; sec?: string; vis?: string; avail?: string }>;
+  searchParams: Promise<{ q?: string; cat?: string; sec?: string; vis?: string; avail?: string; page?: string; limit?: string }>;
 }) {
   const admin = await requireAdmin();
   const canDelete = admin.role === "OWNER";
-  const { q, cat, sec, vis, avail } = await searchParams;
+  const { q, cat, sec, vis, avail, page: pageParam, limit: limitParam } = await searchParams;
+  const allowedLimits = [10, 20, 50];
+  const limit = allowedLimits.includes(Number(limitParam)) ? Number(limitParam) : 10;
+  const requestedPage = Math.max(1, parseInt(pageParam || "1", 10) || 1);
 
   const cats = await prisma.category.findMany({
     orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
     select: { id: true, nameAr: true, sections: { orderBy: { sortOrder: "asc" }, select: { id: true, titleAr: true } } },
   });
 
+  const where = {
+    AND: [
+      q ? { nameAr: { contains: q, mode: "insensitive" as const } } : {},
+      cat ? { section: { categoryId: cat } } : {},
+      sec ? { sectionId: sec } : {},
+      vis === "visible" ? { isVisible: true } : vis === "hidden" ? { isVisible: false } : {},
+      avail === "available" ? { isAvailable: true } : avail === "unavailable" ? { isAvailable: false } : {},
+    ],
+  };
+  const total = await prisma.product.count({ where });
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const page = Math.min(requestedPage, totalPages);
   const products = await prisma.product.findMany({
-    where: {
-      AND: [
-        q ? { nameAr: { contains: q, mode: "insensitive" } } : {},
-        cat ? { section: { categoryId: cat } } : {},
-        sec ? { sectionId: sec } : {},
-        vis === "visible" ? { isVisible: true } : vis === "hidden" ? { isVisible: false } : {},
-        avail === "available" ? { isAvailable: true } : avail === "unavailable" ? { isAvailable: false } : {},
-      ],
-    },
+    where,
     orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
     include: {
       variants: { orderBy: { sortOrder: "asc" } },
       section: { select: { id: true, titleAr: true, category: { select: { nameAr: true } } } },
     },
+    skip: (page - 1) * limit,
+    take: limit,
   });
 
   const activeSections = cat ? cats.find((c) => c.id === cat)?.sections ?? [] : [];
@@ -130,7 +140,7 @@ export default async function ProductsPage({
         action="/admin/products"
         searchValue={q ?? ""}
         searchPlaceholder="ابحث باسم المنتج…"
-        totalCount={products.length}
+        totalCount={total}
         countLabel="منتج"
         clearHref="/admin/products"
         quickChips={quickChips}
@@ -159,7 +169,7 @@ export default async function ProductsPage({
                 <td data-label="التوفر"><span className={`admin-badge ${p.isAvailable ? "on" : "off"}`}>{p.isAvailable ? "متوفر" : "غير متوفر"}</span></td>
                 <td data-label="مميّز">{p.isFeatured ? "★ نعم" : "—"}</td>
                 <td data-label="الترتيب">{p.sortOrder}</td>
-                <td className="cell-actions" style={{minWidth:"320px"}}>
+                <td className="cell-actions" style={{minWidth:"210px"}}>
                   <div className="row-actions">
                     <Link href={`/admin/products/${p.id}`} className="admin-btn admin-btn-sm">تعديل</Link>
                     <ProductRowActions

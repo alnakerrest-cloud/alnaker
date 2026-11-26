@@ -37,19 +37,13 @@ export default function ProductRowActions({ id, nameAr, isVisible, isAvailable, 
     });
 
   return (
-    <div className="row-actions">
-      <button type="button" className="admin-btn admin-btn-sm" disabled={pending} onClick={toggleFlag("isVisible")}>
-        {isVisible ? "إخفاء" : "إظهار"}
-      </button>
-      <button type="button" className="admin-btn admin-btn-sm" disabled={pending} onClick={toggleFlag("isAvailable")}>
-        {isAvailable ? "تعطيل" : "تفعيل"}
-      </button>
-      <button type="button" className="admin-btn admin-btn-sm" disabled={pending} onClick={toggleFlag("isFeatured")}>
-        {isFeatured ? "إلغاء التميز" : "تميّز"}
-      </button>
-      <button type="button" className="admin-btn admin-btn-sm" disabled={pending} title="تحريك لأعلى" onClick={dir("up")}>↑</button>
-      <button type="button" className="admin-btn admin-btn-sm" disabled={pending} title="تحريك لأسفل" onClick={dir("down")}>↓</button>
-      {canDelete ? <button type="button" className="admin-btn admin-btn-sm admin-btn-danger" disabled={pending} onClick={doDelete}>حذف</button> : null}
+    <div className="row-actions row-actions-compact">
+      <button type="button" className="admin-icon-btn" disabled={pending} onClick={toggleFlag("isVisible")} title={isVisible ? "إخفاء" : "إظهار"} aria-label={isVisible ? "إخفاء المنتج" : "إظهار المنتج"}>{isVisible ? "👁" : "🙈"}</button>
+      <button type="button" className="admin-icon-btn" disabled={pending} onClick={toggleFlag("isAvailable")} title={isAvailable ? "تعطيل التوفر" : "تفعيل التوفر"} aria-label={isAvailable ? "تعطيل التوفر" : "تفعيل التوفر"}>{isAvailable ? "✓" : "⦸"}</button>
+      <button type="button" className="admin-icon-btn" disabled={pending} onClick={toggleFlag("isFeatured")} title={isFeatured ? "إلغاء التمييز" : "تمييز"} aria-label={isFeatured ? "إلغاء التمييز" : "تمييز"}>{isFeatured ? "★" : "☆"}</button>
+      <button type="button" className="admin-icon-btn" disabled={pending} title="تحريك لأعلى" aria-label="تحريك لأعلى" onClick={dir("up")}>↑</button>
+      <button type="button" className="admin-icon-btn" disabled={pending} title="تحريك لأسفل" aria-label="تحريك لأسفل" onClick={dir("down")}>↓</button>
+      {canDelete ? <button type="button" className="admin-icon-btn admin-icon-btn-danger" disabled={pending} title="حذف" aria-label="حذف المنتج" onClick={doDelete}>🗑</button> : null}
     </div>
   );
 }

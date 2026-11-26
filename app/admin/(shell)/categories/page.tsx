@@ -9,21 +9,30 @@ export const dynamic = "force-dynamic";
 export default async function CategoriesPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; group?: string }>;
+  searchParams: Promise<{ q?: string; group?: string; page?: string; limit?: string }>;
 }) {
   const admin = await requireAdmin();
   const canDelete = admin.role === "OWNER";
-  const { q, group } = await searchParams;
+  const { q, group, page: pageParam, limit: limitParam } = await searchParams;
+  const allowedLimits = [10, 20, 50];
+  const limit = allowedLimits.includes(Number(limitParam)) ? Number(limitParam) : 10;
+  const requestedPage = Math.max(1, parseInt(pageParam || "1", 10) || 1);
 
+  const where = {
+    AND: [
+      q ? { nameAr: { contains: q, mode: "insensitive" as const } } : {},
+      group === "FOOD" || group === "DRINKS" ? { group: group as "FOOD" | "DRINKS" } : {},
+    ],
+  };
+  const total = await prisma.category.count({ where });
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  const page = Math.min(requestedPage, totalPages);
   const cats = await prisma.category.findMany({
-    where: {
-      AND: [
-        q ? { nameAr: { contains: q, mode: "insensitive" } } : {},
-        group === "FOOD" || group === "DRINKS" ? { group } : {},
-      ],
-    },
+    where,
     orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
     include: { _count: { select: { sections: true } }, sections: { select: { products: true } } },
+    skip: (page - 1) * limit,
+    take: limit,
   });
 
   const productCount = (c: (typeof cats)[number]) => c.sections.reduce((a, s) => a + s.products.length, 0);
@@ -39,7 +48,7 @@ export default async function CategoriesPage({
         action="/admin/categories"
         searchValue={q ?? ""}
         searchPlaceholder="ابحث باسم القسم…"
-        totalCount={cats.length}
+        totalCount={total}
         countLabel="قسم"
         clearHref="/admin/categories"
         quickChips={[
@@ -80,7 +89,7 @@ export default async function CategoriesPage({
                   <span className={`admin-badge ${c.isVisible ? "on" : "off"}`}>{c.isVisible ? "ظاهر" : "مخفي"}</span>
                 </td>
                 <td data-label="الترتيب">{c.sortOrder}</td>
-                <td className="cell-actions" style={{minWidth:"220px"}}>
+                <td className="cell-actions" style={{minWidth:"170px"}}>
                   <div className="row-actions">
                     <Link href={`/admin/categories/${c.id}`} className="admin-btn admin-btn-sm">تعديل</Link>
                     <CategoryRowActions id={c.id} nameAr={c.nameAr} isVisible={c.isVisible} canDelete={canDelete} />
