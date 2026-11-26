@@ -583,7 +583,7 @@ export default async function AdminOrdersPage({
             </p>
           </div>
         ) : (
-          <div className="admin-table-wrap">
+          <div className="admin-table-wrap" style={{ maxWidth: "100%", minWidth: 0 }}>
             <table className="admin-table admin-table-cards">
               <thead>
                 <tr>

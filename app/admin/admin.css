@@ -395,7 +395,7 @@
   max-width: 100%;
 }
 .admin-table {
-  width: 100%;
+  width: max-content;
   min-width: 100%;
   border-collapse: collapse;
   font-size: 14px;
@@ -409,6 +409,7 @@
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+  overscroll-behavior-x: contain;
 }
 .admin-table th,
 .admin-table td {
