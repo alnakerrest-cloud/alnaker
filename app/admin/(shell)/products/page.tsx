@@ -159,7 +159,7 @@ export default async function ProductsPage({
                 <td data-label="التوفر"><span className={`admin-badge ${p.isAvailable ? "on" : "off"}`}>{p.isAvailable ? "متوفر" : "غير متوفر"}</span></td>
                 <td data-label="مميّز">{p.isFeatured ? "★ نعم" : "—"}</td>
                 <td data-label="الترتيب">{p.sortOrder}</td>
-                <td className="cell-actions">
+                <td className="cell-actions" style={{minWidth:"320px"}}>
                   <div className="row-actions">
                     <Link href={`/admin/products/${p.id}`} className="admin-btn admin-btn-sm">تعديل</Link>
                     <ProductRowActions

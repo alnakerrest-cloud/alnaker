@@ -128,7 +128,7 @@ export default async function AddonsPage({
                     </span>
                   </td>
                   <td data-label="الترتيب">{g.sortOrder}</td>
-                  <td className="cell-actions">
+                  <td className="cell-actions" style={{minWidth:"180px"}}>
                     <div className="row-actions">
                       <Link href={`/admin/addons/${g.id}`} className="admin-btn admin-btn-sm">
                         تعديل

@@ -273,7 +273,7 @@ export default async function OffersPage({
                         {offer.endDate ? new Date(offer.endDate).toLocaleDateString("ar-EG") : "مستمر"}
                       </small>
                     </td>
-                    <td className="cell-actions">
+                    <td className="cell-actions" style={{minWidth:"220px"}}>
                       <div className="row-actions">
                       <OfferRowActions
                         id={offer.id}

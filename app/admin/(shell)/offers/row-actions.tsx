@@ -38,21 +38,19 @@ export default function OfferRowActions({
   };
 
   return (
-    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+    <div className="row-actions">
       <button
         type="button"
         onClick={handleToggle}
         disabled={isPending}
-        className={`admin-btn btn-toggle-active ${isActive ? "admin-btn-secondary" : "admin-btn-primary"}`}
-        style={{ padding: "4px 10px", fontSize: "0.82rem" }}
+        className={`admin-btn admin-btn-sm btn-toggle-active ${isActive ? "admin-btn-secondary" : "admin-btn-primary"}`}
       >
         {isActive ? "إيقاف" : "تفعيل"}
       </button>
 
       <Link
         href={`/admin/offers/${id}`}
-        className="admin-btn"
-        style={{ padding: "4px 10px", fontSize: "0.82rem" }}
+        className="admin-btn admin-btn-sm"
       >
         تعديل
       </Link>
@@ -62,20 +60,19 @@ export default function OfferRowActions({
           type="button"
           onClick={() => setConfirmDel(true)}
           disabled={isPending}
-          className="admin-btn admin-btn-danger"
-          style={{ padding: "4px 10px", fontSize: "0.82rem" }}
+          className="admin-btn admin-btn-sm admin-btn-danger"
         >
           حذف
         </button>
       )}
 
       {canDelete && confirmDel && (
-        <form onSubmit={handleDelete} style={{ display: "inline-flex", gap: "4px" }}>
+        <form onSubmit={handleDelete} style={{ display: "inline-flex", gap: "4px", flexWrap: "wrap" }}>
           <button
             type="submit"
             disabled={isPending}
-            className="admin-btn admin-btn-danger"
-            style={{ padding: "4px 10px", fontSize: "0.82rem", background: "#991b1b" }}
+            className="admin-btn admin-btn-sm admin-btn-danger"
+            style={{ background: "#991b1b" }}
           >
             تأكيد الحذف
           </button>
@@ -83,8 +80,7 @@ export default function OfferRowActions({
             type="button"
             onClick={() => setConfirmDel(false)}
             disabled={isPending}
-            className="admin-btn"
-            style={{ padding: "4px 8px", fontSize: "0.82rem" }}
+            className="admin-btn admin-btn-sm"
           >
             إلغاء
           </button>

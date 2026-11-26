@@ -432,7 +432,19 @@
   display: flex;
   gap: 8px;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+}
+.admin-table .row-actions .admin-btn,
+.admin-table .row-actions a.admin-btn,
+.admin-table .row-actions button.admin-btn {
+  width: auto;
+  min-width: max-content;
+  max-width: 100%;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  writing-mode: horizontal-tb;
 }
 .admin-empty { padding: 34px; text-align: center; color: var(--muted); }
 .admin-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; background: var(--bg-2); }

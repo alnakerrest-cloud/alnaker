@@ -81,7 +81,7 @@ export default async function BranchesPage({
                 <td data-label="استقبال الطلبات"><span className={`admin-badge ${b.isOrderable ? "on" : "off"}`}>{b.isOrderable ? "متاح" : "متوقف"}</span></td>
                 <td data-label="الترتيب">{b.sortOrder}</td>
                 {canManage ? (
-                  <td className="cell-actions">
+                  <td className="cell-actions" style={{minWidth:"220px"}}>
                     <div className="row-actions">
                       <Link href={`/admin/branches/${b.id}`} className="admin-btn admin-btn-sm">تعديل</Link>
                       <BranchRowActions id={b.id} nameAr={b.nameAr} isActive={b.isActive} />

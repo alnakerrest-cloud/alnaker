@@ -80,7 +80,7 @@ export default async function CategoriesPage({
                   <span className={`admin-badge ${c.isVisible ? "on" : "off"}`}>{c.isVisible ? "ظاهر" : "مخفي"}</span>
                 </td>
                 <td data-label="الترتيب">{c.sortOrder}</td>
-                <td className="cell-actions">
+                <td className="cell-actions" style={{minWidth:"220px"}}>
                   <div className="row-actions">
                     <Link href={`/admin/categories/${c.id}`} className="admin-btn admin-btn-sm">تعديل</Link>
                     <CategoryRowActions id={c.id} nameAr={c.nameAr} isVisible={c.isVisible} canDelete={canDelete} />
