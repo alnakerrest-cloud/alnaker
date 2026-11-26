@@ -17,6 +17,7 @@ export default function OrderStatusControl({ order }: OrderStatusControlProps) {
   const [reasonText, setReasonText] = useState('');
 
   const updateStatus = async (newStatus: OrderStatus, reason?: string) => {
+    if (loading || newStatus === currentStatus) return;
     setLoading(true);
     setErrorMsg(null);
     setSuccessMsg(null);
@@ -238,6 +239,23 @@ export default function OrderStatusControl({ order }: OrderStatusControlProps) {
               }}
             >
               🍳 بدء التحضير في المطبخ (PREPARING)
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => handleActionClick('RECEIVED')}
+              style={{
+                padding: '9px 18px',
+                borderRadius: '8px',
+                background: '#8b5cf6',
+                color: '#fff',
+                border: 'none',
+                fontWeight: 600,
+                fontSize: '14px',
+                cursor: 'pointer',
+              }}
+            >
+              📥 إرجاع إلى مستلم (RECEIVED)
             </button>
             <button
               type="button"

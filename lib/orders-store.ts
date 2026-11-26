@@ -647,31 +647,31 @@ export async function getOrderByNumberAsync(orderNumber: string): Promise<OrderR
   const clean = decodeURIComponent(orderNumber || "").trim();
   if (!clean) return null;
 
-  const local = getOrderByNumber(clean);
-  if (local) return local;
-
   const pool = getPgPool();
-  if (!pool) return null;
-  try {
-    const res = await pool.query(
-      `SELECT "data" FROM "OrderStore" 
-       WHERE "orderNumber" = $1 OR UPPER("orderNumber") = UPPER($1) 
-       LIMIT 1`,
-      [clean]
-    );
-    if (res.rows[0]?.data) {
-      const order = res.rows[0].data as OrderRecord;
-      const orders = loadOrders();
-      if (!orders.some((o) => o.orderNumber === order.orderNumber)) {
-        orders.unshift(order);
+  if (pool) {
+    try {
+      const res = await pool.query(
+        `SELECT "data" FROM "OrderStore" 
+         WHERE "orderNumber" = $1 OR UPPER("orderNumber") = UPPER($1) 
+         LIMIT 1`,
+        [clean]
+      );
+      if (res.rows[0]?.data) {
+        const raw = res.rows[0].data;
+        const order = (typeof raw === "string" ? JSON.parse(raw) : raw) as OrderRecord;
+        const orders = loadOrders();
+        const idx = orders.findIndex((o) => o.orderNumber === order.orderNumber);
+        if (idx !== -1) orders[idx] = order;
+        else orders.unshift(order);
         saveOrders(orders);
+        return order;
       }
-      return order;
+    } catch (err: any) {
+      console.warn("[orders-store] DB fetch note:", err.message);
     }
-  } catch (err: any) {
-    console.warn("[orders-store] DB fetch note:", err.message);
   }
-  return null;
+
+  return getOrderByNumber(clean);
 }
 
 export async function getOrderByVerificationAsync(orderNumber: string, token: string): Promise<OrderRecord | null> {
@@ -821,7 +821,7 @@ export const VALID_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   PENDING_WHATSAPP: ["CUSTOMER_CONFIRMED_SENT", "RECEIVED", "CONFIRMED", "CANCELLED", "EXPIRED"],
   CUSTOMER_CONFIRMED_SENT: ["RECEIVED", "CONFIRMED", "REJECTED", "CANCELLED"],
   RECEIVED: ["CONFIRMED", "REJECTED", "CANCELLED"],
-  CONFIRMED: ["PREPARING", "CANCELLED", "REJECTED"],
+  CONFIRMED: ["PREPARING", "CANCELLED", "REJECTED", "RECEIVED"],
   PREPARING: ["READY", "CANCELLED"],
   READY: ["OUT_FOR_DELIVERY", "COMPLETED", "CANCELLED"],
   OUT_FOR_DELIVERY: ["COMPLETED", "CANCELLED"],
@@ -844,6 +844,9 @@ export function updateOrderStatus(
   }
 
   const allowed = VALID_STATUS_TRANSITIONS[order.status] || [];
+  if (newStatus === order.status) {
+    return { success: true, order };
+  }
   if (!allowed.includes(newStatus)) {
     return {
       success: false,
@@ -867,6 +870,10 @@ export function updateOrderStatus(
   if (newStatus === "CONFIRMED") {
     order.confirmedAt = now;
     order.confirmedBy = actor;
+  }
+  if (prevStatus === "CONFIRMED" && newStatus !== "CONFIRMED") {
+    order.confirmedAt = undefined;
+    order.confirmedBy = undefined;
   }
   if (newStatus === "REJECTED") {
     order.rejectionReason = reasonOrNote;

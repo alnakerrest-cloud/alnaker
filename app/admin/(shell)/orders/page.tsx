@@ -11,7 +11,7 @@ import {
   ORDERING_MODES_META,
   type OrderStatus,
 } from "@/lib/orders-store";
-import { getSiteData } from "@/lib/site-db";
+import { getSiteData, getStaticSiteData } from "@/lib/site-db";
 
 export const dynamic = "force-dynamic";
 
@@ -88,34 +88,75 @@ export default async function AdminOrdersPage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
+  try {
   const admin = await requireAdmin(["OWNER", "ADMIN", "EDITOR", "ORDERS_STAFF"]);
   const isOwnerOrAdmin = admin.role === "OWNER" || admin.role === "ADMIN";
 
   const params = await searchParams;
-  const page = Math.max(1, parseInt(params.page || "1", 10));
+  const page = Math.max(1, parseInt(params.page || "1", 10) || 1);
+
+  const safeIso = (value?: string, endOfDay = false): string | undefined => {
+    if (!value) return undefined;
+    const raw = value.trim();
+    if (!raw) return undefined;
+    const normalized = /^\d{4}-\d{2}-\d{2}$/.test(raw)
+      ? `${raw}${endOfDay ? "T23:59:59.999Z" : "T00:00:00.000Z"}`
+      : raw;
+    const d = new Date(normalized);
+    return Number.isNaN(d.getTime()) ? undefined : d.toISOString();
+  };
 
   const dateFilterRange = calculateDateRange(params.dateFilter);
-  const dateFrom = params.dateFrom ? new Date(params.dateFrom).toISOString() : dateFilterRange.from;
-  const dateTo = params.dateTo ? new Date(params.dateTo + "T23:59:59.999Z").toISOString() : dateFilterRange.to;
+  const dateFrom = safeIso(params.dateFrom) ?? dateFilterRange.from;
+  const dateTo = safeIso(params.dateTo, true) ?? dateFilterRange.to;
 
-  const listResult = await listOrdersAsync({
-    q: params.q,
-    status: params.status,
-    type: params.type,
-    branchId: params.branch,
-    paymentMethod: params.payment,
-    sortBy: params.sortBy || "newest",
-    dateFrom,
-    dateTo,
-    page,
-    pageSize: 15,
-  });
+  const allowedStatus = new Set(["ALL","DRAFT","PENDING_WHATSAPP","CUSTOMER_CONFIRMED_SENT","RECEIVED","CONFIRMED","PREPARING","READY","OUT_FOR_DELIVERY","COMPLETED","REJECTED","CANCELLED","EXPIRED"]);
+  const allowedType = new Set(["ALL","DELIVERY","TAKEAWAY"]);
+  const allowedSort = new Set(["newest","oldest","totalDesc","totalAsc"]);
+  const status = allowedStatus.has(params.status || "") ? params.status : "ALL";
+  const type = allowedType.has(params.type || "") ? params.type : "ALL";
+  const sortBy = allowedSort.has(params.sortBy || "") ? params.sortBy : "newest";
+  const q = typeof params.q === "string" ? params.q.slice(0, 120) : "";
+  const branch = typeof params.branch === "string" ? params.branch.slice(0, 120) : "ALL";
+  const payment = typeof params.payment === "string" ? params.payment.slice(0, 60) : undefined;
 
-  const stats = await getOrdersStatsAsync();
-  const menuSettings = await getMenuSettingsAsync();
-  const normalizedMode = normalizeOrderingMode(menuSettings.mode);
-  const modeMeta = ORDERING_MODES_META[normalizedMode];
-  const siteData = await getSiteData("ar");
+  const [listResult, stats, menuSettings, siteData] = await Promise.all([
+    listOrdersAsync({
+      q,
+      status,
+      type,
+      branchId: branch,
+      paymentMethod: payment,
+      sortBy,
+      dateFrom,
+      dateTo,
+      page,
+      pageSize: 15,
+    }).catch((err) => {
+      console.error("[admin/orders] listOrdersAsync failed:", err);
+      return { orders: [], total: 0, page, pageSize: 15, totalPages: 1 };
+    }),
+    getOrdersStatsAsync().catch((err) => {
+      console.error("[admin/orders] getOrdersStatsAsync failed:", err);
+      return {
+        totalOrders: 0, newOrders: 0, inProgressOrders: 0, completedOrders: 0,
+        cancelledOrRejectedOrders: 0, confirmedOrders: 0, pendingReviewOrders: 0,
+        totalRevenue: 0, avgOrderValue: 0, ordersToday: 0, revenueToday: 0,
+      };
+    }),
+    getMenuSettingsAsync().catch((err) => {
+      console.error("[admin/orders] getMenuSettingsAsync failed:", err);
+      return { mode: "FULL_ORDERING" as const };
+    }),
+    getSiteData("ar").catch((err) => {
+      console.error("[admin/orders] getSiteData failed, using static fallback:", err);
+      try { return getStaticSiteData("ar"); } catch { return { branches: [] } as any; }
+    }),
+  ]);
+
+  const normalizedMode = normalizeOrderingMode((menuSettings as any)?.mode);
+  const modeMeta = ORDERING_MODES_META[normalizedMode] || ORDERING_MODES_META.FULL_ORDERING;
+  const safeBranches = Array.isArray((siteData as any)?.branches) ? (siteData as any).branches : [];
 
   return (
     <div style={{ maxWidth: "1280px", margin: "0 auto", paddingBottom: "60px" }}>
@@ -225,7 +266,7 @@ export default async function AdminOrdersPage({
             border: "1px solid #e2e8f0",
             boxShadow: "0 1px 3px rgba(0,0,0,0.03)",
             position: "relative",
-            overflow: "hidden",
+            overflow: "clip",
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", color: "#64748b", fontSize: "13px", fontWeight: 600, marginBottom: "8px" }}>
@@ -359,7 +400,8 @@ export default async function AdminOrdersPage({
           borderRadius: "14px",
           border: "1px solid #e2e8f0",
           boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-          overflow: "hidden",
+          overflow: "clip",
+          minWidth: 0,
         }}
       >
         {/* Search & Filter Toolbar */}
@@ -381,7 +423,7 @@ export default async function AdminOrdersPage({
               type="text"
               name="q"
               placeholder="بحث برقم الطلب / كود التحقق / الهاتف / اسم العميل..."
-              defaultValue={params.q || ""}
+              defaultValue={q}
               style={{
                 width: "100%",
                 padding: "9px 14px",
@@ -395,7 +437,7 @@ export default async function AdminOrdersPage({
 
           <select
             name="status"
-            defaultValue={params.status || "ALL"}
+            defaultValue={status}
             style={{
               padding: "9px 12px",
               borderRadius: "8px",
@@ -421,7 +463,7 @@ export default async function AdminOrdersPage({
 
           <select
             name="type"
-            defaultValue={params.type || "ALL"}
+            defaultValue={type}
             style={{
               padding: "9px 12px",
               borderRadius: "8px",
@@ -438,7 +480,7 @@ export default async function AdminOrdersPage({
 
           <select
             name="branch"
-            defaultValue={params.branch || "ALL"}
+            defaultValue={branch}
             style={{
               padding: "9px 12px",
               borderRadius: "8px",
@@ -449,7 +491,7 @@ export default async function AdminOrdersPage({
             }}
           >
             <option value="ALL">جميع الفروع</option>
-            {siteData.branches.map((b) => (
+            {safeBranches.map((b: any) => (
               <option key={b.id} value={b.id}>
                 {b.nameAr}
               </option>
@@ -477,7 +519,7 @@ export default async function AdminOrdersPage({
 
           <select
             name="sortBy"
-            defaultValue={params.sortBy || "newest"}
+            defaultValue={sortBy}
             style={{
               padding: "9px 12px",
               borderRadius: "8px",
@@ -771,4 +813,17 @@ export default async function AdminOrdersPage({
       </div>
     </div>
   );
+  } catch (err) {
+    console.error('[admin/orders] page failed:', err);
+    return (
+      <div style={{ maxWidth: 900, margin: '40px auto', padding: 20 }}>
+        <h1 style={{ fontSize: 22, fontWeight: 800, marginBottom: 8 }}>إدارة الطلبات</h1>
+        <p style={{ color: '#64748b', marginBottom: 16 }}>تعذر تحميل الصفحة بسبب خطأ مؤقت. جرّب إعادة المحاولة أو مسح معاملات التصفية.</p>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <a href="/admin/orders" style={{ padding: '10px 14px', borderRadius: 8, background: '#0f172a', color: '#fff', textDecoration: 'none' }}>إعادة المحاولة</a>
+          <a href="/admin/orders?status=ALL&amp;type=ALL&amp;sortBy=newest" style={{ padding: '10px 14px', borderRadius: 8, background: '#e2e8f0', color: '#0f172a', textDecoration: 'none' }}>مسح التصفية</a>
+        </div>
+      </div>
+    );
+  }
 }

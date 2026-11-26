@@ -401,8 +401,12 @@
 }
 .admin-table-wrap {
   overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+  max-width: 100%;
+  width: 100%;
+  min-width: 0;
 }
 .admin-table th,
 .admin-table td {
