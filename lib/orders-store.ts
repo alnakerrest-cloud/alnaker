@@ -1161,6 +1161,11 @@ export function getOrdersStats(): OrdersStats {
  * Calculates real product popularity (order counts and quantities) from all confirmed/completed orders.
  * Strictly based on actual customer orders in orders-store.json (no fake numbers).
  */
+export async function getMostOrderedProductStatsAsync(): Promise<Record<string, { count: number; totalQty: number; name: string }>> {
+  await listOrdersAsync({ pageSize: 1 });
+  return getMostOrderedProductStats();
+}
+
 export function getMostOrderedProductStats(): Record<string, { count: number; totalQty: number; name: string }> {
   const orders = loadOrders();
   const confirmedStatuses: OrderStatus[] = [

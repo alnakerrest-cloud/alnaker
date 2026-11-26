@@ -6,6 +6,9 @@ const { Pool } = pg;
 const ROUNDS = 12;
 
 function getDbUrl() {
+  if (process.env.DATABASE_URL) {
+    return process.env.DATABASE_URL;
+  }
   const files = ['.env.prod.bak', '.env.local', '.env'];
   for (const f of files) {
     if (fs.existsSync(f)) {
@@ -32,8 +35,15 @@ const ACCOUNTS = [
   {
     id: 'usr-admin-owner-001',
     email: 'admin@naqer-restaurant.local',
-    plainPassword: 'NaqerAdmin#2026!SecX',
+    plainPassword: 'NaqerOwner#2026!94',
     displayName: 'إبراهيم شعيب (مدير عام المطعم)',
+    role: 'OWNER',
+  },
+  {
+    id: 'usr-admin-ibrahim-003',
+    email: 'ibrahimshoeib255@gmail.com',
+    plainPassword: 'Test1234',
+    displayName: 'إبراهيم شعيب',
     role: 'OWNER',
   },
   {

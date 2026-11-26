@@ -9,7 +9,7 @@ import { isLocale } from '@/lib/i18n';
 import { getMenuForLocale } from '@/lib/menu-db';
 import { getSiteData } from '@/lib/site-db';
 import { getActiveOffers } from '@/lib/offers-db';
-import { getMenuSettingsAsync, getMostOrderedProductStats, normalizeOrderingMode } from '@/lib/orders-store';
+import { getMenuSettingsAsync, getMostOrderedProductStatsAsync, normalizeOrderingMode } from '@/lib/orders-store';
 import { resolveEffectiveBranches } from '@/lib/order-settings-types';
 
 // The menu and the site chrome (hero/footer/branches/phone/settings) now come from Neon. Admin
@@ -26,7 +26,7 @@ export default async function MenuPage({ params }: { params: Promise<{ locale: s
     getSiteData(locale),
     getActiveOffers(locale),
     getMenuSettingsAsync(),
-    Promise.resolve(getMostOrderedProductStats()),
+    getMostOrderedProductStatsAsync(),
   ]);
 
   const effectiveBranches = resolveEffectiveBranches(site.branches, menuSettings?.branchOverrides);

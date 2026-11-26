@@ -132,10 +132,18 @@ export async function findUserByEmail(email: string): Promise<StoredUser | null>
       };
     }
   } catch (err: any) {
+    if (!shouldUseLocalBackup()) {
+      console.error("[users-store] Database lookup failed in authoritative mode:", err?.message || err);
+      throw err;
+    }
     console.warn("[users-store] Database lookup failed, checking local backup:", err?.message || err);
   }
 
-  // 2. Fallback: Local users.json
+  if (!shouldUseLocalBackup()) {
+    return null;
+  }
+
+  // 2. Fallback: Local users.json (dev/offline mode only)
   const users = loadUsers();
   return users.find((u) => u.email.toLowerCase() === normalized) || null;
 }
@@ -159,10 +167,18 @@ export async function findUserById(id: string): Promise<StoredUser | null> {
       };
     }
   } catch (err: any) {
+    if (!shouldUseLocalBackup()) {
+      console.error("[users-store] Database lookup failed in authoritative mode:", err?.message || err);
+      throw err;
+    }
     console.warn("[users-store] Database lookup failed, checking local backup:", err?.message || err);
   }
 
-  // 2. Fallback: Local users.json
+  if (!shouldUseLocalBackup()) {
+    return null;
+  }
+
+  // 2. Fallback: Local users.json (dev/offline mode only)
   const users = loadUsers();
   return users.find((u) => u.id === id) || null;
 }

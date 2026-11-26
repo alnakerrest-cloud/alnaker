@@ -1,7 +1,7 @@
 import QRCode from "qrcode";
 import Link from "next/link";
 import { getOrderByNumber, getOrderByNumberAsync } from "@/lib/orders-store";
-import { getBackupSiteData } from "@/lib/backup-menu-db";
+import { getSiteData } from "@/lib/site-db";
 import ReceiptActionButtons from "@/components/ReceiptActionButtons";
 import OrderTrackingTimeline from "@/components/OrderTrackingTimeline";
 
@@ -45,7 +45,7 @@ export default async function ReceiptPage({ params, searchParams }: ReceiptPageP
 
   const cleanOrderNumber = decodeURIComponent(orderNumber || "").trim();
   const order = await getOrderByNumberAsync(cleanOrderNumber);
-  const siteData = getBackupSiteData("ar");
+  const siteData = await getSiteData(locale === "en" ? "en" : "ar");
 
   if (!order) {
     return (
