@@ -587,16 +587,16 @@ export default async function AdminOrdersPage({
             <table className="admin-table admin-table-cards">
               <thead>
                 <tr>
-                  <th style={{ width: "160px" }}>رقم الطلب</th>
-                  <th style={{ width: "100px" }}>كود الأمان</th>
-                  <th style={{ width: "130px" }}>العميل</th>
-                  <th style={{ width: "140px" }}>الهاتف</th>
-                  <th style={{ width: "140px" }}>الفرع</th>
-                  <th style={{ width: "110px" }}>النوع</th>
-                  <th style={{ width: "110px" }}>الإجمالي</th>
-                  <th style={{ width: "140px" }}>الحالة</th>
-                  <th style={{ width: "150px" }}>الوقت</th>
-                  <th style={{ width: "110px", textAlign: "center" }}>الإجراء</th>
+                  <th style={{ width: "13%" }}>رقم الطلب</th>
+                  <th style={{ width: "8%" }}>كود الأمان</th>
+                  <th style={{ width: "10%" }}>العميل</th>
+                  <th style={{ width: "12%" }}>الهاتف</th>
+                  <th style={{ width: "11%" }}>الفرع</th>
+                  <th style={{ width: "9%" }}>النوع</th>
+                  <th style={{ width: "8%" }}>الإجمالي</th>
+                  <th style={{ width: "11%" }}>الحالة</th>
+                  <th style={{ width: "10%" }}>الوقت</th>
+                  <th style={{ width: "8%", textAlign: "center" }}>الإجراء</th>
                 </tr>
               </thead>
               <tbody>
