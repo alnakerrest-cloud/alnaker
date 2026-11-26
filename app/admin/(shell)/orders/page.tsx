@@ -594,9 +594,9 @@ export default async function AdminOrdersPage({
                   <th style={{ width: "11%" }}>الفرع</th>
                   <th style={{ width: "9%" }}>النوع</th>
                   <th style={{ width: "8%" }}>الإجمالي</th>
-                  <th style={{ width: "11%" }}>الحالة</th>
-                  <th style={{ width: "10%" }}>الوقت</th>
-                  <th style={{ width: "8%", textAlign: "center" }}>الإجراء</th>
+                  <th style={{ width: "10%" }}>الحالة</th>
+                  <th style={{ width: "9%" }}>الوقت</th>
+                  <th style={{ width: "11%", textAlign: "center" }}>الإجراء</th>
                 </tr>
               </thead>
               <tbody>
@@ -702,14 +702,17 @@ export default async function AdminOrdersPage({
                           style={{
                             display: "inline-flex",
                             alignItems: "center",
+                            justifyContent: "center",
                             gap: "4px",
                             padding: "4px 10px",
-                            borderRadius: "8px",
-                            fontSize: "12px",
+                            borderRadius: 999,
+                            fontSize: "11.5px",
                             fontWeight: 700,
                             background: cfg.bg,
                             color: cfg.color,
                             border: `1px solid ${cfg.border}`,
+                            whiteSpace: "nowrap",
+                            maxWidth: "100%",
                           }}
                         >
                           <span>{cfg.icon}</span>
@@ -730,14 +733,16 @@ export default async function AdminOrdersPage({
                           href={`/admin/orders/${o.id}`}
                           className="admin-btn admin-btn-sm"
                           style={{
-                            padding: "5px 12px",
+                            padding: "6px 12px",
                             fontSize: "12px",
-                            fontWeight: 600,
-                            borderRadius: "6px",
+                            fontWeight: 700,
+                            borderRadius: 8,
                             textDecoration: "none",
-                            background: "#0f172a",
-                            color: "#fff",
-                            display: "inline-block",
+                            background: "#fff",
+                            color: "#0f172a",
+                            border: "1px solid #cbd5e1",
+                            display: "inline-flex",
+                            minHeight: 34,
                           }}
                         >
                           التفاصيل

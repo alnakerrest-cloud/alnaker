@@ -399,7 +399,7 @@
   min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 14px;
+  font-size: 13.5px;
   table-layout: fixed;
 }
 .admin-table-wrap {
@@ -408,29 +408,35 @@
   max-width: 100%;
   min-width: 0;
   overflow: visible;
+  border-radius: 0 0 14px 14px;
 }
 .admin-table th,
 .admin-table td {
-  padding: 10px 8px;
+  padding: 12px 10px;
   text-align: right;
   border-bottom: 1px solid var(--line);
   white-space: normal;
   overflow-wrap: anywhere;
   word-break: break-word;
   vertical-align: middle;
+  line-height: 1.45;
 }
 .admin-table th {
-  background: var(--bg-2);
-  color: var(--brand-deep);
+  background: #f8fafc;
+  color: #334155;
   font-weight: 700;
+  font-size: 12.5px;
   position: sticky;
   top: 0;
   z-index: 2;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
 }
-.admin-table tr:hover td { background: #fdf8ef; }
+.admin-table tbody tr:last-child td { border-bottom: none; }
+.admin-table tr:hover td { background: #fcfaf5; }
 .admin-table .row-actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   align-items: center;
   flex-wrap: wrap;
 }
@@ -445,6 +451,10 @@
   word-break: keep-all;
   overflow-wrap: normal;
   writing-mode: horizontal-tb;
+  min-height: 34px;
+  padding: 6px 10px;
+  font-size: 12.5px;
+  border-radius: 8px;
 }
 .admin-empty { padding: 34px; text-align: center; color: var(--muted); }
 .admin-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; background: var(--bg-2); }
