@@ -395,8 +395,8 @@
   max-width: 100%;
 }
 .admin-table {
-  width: max-content;
-  min-width: 100%;
+  width: 100%;
+  min-width: 1180px;
   border-collapse: collapse;
   font-size: 14px;
 }
