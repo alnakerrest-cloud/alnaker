@@ -400,8 +400,9 @@ export default async function AdminOrdersPage({
           borderRadius: "14px",
           border: "1px solid #e2e8f0",
           boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-          overflow: "clip",
+          overflow: "hidden",
           minWidth: 0,
+          maxWidth: "100%",
         }}
       >
         {/* Search & Filter Toolbar */}
